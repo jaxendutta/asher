@@ -15,15 +15,15 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Format date string for display
  */
-export function formatDate(dateString: string): string {
-  if (dateString.toLowerCase() === 'present' || !dateString) {
+export function formatDate(dateString: string | Date): string {
+  if (typeof dateString === 'string' && dateString.toLowerCase() === 'present') {
     return 'Present';
   }
   
   // Handle formats like "Sep 2021" or "2021"
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
-    return dateString; // Return as-is if not parseable
+    return typeof dateString === 'string' ? dateString : dateString.toString(); // Return as-is if not parseable
   }
   
   return date.toLocaleDateString('en-US', {
@@ -35,10 +35,7 @@ export function formatDate(dateString: string): string {
 /**
  * Calculate duration between two dates
  */
-export function calculateDuration(start: string, end: string): string {
-  const startDate: Date = new Date(start);
-  const endDate: Date = end.toLowerCase() === 'present' ? new Date() : new Date(end);
-  
+export function calculateDuration(startDate: Date, endDate: Date): string {
   if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
     return '';
   }

@@ -1,3 +1,8 @@
+export interface textLink {
+  label: string;
+  url?: string;
+}
+
 export interface Education {
   id: string;
   institution: string;
@@ -20,17 +25,15 @@ export interface Education {
 export interface ResearchExperience {
   id: string;
   title: string;
-  organization: string;
-  organizationLink?: string;
+  org?: textLink
+  lab?: textLink
   location: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate?: Date;
   description: string[];
   skills?: string[];
-  supervisor?: {
-    name: string;
-    link?: string;
-  };
+  supervisor?: textLink;
+  highlights?: string[];
 }
 
 export interface Publication {

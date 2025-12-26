@@ -5,6 +5,7 @@
 // ============================================================================
 
 import React from 'react';
+import Link from 'next/link';
 import { HiExternalLink, HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -17,7 +18,7 @@ interface ResearchCardProps {
 }
 
 export function ResearchCard({ research, className }: ResearchCardProps) {
-  const duration = calculateDuration(research.startDate, research.endDate || 'present');
+  const duration = calculateDuration(research.startDate, research.endDate || new Date());
 
   return (
     <Card hoverable variant="bordered" className={cn('group', className)}>
@@ -25,26 +26,26 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h3 className="text-xl font-bold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors">
-              {research.position}
+              {research.title}
             </h3>
             <div className="flex items-center gap-2 mt-1 text-[#5C6B5C]">
-              {research.labUrl ? (
+              {research.lab?.url ? (
                 <a
-                  href={research.labUrl}
+                  href={research.org?.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 hover:text-[#2D5F3F] transition-colors"
                 >
-                  <span className="font-medium">{research.institution}</span>
+                  <span className="font-medium">{research.org?.label}</span>
                   <HiExternalLink className="w-4 h-4" />
                 </a>
               ) : (
-                <span className="font-medium">{research.institution}</span>
+                <span className="font-medium">{research.org?.label}</span>
               )}
               {research.lab && (
                 <>
                   <span>•</span>
-                  <span className="text-sm">{research.lab}</span>
+                  <span className="text-sm">{research.lab?.label}</span>
                 </>
               )}
             </div>
@@ -83,17 +84,17 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
         {research.supervisor && (
           <div className="text-sm text-[#5C6B5C] mt-3">
             <span className="font-medium">Supervisor: </span>
-            {research.supervisor.link ? (
-              <a
-                href={research.supervisor.link}
+            {research.supervisor.url ? (
+              <Link
+                href={research.supervisor.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#2D5F3F] hover:underline"
               >
-                {research.supervisor.name}
-              </a>
+                {research.supervisor.label}
+              </Link>
             ) : (
-              <span>{research.supervisor.name}</span>
+              <span>{research.supervisor.label}</span>
             )}
           </div>
         )}
