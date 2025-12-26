@@ -7,14 +7,21 @@ import type { ResearchExperience } from '@/types';
 export const outreachExperience: ResearchExperience[] = [
   {
     id: 'chemistry-lab-assistant',
-    position: 'Chemistry Lab Assistant',
-    institution: 'University of Waterloo',
-    lab: 'Chemistry Community Outreach',
-    labUrl: 'https://uwaterloo.ca/chemistry/community-outreach',
+    title: 'Chemistry Lab Assistant',
+    org: {
+      label: 'University of Waterloo',
+      url: 'https://uwaterloo.ca/',
+    },
+    lab: {
+      label: 'Chemistry Community Outreach',
+      url: 'https://uwaterloo.ca/chemistry/community-outreach',
+    },
     location: 'Waterloo, ON',
-    startDate: 'Dec 2023',
-    endDate: 'Apr 2024',
-    description: 'Facilitated chemistry experiments for high school students and maintained laboratory equipment',
+    startDate: new Date('2023-12-01'),
+    endDate: new Date('2024-04-30'),
+    description: [
+      'Facilitated chemistry experiments for high school students and maintained laboratory equipment',
+    ],
     highlights: [
       'Led synthesis of acetaminophen experiments for high school students',
       'Prepared and maintained laboratory equipment and workspaces',
@@ -24,14 +31,19 @@ export const outreachExperience: ResearchExperience[] = [
   },
   {
     id: 'earth-sciences-museum',
-    position: 'Earth Sciences Museum Assistant',
-    institution: 'University of Waterloo',
-    lab: 'Earth Sciences Museum',
-    labUrl: 'https://uwaterloo.ca/earth-sciences-museum/',
+    title: 'Earth Sciences Museum Assistant',
+    org: {
+      label: 'University of Waterloo',
+      url: 'https://uwaterloo.ca/',
+    },
+    lab: {
+      label: 'Earth Sciences Museum',
+      url: 'https://uwaterloo.ca/earth-sciences-museum/',
+    },
     location: 'Waterloo, ON',
-    startDate: 'Feb 2024',
-    endDate: 'Feb 2024',
-    description: 'Educated museum visitors about environmental issues including microplastics',
+    startDate: new Date('2024-02-01'),
+    endDate: new Date('2024-02-28'),
+    description: ['Educated museum visitors about environmental issues including microplastics'],
     highlights: [
       'Delivered interactive science activities for children',
       'Focused on recycling and microplastics education',
@@ -41,14 +53,19 @@ export const outreachExperience: ResearchExperience[] = [
   },
   {
     id: 'science-open-house',
-    position: 'Science Open-House Assistant',
-    institution: 'University of Waterloo',
-    lab: 'Science Community Outreach',
-    labUrl: 'https://uwaterloo.ca/science/outreach',
+    title: 'Science Open-House Assistant',
+    org: {
+      label: 'University of Waterloo',
+      url: 'https://uwaterloo.ca/',
+    },
+    lab: {
+      label: 'Science Community Outreach',
+      url: 'https://uwaterloo.ca/science/outreach',
+    },
     location: 'Waterloo, ON',
-    startDate: 'Oct 2023',
-    endDate: 'Oct 2023',
-    description: 'Presented interactive physics demonstrations at the Science Open House',
+    startDate: new Date('2023-10-01'),
+    endDate: new Date('2023-10-31'),
+    description: ['Presented interactive physics demonstrations at the Science Open House'],
     highlights: [
       'Explained key physics concepts through demonstrations',
       'Engaged with prospective students and families',
@@ -58,14 +75,19 @@ export const outreachExperience: ResearchExperience[] = [
   },
   {
     id: 'biology-mentor',
-    position: 'Biology Mentor',
-    institution: 'University of Waterloo',
-    lab: 'Department of Athletics',
-    labUrl: 'https://athletics.uwaterloo.ca/',
+    title: 'Biology Mentor',
+    org: {
+      label: 'University of Waterloo',
+      url: 'https://uwaterloo.ca/',
+    },
+    lab: {
+      label: 'Department of Athletics',
+      url: 'https://athletics.uwaterloo.ca/',
+    },
     location: 'Waterloo, ON',
-    startDate: 'Sep 2022',
-    endDate: 'Apr 2023',
-    description: 'Provided one-on-one tutoring in cell biology and human physiology to student athletes',
+    startDate: new Date('2022-09-01'),
+    endDate: new Date('2023-04-30'),
+    description: ['Provided one-on-one tutoring in cell biology and human physiology to student athletes'],
     highlights: [
       'Tutored student athletes in cell biology',
       'Provided personalized instruction in human physiology',
