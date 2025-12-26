@@ -1,0 +1,64 @@
+// ============================================================================
+// Skills Data
+// ============================================================================
+
+import type { Skill } from '@/types';
+
+export const skills: Skill[] = [
+  {
+    category: 'Laboratory Skills',
+    items: [
+      'Chlorophyll Extraction',
+      'PCR',
+      'Cell Culture',
+      'Gel Electrophoresis',
+      'Cell Transformation',
+      'DNA Purification',
+      'Plasmid Ligation and Transformation',
+      'Biolistic Cell Bombardment',
+    ],
+  },
+  {
+    category: 'Technical Skills',
+    items: [
+      'R',
+      'IBM SPSS',
+      'Python',
+    ],
+  },
+  {
+    category: 'Databases & Bioinformatics',
+    items: [
+      'PDB',
+      'AlphaFold',
+      'NCBI (BLAST, PubMed)',
+      'PSIPRED',
+      'DeepTMHMM',
+      'Phobius',
+      'UCSC Genome Browser',
+      'PyMol',
+      'Jalview',
+    ],
+  },
+];
+
+export const researchInterests = [
+  {
+    id: 'abiotic-stress',
+    title: 'Abiotic Stress Responses',
+    description: 'Plant physiological, metabolic, and genetic responses to abiotic stress',
+    icon: 'plant',
+  },
+  {
+    id: 'plant-microbe',
+    title: 'Plant-Microbe Interactions',
+    description: 'Beneficial plant-microbe interactions',
+    icon: 'bacteria',
+  },
+  {
+    id: 'protein-transport',
+    title: 'Protein Subcellular Transport',
+    description: 'Molecular mechanisms of protein subcellular transport in plant cells',
+    icon: 'cell',
+  },
+];
