@@ -30,7 +30,7 @@ export default function AboutPage() {
 
           <div className="prose prose-lg max-w-3xl mx-auto text-left">
             <p className="text-[#2C3E2C] leading-relaxed">
-              I'm a highly motivated Honours Biology student with a strong academic record and 
+              I&apos;m a highly motivated Honours Biology student with a strong academic record and 
               hands-on research experience in plant biology, focusing on subcellular protein 
               localization. My passion lies in understanding the molecular mechanisms that 
               govern plant responses to environmental stress and beneficial interactions with microorganisms.
@@ -114,7 +114,7 @@ export default function AboutPage() {
                   advancing our understanding of plant systems.
                 </p>
                 <p className="text-[#2C3E2C] leading-relaxed">
-                  Beyond research, I'm passionate about science education and outreach, having 
+                  Beyond research, I&apos;m passionate about science education and outreach, having 
                   mentored students, facilitated laboratory experiments, and engaged with 
                   diverse audiences about environmental issues and scientific discovery.
                 </p>

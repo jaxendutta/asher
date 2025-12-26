@@ -22,10 +22,10 @@ export default function ContactPage() {
                                 <div className="text-center">
                                     <div className="text-6xl mb-4">🌿</div>
                                     <h3 className="text-2xl font-bold text-[#1A3A2A] mb-2">
-                                        Let's Connect
+                                        Let&apos;s Connect
                                     </h3>
                                     <p className="text-[#5C6B5C]">
-                                        I'm always open to discussing research collaborations,
+                                        I&apos;m always open to discussing research collaborations,
                                         academic opportunities, or science outreach initiatives.
                                     </p>
                                 </div>

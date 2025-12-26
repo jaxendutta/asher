@@ -3,7 +3,6 @@
 // ============================================================================
 
 import { ANIMATION } from './constants';
-import type { AnimationConfig } from '@/types';
 
 /**
  * Get bloom animation CSS properties
