@@ -3,10 +3,7 @@ import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { BloomOnHover } from '@/components/interactive/BloomOnHover';
 import { Plant } from '@/components/garden/Plant';
-import { HiMail } from 'react-icons/hi';
-import { FaLinkedin } from 'react-icons/fa';
 import { SOCIAL_LINKS } from '@/lib/constants';
-import { it } from 'node:test';
 import Link from 'next/dist/client/link';
 
 export default function ContactPage() {
@@ -36,13 +33,11 @@ export default function ContactPage() {
                             <CardContent>
                                 <div className="flex flex-col items-center gap-4">
                                     {Object.values(SOCIAL_LINKS).map((item) => (
-                                        <Link href={item.url} key={item.id}>
-                                            <a target="_blank" rel="noopener noreferrer" className="w-full max-w-md">
+                                        <Link href={item.url} key={item.id} target="_blank" rel="noopener noreferrer" className="w-full max-w-md">
                                                 <Button variant="primary" size="lg" className="w-full flex items-center justify-center gap-2">
                                                     <item.icon className="w-5 h-5 mr-2" />
                                                     {item.label}
                                                 </Button>
-                                            </a>
                                         </Link>
                                     ))}
                                 </div>
