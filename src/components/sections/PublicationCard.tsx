@@ -5,7 +5,7 @@
 // ============================================================================
 
 import React from 'react';
-import { HiExternalLink, HiDocumentText } from 'react-icons/hi';
+import { HiExternalLink } from 'react-icons/hi';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate } from '@/lib/utils';

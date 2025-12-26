@@ -40,7 +40,7 @@ export interface Publication {
   venue?: string;
   date: string;
   type: 'paper' | 'essay' | 'article' | 'thesis';
-  link?: string;
+  url?: string;
   abstract?: string;
   tags?: string[];
 }

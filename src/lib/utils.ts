@@ -36,18 +36,18 @@ export function formatDate(dateString: string): string {
  * Calculate duration between two dates
  */
 export function calculateDuration(start: string, end: string): string {
-  const startDate = new Date(start);
-  const endDate = end.toLowerCase() === 'present' ? new Date() : new Date(end);
+  const startDate: Date = new Date(start);
+  const endDate: Date = end.toLowerCase() === 'present' ? new Date() : new Date(end);
   
   if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
     return '';
   }
   
-  const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 
+  const months: number = (endDate.getFullYear() - startDate.getFullYear()) * 12 
     + (endDate.getMonth() - startDate.getMonth());
   
-  const years = Math.floor(months / 12);
-  const remainingMonths = months % 12;
+  const years: number = Math.floor(months / 12);
+  const remainingMonths: number = months % 12;
   
   if (years === 0) {
     return `${months} ${months === 1 ? 'month' : 'months'}`;
