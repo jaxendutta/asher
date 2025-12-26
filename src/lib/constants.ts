@@ -3,6 +3,7 @@
 // ============================================================================
 
 import type { GardenTheme, NavItem } from '@/types';
+import { BsEnvelopeHeart, BsLinkedin } from 'react-icons/bs';
 
 // ---------- Color Palette ----------
 // Inspired by natural garden colors with cat-friendly accents
@@ -172,26 +173,22 @@ export const CAT_CONFIG = {
 
 // ---------- Social Links ----------
 
-export const SOCIAL_LINKS = [
-  {
+export const SOCIAL_LINKS = {
+  email: {
     label: 'Email',
     url: 'mailto:rkim070@uottawa.ca',
-    icon: 'mail',
+    id: 'rkim070@uottawa.ca',
+    icon: BsEnvelopeHeart,
     type: 'social' as const,
   },
-  {
+  linkedin: {
     label: 'LinkedIn',
     url: 'https://www.linkedin.com/in/kimasher',
-    icon: 'linkedin',
+    id: 'kimasher',
+    icon: BsLinkedin,
     type: 'social' as const,
   },
-  {
-    label: 'GitHub',
-    url: '#', // To be added if Asher has one
-    icon: 'github',
-    type: 'social' as const,
-  },
-] as const;
+ } as const;
 
 // ---------- Research Interests ----------
 

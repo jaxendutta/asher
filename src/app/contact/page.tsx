@@ -40,7 +40,7 @@ export default function ContactPage() {
                   >
                     <Button variant="primary" size="lg" className="w-full">
                       <HiMail className="w-5 h-5 mr-2" />
-                      rkim070@uottawa.ca
+                      {SOCIAL_LINKS.email.url.replace('mailto:', '')}
                     </Button>
                   </a>
 
@@ -124,27 +124,6 @@ export default function ContactPage() {
               </Card>
             </BloomOnHover>
           </div>
-
-          {/* University info */}
-          <BloomOnHover delay={300}>
-            <div className="mt-12 text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-[#B8D4BE]">
-              <p className="text-[#5C6B5C] mb-2">
-                Currently studying at
-              </p>
-              <a
-                href="https://uwaterloo.ca"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[#2D5F3F] font-semibold hover:underline"
-              >
-                University of Waterloo
-                <HiExternalLink className="w-4 h-4" />
-              </a>
-              <p className="text-sm text-[#8C9B8C] mt-1">
-                Faculty of Science • Honours Biology
-              </p>
-            </div>
-          </BloomOnHover>
         </div>
       </Section>
     </div>

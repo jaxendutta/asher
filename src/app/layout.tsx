@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { CatCursor } from '@/components/cat/CatCursor';
 import { CatCompanion } from '@/components/cat/CatCompanion';
 
@@ -41,9 +40,6 @@ export default function RootLayout({
         <main className="flex-1 pt-20">
           {children}
         </main>
-        
-        {/* Footer */}
-        <Footer />
         
         {/* Garden background effect */}
         <div className="garden-background" />
