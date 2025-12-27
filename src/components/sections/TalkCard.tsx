@@ -5,6 +5,7 @@
 // ============================================================================
 
 import React from 'react';
+import Link from 'next/link';
 import { HiCalendar, HiLocationMarker, HiPresentationChartBar, HiVideoCamera } from 'react-icons/hi';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -20,13 +21,13 @@ interface TalkCardProps {
 export function TalkCard({ talk, className }: TalkCardProps) {
   const getTypeIcon = () => {
     switch (talk.type) {
-      case 'presentation':
+      case 'Presentation':
         return '🎤';
-      case 'poster':
+      case 'Poster':
         return '📊';
-      case 'seminar':
+      case 'Seminar':
         return '💡';
-      case 'workshop':
+      case 'Workshop':
         return '🔧';
       default:
         return '📢';
@@ -35,13 +36,13 @@ export function TalkCard({ talk, className }: TalkCardProps) {
 
   const getTypeColor = () => {
     switch (talk.type) {
-      case 'presentation':
+      case 'Presentation':
         return 'info';
-      case 'poster':
+      case 'Poster':
         return 'success';
-      case 'seminar':
+      case 'Seminar':
         return 'warning';
-      case 'workshop':
+      case 'Workshop':
         return 'default';
       default:
         return 'default';
@@ -58,9 +59,15 @@ export function TalkCard({ talk, className }: TalkCardProps) {
               {talk.title}
             </h3>
 
-            <div className="text-sm font-medium text-[#2D5F3F] mb-2">
-              {talk.event}
-            </div>
+            {talk.event.url ? (
+              <Link href={talk.event.url} className="text-sm font-medium text-[#2D5F3F] mb-2" target="_blank" rel="noopener noreferrer">
+                {talk.event.label}
+              </Link>
+            ) : (
+              <span className="text-sm font-medium text-[#2D5F3F] mb-2">
+                {talk.event.label}
+              </span>
+            )}
 
             <div className="flex flex-wrap items-center gap-3 text-xs text-[#5C6B5C]">
               <Badge variant={getTypeColor()} size="sm">
@@ -70,10 +77,10 @@ export function TalkCard({ talk, className }: TalkCardProps) {
                 <HiCalendar className="w-4 h-4" />
                 <span>{formatDate(talk.date)}</span>
               </div>
-              <div className="flex items-center gap-1">
+              <Link href={talk.location.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
                 <HiLocationMarker className="w-4 h-4" />
-                <span>{talk.location}</span>
-              </div>
+                <span>{talk.location.label}</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -90,26 +97,28 @@ export function TalkCard({ talk, className }: TalkCardProps) {
       {(talk.slides || talk.video) && (
         <CardFooter>
           <div className="flex flex-wrap gap-2">
-            {talk.slides && (
+            {talk.slides && (talk.slides.map(slide => (
               <Button
+                key={slide.url}
                 variant="outline"
                 size="sm"
-                onClick={() => window.open(talk.slides, '_blank')}
+                onClick={() => window.open(slide.url, '_blank')}
               >
                 <HiPresentationChartBar className="w-4 h-4 mr-1.5" />
-                View Slides
+                View {slide.label || 'Slides'}
               </Button>
-            )}
-            {talk.video && (
+            )))}
+            {talk.video && (talk.video.map(video => (
               <Button
+                key={video.url}
                 variant="outline"
                 size="sm"
-                onClick={() => window.open(talk.video, '_blank')}
+                onClick={() => window.open(video.url, '_blank')}
               >
                 <HiVideoCamera className="w-4 h-4 mr-1.5" />
-                Watch Recording
+                Watch {video.label || 'Video'}
               </Button>
-            )}
+            )))}
           </div>
         </CardFooter>
       )}

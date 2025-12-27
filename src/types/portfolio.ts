@@ -47,8 +47,8 @@ export interface Publication {
   title: string;
   authors: string[];
   medium?: string;
-  date: string;
-  type: 'paper' | 'essay' | 'article' | 'thesis';
+  date: Date;
+  type: 'Article' | 'Essay' | 'Thesis';
   url?: string;
   abstract?: string;
   tags?: string[];
@@ -60,7 +60,7 @@ export interface Talk {
   event: textLink;
   location: Location;
   date: Date;
-  type: 'presentation' | 'poster' | 'seminar' | 'workshop';
+  type: 'Presentation' | 'Poster' | 'Seminar' | 'Workshop';
   description?: string;
   slides?: textLink[];
   video?: textLink[];

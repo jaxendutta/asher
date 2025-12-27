@@ -19,7 +19,7 @@ export const talks: Talk[] = [
   // },
   {
     id: 'path-2025',
-    title: 'Presentation Title',
+    title: 'Investigating Subcellular Localization of <span class="italic">Arabidopsis thaliana</span> Hydroperoxide Lyase I (At4g15440)',
     event: {
       label: '1st Pursuits in Applied and Theoretical Science (PATH) Symposium',
       url: 'https://uwaterloo.ca/science/events/pursuits-applied-and-theoretical-science-path-symposium'
@@ -29,7 +29,30 @@ export const talks: Talk[] = [
       url: 'https://maps.app.goo.gl/4WbZj6hH7zwjEBn28',
      },
     date: new Date('2025-04-16'),
-    type: 'poster',
-    description: 'Brief description',
+    type: 'Poster',
+    description: 'PLACEHOLDER',
+    poster: {
+      label: 'Poster[PDF]',
+      url: '/docs/asher-kim-poster-2025.pdf',
+    },
+  },
+  {
+    id: 'uw-showcase-2025',
+    title: 'Investigating Subcellular Localization of <span class="italic">Arabidopsis thaliana</span> Hydroperoxide Lyase I (At4g15440)',
+    event: {
+      label: 'Faculty of Science Undergraduate Research Showcase',
+      url: 'https://uwaterloo.ca/science/events/pursuits-applied-and-theoretical-science-path-symposium'
+    },
+    location: { 
+      label: 'Science Teaching Complex, University of Waterloo, Waterloo, ON',
+      url: 'https://maps.app.goo.gl/XCzJ63TDJ7dPrNxk8',
+     },
+    date: new Date('2025-04-04'),
+    type: 'Poster',
+    description: 'PLACEHOLDER',
+    poster: {
+      label: 'Poster[PDF]',
+      url: '/docs/asher-kim-poster-2025.pdf',
+    },
   },
 ];

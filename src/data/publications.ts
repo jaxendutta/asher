@@ -11,9 +11,10 @@ export const publications: Publication[] = [
     title: 'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
     authors: ['Asher Kim'],
     medium: 'Honours Thesis, University of Waterloo',
-    date: '2025',
-    type: 'thesis',
+    date: new Date('2025-04-15'),
+    type: 'Thesis',
     abstract: 'Research conducted under the supervision of Dr. Simon Chuong investigating protein subcellular localization mechanisms.',
+    url: '/docs/asher-kim-thesis-honours-2025.pdf',
     tags: ['Protein Localization', 'GFP', 'Plant Biology', 'Molecular Biology'],
   },
   // Add future publications here
