@@ -71,14 +71,12 @@ export function TalkCard({ talk, className }: TalkCardProps) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="italic font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors">
-            {talk.title}
-          </div>
+          <div className="font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors" dangerouslySetInnerHTML={{ __html: talk.title }} />
           {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
             {talk.description}
           </p>)}
         </div>
-
+        
         {(talk.slides || talk.video) && (
           <div className="flex flex-wrap gap-2">
             {talk.slides && (talk.slides.map(slide => (

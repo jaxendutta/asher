@@ -19,7 +19,7 @@ export const talks: Talk[] = [
   // },
   {
     id: 'path-2025',
-    title: 'Investigating Subcellular Localization of Arabidopsis thaliana Hydroperoxide Lyase I (At4g15440)',
+    title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
       label: '1st Pursuits in Applied and Theoretical Science (PATH) Symposium',
       url: 'https://uwaterloo.ca/science/events/pursuits-applied-and-theoretical-science-path-symposium'
@@ -37,7 +37,7 @@ export const talks: Talk[] = [
   },
   {
     id: 'uw-showcase-2025',
-    title: 'Investigating Subcellular Localization of Arabidopsis thaliana Hydroperoxide Lyase I (At4g15440)',
+    title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
       label: 'Biology Senior Honours Thesis: Poster Showcase',
     },

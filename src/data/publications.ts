@@ -8,7 +8,7 @@ export const publications: Publication[] = [
   // Thesis
   {
     id: 'honours-thesis-2025',
-    title: 'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
+    title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     authors: ['Asher Kim'],
     medium: 'Honours Thesis, University of Waterloo',
     date: new Date('2025-04-15'),
