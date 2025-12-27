@@ -19,19 +19,6 @@ interface PublicationCardProps {
 }
 
 export function PublicationCard({ publication, className }: PublicationCardProps) {
-  const getTypeIcon = () => {
-    switch (publication.type) {
-      case 'Article':
-        return '📄';
-      case 'Thesis':
-        return '🎓';
-      case 'Essay':
-        return '✍️';
-      default:
-        return '📝';
-    }
-  };
-
   const getTypeColor = () => {
     switch (publication.type) {
       case 'Article':
@@ -39,7 +26,7 @@ export function PublicationCard({ publication, className }: PublicationCardProps
       case 'Thesis':
         return 'border-green-800/40 text-[#2D5F3F] bg-green-100';
       case 'Essay':
-        return 'default';
+        return 'border-yellow-800/40 text-[#92400E] bg-yellow-100';
       default:
         return 'default';
     }
