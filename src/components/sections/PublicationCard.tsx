@@ -6,9 +6,9 @@
 
 import React from 'react';
 import { HiExternalLink } from 'react-icons/hi';
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { cn, formatDate } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import type { Publication } from '@/types';
 import Link from 'next/link';
 import { VscFilePdf } from 'react-icons/vsc';
@@ -34,7 +34,7 @@ export function PublicationCard({ publication, className }: PublicationCardProps
 
   return (
     <Card hoverable variant="bordered" className={cn('group', className)}>
-      <CardHeader>
+      <CardContent>
         <div className="flex items-start gap-3">
           <div className="flex-1 flex flex-col gap-2">
             <div className="flex items-start justify-between gap-4">
@@ -82,7 +82,7 @@ export function PublicationCard({ publication, className }: PublicationCardProps
             </div>
           </div>
         </div>
-      </CardHeader>
+      </CardContent>
     </Card>
   );
 }

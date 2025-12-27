@@ -7,10 +7,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { HiCalendar, HiLocationMarker, HiPresentationChartBar, HiVideoCamera } from 'react-icons/hi';
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { cn, formatDate } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import type { Talk } from '@/types';
 import { VscGlobe, VscFilePdf } from 'react-icons/vsc';
 
@@ -69,7 +69,7 @@ export function TalkCard({ talk, className }: TalkCardProps) {
             </Link>
           </div>
         </div>
-        
+
         <div className="flex flex-col gap-2">
           <div className="italic font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors">
             {talk.title}
