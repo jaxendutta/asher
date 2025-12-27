@@ -3,14 +3,20 @@ export interface textLink {
   url?: string;
 }
 
+export interface Location {
+  label: string;
+  url: string;
+  embedUrl?: string;
+}
+
 export interface Education {
   id: string;
   institution: string;
   degree: string;
   field: string;
-  location: string;
-  startDate: string;
-  endDate: string;
+  location: Location;
+  startDate: Date;
+  endDate: Date;
   gpa?: string;
   thesis?: {
     title: string;
@@ -27,7 +33,7 @@ export interface ResearchExperience {
   title: string;
   org?: textLink
   lab?: textLink
-  location: string;
+  location: Location;
   startDate: Date;
   endDate?: Date;
   description: string[];
@@ -51,13 +57,15 @@ export interface Publication {
 export interface Talk {
   id: string;
   title: string;
-  event: string;
-  location: string;
-  date: string;
+  event: textLink;
+  location: Location;
+  date: Date;
   type: 'presentation' | 'poster' | 'seminar' | 'workshop';
   description?: string;
-  slides?: string;
-  video?: string;
+  slides?: textLink[];
+  video?: textLink[];
+  poster?: textLink;
+  docs?: textLink[];
 }
 
 export interface Skill {

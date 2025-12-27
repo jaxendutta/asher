@@ -16,7 +16,10 @@ export const outreachExperience: ResearchExperience[] = [
       label: 'Chemistry Community Outreach',
       url: 'https://uwaterloo.ca/chemistry/community-outreach',
     },
-    location: 'Waterloo, ON',
+    location: {
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/mji2ifRt1fGHFAAy7',
+    },
     startDate: new Date('2023-12-01'),
     endDate: new Date('2024-04-30'),
     description: [
@@ -38,9 +41,12 @@ export const outreachExperience: ResearchExperience[] = [
     },
     lab: {
       label: 'Earth Sciences Museum',
-      url: 'https://uwaterloo.ca/earth-sciences-museum/',
+      url: 'https://maps.app.goo.gl/1p1v97g3qjScq5ac7',
     },
-    location: 'Waterloo, ON',
+    location: {
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/mji2ifRt1fGHFAAy7',
+    },
     startDate: new Date('2024-02-01'),
     endDate: new Date('2024-02-28'),
     description: ['Educated museum visitors about environmental issues including microplastics'],
@@ -62,7 +68,10 @@ export const outreachExperience: ResearchExperience[] = [
       label: 'Science Community Outreach',
       url: 'https://uwaterloo.ca/science/outreach',
     },
-    location: 'Waterloo, ON',
+    location: {
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/mji2ifRt1fGHFAAy7',
+    },
     startDate: new Date('2023-10-01'),
     endDate: new Date('2023-10-31'),
     description: ['Presented interactive physics demonstrations at the Science Open House'],
@@ -84,7 +93,10 @@ export const outreachExperience: ResearchExperience[] = [
       label: 'Department of Athletics',
       url: 'https://athletics.uwaterloo.ca/',
     },
-    location: 'Waterloo, ON',
+    location: {
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/T8kE2nqfSSDsZjqHA',
+    },
     startDate: new Date('2022-09-01'),
     endDate: new Date('2023-04-30'),
     description: ['Provided one-on-one tutoring in cell biology and human physiology to student athletes'],

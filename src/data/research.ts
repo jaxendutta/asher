@@ -16,7 +16,10 @@ export const researchExperience: ResearchExperience[] = [
       label: 'Waterloo Wetland Lab',
       url: 'https://uwaterloo.ca/rooney-lab/',
     },
-    location: 'Waterloo, ON',
+    location: {
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/pYyr39iEYtgsiitY6',
+    },
     startDate: new Date('2024-02-01'),
     endDate: new Date('2024-12-01'),
     description: ['Contributed to carbon stock analysis following herbicide treatment of invasive Phragmites australis'],
@@ -42,7 +45,10 @@ export const researchExperience: ResearchExperience[] = [
       label: 'Sustainability Office',
       url: 'https://uwaterloo.ca/sustainability/',
     },
-    location: 'Waterloo, ON',
+    location: {
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/LhwgY2zCUa8suxCu9',
+    },
     startDate: new Date('2024-09-01'),
     endDate: new Date('2024-11-01'),
     description: ['Documented bird-window collisions to support funding for bird-safe window designs'],

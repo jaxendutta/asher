@@ -10,9 +10,12 @@ export const education: Education[] = [
     institution: 'University of Ottawa',
     degree: 'Master of Science (MSc) in Biology',
     field: 'Honours Biology',
-    location: 'Ottawa, ON',
-    startDate: 'September 2025',
-    endDate: 'April 2027',
+    location: { 
+      label: 'Ottawa, ON',
+      url: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
+    },
+    startDate: new Date('2025-09-01'),
+    endDate: new Date('2027-04-01'),
     gpa: 'In progress',
     thesis: {
       title:'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
@@ -21,9 +24,6 @@ export const education: Education[] = [
     },
     awards: [
       'President\'s Scholarship of Distinction',
-      'Purdy Crawford Undergraduate Scholarship',
-      'Science Memorial Scholarship',
-      'Excelling Standing Term Distinctions (8 terms)',
     ],
   },
   {
@@ -31,9 +31,12 @@ export const education: Education[] = [
     institution: 'University of Waterloo',
     degree: 'Bachelor of Science (BSc) in Biology',
     field: 'Honours Biology',
-    location: 'Waterloo, ON',
-    startDate: 'September 2021',
-    endDate: 'April 2025',
+    location: { 
+      label: 'Waterloo, ON',
+      url: 'https://maps.app.goo.gl/KMeDQQRfvthmS6cH9',
+    },
+    startDate: new Date('2021-09-01'),
+    endDate: new Date('2025-04-01'),
     gpa: '93/100',
     thesis: {
       title:'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
@@ -45,6 +48,7 @@ export const education: Education[] = [
       'Purdy Crawford Undergraduate Scholarship',
       'Science Memorial Scholarship',
       'Excelling Standing Term Distinctions (8 terms)',
+      'IDEAL Scholar Recipient',
     ],
   },
 ];

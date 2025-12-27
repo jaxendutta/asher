@@ -78,10 +78,10 @@ export function PublicationCard({ publication, className }: PublicationCardProps
               <Badge variant={getTypeColor()} size="sm">
                 {publication.type}
               </Badge>
-              {publication.venue && (
+              {publication.medium && (
                 <>
                   <span>•</span>
-                  <span className="italic">{publication.venue}</span>
+                  <span className="italic">{publication.medium}</span>
                 </>
               )}
               <span>•</span>

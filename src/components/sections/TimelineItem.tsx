@@ -53,10 +53,10 @@ export function TimelineItem({ education, isLast = false, className }: TimelineI
                   {formatDate(education.startDate)} - {formatDate(education.endDate)}
                 </span>
               </div>
-              <div className="flex items-center gap-1">
+              <Link href={education.location.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
                 <HiLocationMarker className="w-4 h-4" />
-                <span>{education.location}</span>
-              </div>
+                <span>{education.location.label}</span>
+              </Link>
               {education.gpa && (
                 <div className="flex items-center gap-1">
                   <span className="font-medium">GPA: {education.gpa}</span>

@@ -60,10 +60,10 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
             </span>
             {duration && <span className="text-xs ml-1">({duration})</span>}
           </div>
-          <div className="flex items-center gap-1">
+          <Link href={research.location.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
             <HiLocationMarker className="w-4 h-4" />
-            <span>{research.location}</span>
-          </div>
+            <span>{research.location.label}</span>
+          </Link>
         </div>
       </CardHeader>
 
