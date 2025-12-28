@@ -29,7 +29,7 @@ export function Hero() {
         {/* Main heading with animation */}
         <div className="animate-fadeIn text-[#1A3A2A] flex flex-col gap-2">
           <span className="text-lg sm:text-xl md:text-2xl">WELCOME TO</span>
-          <span className={`${fleur_de_leah.className} block text-[#2D5F3F] mt-2 mb-8 text-6xl sm:text-7xl md:text-8xl`}>Asher's Garden</span>
+          <span className={`${fleur_de_leah.className} block text-[#2D5F3F] mt-2 mb-8 text-6xl sm:text-7xl md:text-8xl`}>Asher&apos;s Garden</span>
         </div>
 
         {/* Subtitle */}
