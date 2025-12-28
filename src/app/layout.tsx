@@ -1,21 +1,8 @@
-import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { CatCursor } from '@/components/cat/CatCursor';
 import { CatCompanion } from '@/components/cat/CatCompanion';
 import { inter } from '@/lib/fonts';
-
-const metadata: Metadata = {
-  title: 'Asher Kim - Plant Biology Researcher',
-  description: 'Biology student at the University of Waterloo specializing in plant biology, protein localization, and molecular mechanisms.',
-  keywords: ['plant biology', 'research', 'University of Waterloo', 'protein localization', 'molecular biology'],
-  authors: [{ name: 'Asher Kim' }],
-  openGraph: {
-    title: 'Asher Kim - Plant Biology Researcher',
-    description: 'Biology student at the University of Waterloo specializing in plant biology research',
-    type: 'website',
-  },
-};
 
 export default function RootLayout({
   children,
