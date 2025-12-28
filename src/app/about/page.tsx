@@ -1,40 +1,45 @@
+import Link from 'next/link';
+import { fleur_de_leah } from '@/lib/fonts';
 import { Section } from '@/components/ui/Section';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { BloomOnHover } from '@/components/interactive/BloomOnHover';
 import { Plant } from '@/components/garden/Plant';
 import { skills, researchInterests } from '@/data/skills';
+import { SITECONFIG } from '@/data/siteConfig';
+import { FiLink } from 'react-icons/fi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter min-h-screen mt-20">
       {/* Hero Section */}
       <Section className="pt-24 pb-12">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8">
-            <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#6B8E23] to-[#2D5F3F] flex items-center justify-center text-6xl shadow-xl">
-              🌱
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#1A3A2A] mb-4">
-              Asher Kim
-            </h1>
-            <p className="text-xl text-[#5C6B5C] mb-6">
-              Honours Biology Student
+          <div className="mb-8 space-y-6">
+            <p className="text-base text-[#5C6B5C] uppercase">
+              About Me
+            </p>
+            <span className={`${fleur_de_leah.className} text-6xl md:text-7xl font-bold text-[#1A3A2A]`}>
+              {SITECONFIG.name}
+            </span>
+            <p className="text-xl text-[#5C6B5C]">
+              {SITECONFIG.role} at {SITECONFIG.org}
             </p>
             <div className="flex justify-center gap-2 text-sm">
-              <Badge variant="info">University of Waterloo</Badge>
-              <Badge variant="success">GPA: 93%</Badge>
-              <Badge variant="default">Class of 2025</Badge>
+              <Badge variant="info">{SITECONFIG.role}</Badge>
+              <Link href={`https://www.google.com/maps/search/${encodeURIComponent(SITECONFIG.org)}`} target="_blank" rel="noopener noreferrer">
+                <Badge variant="warning" className="flex flex-row gap-1">
+                  {SITECONFIG.org}
+                  <FiLink className="inline rounded-full p-0.25" />
+                </Badge>
+              </Link>
+              <Link href={SITECONFIG.supervisor.url} target="_blank" rel="noopener noreferrer">
+                <Badge variant="default" className="flex flex-row gap-1">
+                  Under {SITECONFIG.supervisor.name}
+                  <FiLink className="inline rounded-full p-0.25" />
+                </Badge>
+              </Link>
             </div>
-          </div>
-
-          <div className="prose prose-lg max-w-3xl mx-auto text-left">
-            <p className="text-[#2C3E2C] leading-relaxed">
-              I&apos;m a highly motivated Honours Biology student with a strong academic record and 
-              hands-on research experience in plant biology, focusing on subcellular protein 
-              localization. My passion lies in understanding the molecular mechanisms that 
-              govern plant responses to environmental stress and beneficial interactions with microorganisms.
-            </p>
           </div>
         </div>
       </Section>
@@ -43,7 +48,6 @@ export default function AboutPage() {
       <Section
         title="Research Interests"
         subtitle="Areas of focus in plant biology and molecular research"
-        className="bg-white/50"
       >
         <div className="grid md:grid-cols-3 gap-6">
           {researchInterests.map((interest, index) => (
@@ -92,35 +96,6 @@ export default function AboutPage() {
               </Card>
             </BloomOnHover>
           ))}
-        </div>
-      </Section>
-
-      {/* Professional Summary */}
-      <Section className="bg-gradient-to-b from-transparent to-[#F4EBD0]/30">
-        <div className="max-w-4xl mx-auto">
-          <BloomOnHover>
-            <Card variant="elevated" className="bg-white">
-              <CardHeader>
-                <h3 className="text-2xl font-bold text-[#1A3A2A] mb-2">
-                  Professional Summary
-                </h3>
-              </CardHeader>
-              <CardContent>
-                <p className="text-[#2C3E2C] leading-relaxed mb-4">
-                  I bring proven ability to conduct laboratory work, analyze data using 
-                  statistical software, and communicate scientific concepts effectively through 
-                  tutoring and outreach activities. My research experience spans from wetland 
-                  ecology to molecular biology, demonstrating versatility and dedication to 
-                  advancing our understanding of plant systems.
-                </p>
-                <p className="text-[#2C3E2C] leading-relaxed">
-                  Beyond research, I&apos;m passionate about science education and outreach, having 
-                  mentored students, facilitated laboratory experiments, and engaged with 
-                  diverse audiences about environmental issues and scientific discovery.
-                </p>
-              </CardContent>
-            </Card>
-          </BloomOnHover>
         </div>
       </Section>
     </div>

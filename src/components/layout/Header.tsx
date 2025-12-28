@@ -8,8 +8,10 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HiMenu, HiX } from 'react-icons/hi';
+import { fleur_de_leah } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/lib/constants';
+import { SITECONFIG } from '@/data/siteConfig';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,15 +36,14 @@ export function Header() {
           : 'bg-transparent'
       )}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo / Name */}
           <Link
             href="/"
-            className="text-2xl font-bold text-[#2D5F3F] hover:text-[#1A3A2A] transition-colors"
+            className={`${fleur_de_leah.className} text-2xl font-bold text-[#2D5F3F] hover:text-[#1A3A2A] transition-colors`}
           >
-            Asher Kim
-            <span className="text-sm ml-2 text-[#967BB6]">🌱</span>
+            {SITECONFIG.name}
           </Link>
 
           {/* Desktop Navigation */}
@@ -54,14 +55,13 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                    'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
                     'hover:bg-[#B8D4BE]/30',
                     isActive
                       ? 'bg-[#B8D4BE] text-[#1A3A2A]'
                       : 'text-[#5C6B5C]'
                   )}
                 >
-                  <span className="mr-1.5">{item.gardenIcon}</span>
                   {item.label}
                 </Link>
               );
