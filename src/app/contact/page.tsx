@@ -31,9 +31,9 @@ export default function ContactPage() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="flex flex-col items-center gap-4">
+                                <div className="flex items-center gap-4">
                                     {Object.values(SOCIAL_LINKS).map((item) => (
-                                        <Link href={item.url} key={item.id} target="_blank" rel="noopener noreferrer" className="w-full max-w-md">
+                                        <Link href={item.url} key={item.label} target="_blank" rel="noopener noreferrer" className="w-full max-w-md">
                                                 <Button variant="primary" size="lg" className="w-full flex items-center justify-center gap-2">
                                                     <item.icon className="w-5 h-5 mr-2" />
                                                     {item.label}

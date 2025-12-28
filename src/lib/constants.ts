@@ -3,7 +3,7 @@
 // ============================================================================
 
 import type { GardenTheme, NavItem } from '@/types';
-import { BsEnvelopeHeart, BsLinkedin } from 'react-icons/bs';
+import { BsEnvelopeHeart, BsLinkedin, BsFileEarmarkText } from 'react-icons/bs';
 
 // ---------- Color Palette ----------
 // Inspired by natural garden colors with cat-friendly accents
@@ -179,15 +179,18 @@ export const SOCIAL_LINKS = {
     url: 'mailto:rkim070@uottawa.ca',
     id: 'rkim070@uottawa.ca',
     icon: BsEnvelopeHeart,
-    type: 'social' as const,
   },
   linkedin: {
     label: 'LinkedIn',
     url: 'https://www.linkedin.com/in/kimasher',
     id: 'kimasher',
     icon: BsLinkedin,
-    type: 'social' as const,
   },
+  resume: {
+    label: 'Résumé',
+    url: 'https://docs.google.com/viewer?url=https://docs.google.com/document/d/1Mq_v4v8Nd1nbFrKElQU8YtIwzPFQUonz4XdLpT_5vQ0/export?format=pdf',
+    icon: BsFileEarmarkText,
+  }
  } as const;
 
 // ---------- Research Interests ----------

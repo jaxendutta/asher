@@ -22,7 +22,7 @@ export default function RootLayout({
         <Header />
 
         {/* Main content */}
-        <main className="h-full flex flex-1 justify-center items-center">
+        <main className="h-full flex flex-1 justify-center items-center mt-20">
           {children}
         </main>
 

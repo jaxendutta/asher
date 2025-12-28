@@ -7,7 +7,7 @@ export default function ResearchPage() {
   return (
     <div className="page-enter min-h-screen">
       <Section
-        title="Research Experience"
+        title="Research"
         subtitle="Exploring plant biology through hands-on research and fieldwork"
         centered
       >

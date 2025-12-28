@@ -11,7 +11,7 @@ import { FiLink } from 'react-icons/fi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter min-h-screen mt-20">
+    <div className="page-enter min-h-screen">
       {/* Hero Section */}
       <Section className="pt-24 pb-12">
         <div className="max-w-4xl mx-auto text-center">

@@ -1,35 +1,58 @@
 import { Section } from '@/components/ui/Section';
-import { TalkCard } from '@/components/sections/TalkCard';
+import { ResearchCard } from '@/components/sections/ResearchCard';
 import { BloomOnHover } from '@/components/interactive/BloomOnHover';
-import { talks } from '@/data/talks';
+import { outreachExperience } from '@/data/outreach';
 
-export default function TalksPage() {
+export default function OutreachPage() {
   return (
     <div className="page-enter min-h-screen">
       <Section
-        title="Talks & Presentations"
-        subtitle="Sharing research findings and scientific insights"
+        title="Outreach & Teaching"
+        subtitle="Sharing the joy of science with students and communities"
         centered
       >
-        {talks.length > 0 ? (
-          <div className="space-y-6">
-            {talks.map((talk, index) => (
-              <BloomOnHover key={talk.id} delay={index * 100}>
-                <TalkCard talk={talk} />
-              </BloomOnHover>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🎤</div>
-            <p className="text-[#5C6B5C] text-lg mb-2">
-              Upcoming presentations will be listed here
-            </p>
-            <p className="text-sm text-[#8C9B8C]">
-              Check back for conference talks, seminars, and poster presentations
-            </p>
-          </div>
-        )}
+        <div className="max-w-4xl mx-auto mb-12">
+          <BloomOnHover>
+            <div className="bg-gradient-to-r from-[#F4EBD0]/50 to-[#B8D4BE]/30 rounded-3xl p-8 border-2 border-[#B8D4BE]">
+              <div className="flex items-center gap-1.5 mb-4">
+                <div className="text-4xl">🌻</div>
+                <h3 className="text-2xl font-bold text-[#1A3A2A]">
+                  Science Communication
+                </h3>
+              </div>
+              <p className="text-[#2C3E2C] leading-relaxed">
+                Beyond research, I'm deeply committed to science education and community outreach.
+                From facilitating chemistry experiments for high school students to educating museum
+                visitors about environmental issues, I believe in making science accessible and
+                engaging for all ages.
+              </p>
+            </div>
+          </BloomOnHover>
+        </div>
+
+        <div className="space-y-6">
+          {outreachExperience.map((experience, index) => (
+            <BloomOnHover key={experience.id} delay={index * 100}>
+              <ResearchCard research={experience} />
+            </BloomOnHover>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <BloomOnHover delay={400}>
+            <div className="inline-block bg-white/80 backdrop-blur-sm rounded-3xl p-6 border-2 border-[#B8D4BE]">
+              <p className="text-[#5C6B5C] mb-2">
+                Interested in collaboration or have outreach opportunities?
+              </p>
+              <a
+                href="/contact"
+                className="text-[#2D5F3F] font-semibold hover:underline"
+              >
+                Let's connect →
+              </a>
+            </div>
+          </BloomOnHover>
+        </div>
       </Section>
     </div>
   );
