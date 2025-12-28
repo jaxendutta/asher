@@ -38,29 +38,19 @@ export function PublicationCard({ publication, className }: PublicationCardProps
         <div className="flex items-start gap-3">
           <div className="flex-1 flex flex-col gap-2">
             <div className="flex items-start justify-between gap-4">
-              <h3 className="text-lg font-bold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors leading-tight" dangerouslySetInnerHTML={{ __html: publication.title }} />
+              <span className="text-xl md:text-2xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors leading-tight" dangerouslySetInnerHTML={{ __html: publication.title }} />
               {publication.url && (
-                publication.url.startsWith('http') ? (
-                  <Link
-                    href={publication.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 p-1 text-[#5C6B5C] hover:text-[#2D5F3F] transition-colors"
-                    aria-label="View publication"
-                  >
-                    <HiExternalLink className="w-6 h-6" />
-                  </Link>
-                ): (
                 <Link
                   href={publication.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-shrink-0 p-1 text-[#5C6B5C] hover:text-[#2D5F3F] transition-colors"
                   aria-label="View publication"
-                >               
-                  <VscFilePdf className="w-6 h-6" />
+                >
+                  {publication.url.startsWith('http') ? (<HiExternalLink className="w-6 h-6" />) : (<VscFilePdf className="w-6 h-6" />)}
                 </Link>
-              ))}
+              )
+              }
             </div>
 
             <div className="text-sm text-[#5C6B5C]">

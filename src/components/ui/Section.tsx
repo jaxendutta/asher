@@ -30,12 +30,12 @@ export function Section({
         {(title || subtitle) && (
           <div className={cn('mb-12', centered && 'text-center')}>
             {title && (
-              <span className={`${fleur_de_leah.className} text-4xl md:text-6xl font-bold text-[#1A3A2A] mb-4`}>
+              <span className={`${fleur_de_leah.className} text-5xl md:text-6xl font-bold text-[#1A3A2A] mb-4`}>
                 {title}
               </span>
             )}
             {subtitle && (
-              <p className="text-lg text-[#5C6B5C] max-w-2xl mx-auto">
+              <p className="text-sm md:text-lg text-[#5C6B5C] max-w-2xl mx-auto">
                 {subtitle}
               </p>
             )}

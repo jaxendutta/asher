@@ -8,7 +8,7 @@ export const education: Education[] = [
   {
     id: 'uottawa-biology',
     institution: 'University of Ottawa',
-    degree: 'Master of Science (MSc) in Biology',
+    degree: 'Master of Science - MSc (Biology)',
     field: 'Honours Biology',
     location: { 
       label: 'Ottawa, ON',
@@ -29,7 +29,7 @@ export const education: Education[] = [
   {
     id: 'uwaterloo-biology',
     institution: 'University of Waterloo',
-    degree: 'Bachelor of Science (BSc) in Biology',
+    degree: 'Bachelor of Science - BSc (Biology)',
     field: 'Honours Biology',
     location: { 
       label: 'Waterloo, ON',
@@ -47,7 +47,7 @@ export const education: Education[] = [
       'President\'s Scholarship of Distinction',
       'Purdy Crawford Undergraduate Scholarship',
       'Science Memorial Scholarship',
-      'Excelling Standing Term Distinctions (8 terms)',
+      'Excellent Standing Term Distinctions (8 terms)',
       'IDEAL Scholar Recipient',
     ],
   },

@@ -25,9 +25,9 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors">
+            <span className="text-xl md:text-2xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors">
               {research.title}
-            </h3>
+            </span>
             <div className="flex items-center gap-2 mt-1 text-[#5C6B5C]">
               {research.lab?.url ? (
                 <a

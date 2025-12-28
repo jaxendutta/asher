@@ -23,7 +23,7 @@ export default function AboutPage() {
               {SITECONFIG.name}
             </span>
             <p className="text-xl text-[#5C6B5C]">
-              {SITECONFIG.role} at {SITECONFIG.org}
+              {SITECONFIG.role}
             </p>
             <div className="flex justify-center gap-2 text-sm">
               <Badge variant="info">{SITECONFIG.role}</Badge>

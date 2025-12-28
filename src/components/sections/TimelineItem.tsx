@@ -39,9 +39,9 @@ export function TimelineItem({ education, isLast = false, className }: TimelineI
         <div className="flex-1 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-[#B8D4BE] p-6 hover:shadow-lg hover:border-[#6B8E23] transition-all duration-300">
           {/* Header */}
           <div className="mb-4">
-            <h3 className="text-xl font-bold text-[#1A3A2A] mb-1">
+            <span className="text-xl md:text-2xl font-semibold text-[#1A3A2A] mb-1">
               {education.degree}
-            </h3>
+            </span>
             <div className="text-[#2D5F3F] font-semibold mb-2">
               {education.institution}
             </div>
@@ -96,7 +96,7 @@ export function TimelineItem({ education, isLast = false, className }: TimelineI
           {education.awards && education.awards.length > 0 && (
             <div>
               <div className="text-sm font-semibold text-[#2D5F3F] mb-2">
-                Awards & Honors
+                Awards + Honours
               </div>
               <div className="flex flex-wrap gap-2">
                 {education.awards.map((award, index) => (

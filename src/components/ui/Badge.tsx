@@ -18,7 +18,7 @@ export function Badge({
   children,
   ...props
 }: BadgeProps) {
-  const baseStyles = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
+  const baseStyles = 'inline-flex items-center justify-center rounded-xl font-medium transition-colors';
   
   const variants = {
     default: 'bg-[#B8D4BE] text-[#1A3A2A]',
