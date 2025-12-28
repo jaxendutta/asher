@@ -6,6 +6,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { fleur_de_leah } from '@/lib/fonts';
 import { HiArrowRight } from 'react-icons/hi';
 import { Button } from '@/components/ui/Button';
 import { Plant } from '@/components/garden/Plant';
@@ -24,53 +25,30 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
         {/* Main heading with animation */}
-        <div className="mb-8 animate-fadeIn">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-[#1A3A2A] mb-4">
-            Welcome to the
-            <span className="block text-[#2D5F3F] mt-2">Research Garden</span>
-          </h1>
-          <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl mb-6">
-            <span>🌱</span>
-            <p className="text-[#5C6B5C] font-medium">Asher Kim</p>
-            <span>🌱</span>
-          </div>
+        <div className="animate-fadeIn text-[#1A3A2A] flex flex-col gap-2">
+          <span className="text-lg sm:text-xl md:text-2xl">WELCOME TO</span>
+          <span className={`${fleur_de_leah.className} block text-[#2D5F3F] mt-2 mb-8 text-6xl sm:text-7xl md:text-8xl`}>Asher's Garden</span>
         </div>
 
         {/* Subtitle */}
-        <div className="mb-12 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-          <p className="text-xl sm:text-2xl text-[#2C3E2C] max-w-3xl mx-auto leading-relaxed">
-            Biology student at the University of Waterloo exploring{' '}
-            <span className="text-[#2D5F3F] font-semibold">plant biology</span>,{' '}
-            <span className="text-[#2D5F3F] font-semibold">protein localization</span>, and{' '}
-            <span className="text-[#2D5F3F] font-semibold">molecular mechanisms</span>
+        <div className="animate-fadeIn" style={{ animationDelay: '0.2s' }}>
+          <p className="text-base sm:text-lg md:text-xl text-[#2C3E2C] max-w-3xl mx-auto leading-relaxed uppercase">
+            MSc Candidate at the University of Ottawa
           </p>
-        </div>
-
-        {/* Research interests pills */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-fadeIn" style={{ animationDelay: '0.4s' }}>
-          <div className="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border-2 border-[#B8D4BE] text-sm font-medium text-[#2D5F3F]">
-            🧬 Abiotic Stress Responses
-          </div>
-          <div className="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border-2 border-[#B8D4BE] text-sm font-medium text-[#2D5F3F]">
-            🦠 Plant-Microbe Interactions
-          </div>
-          <div className="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border-2 border-[#B8D4BE] text-sm font-medium text-[#2D5F3F]">
-            🔬 Protein Subcellular Transport
-          </div>
         </div>
 
         {/* CTA Buttons */}
         <div className="flex flex-wrap justify-center gap-4 animate-fadeIn" style={{ animationDelay: '0.6s' }}>
           <Link href="/research">
-            <Button variant="primary" size="lg" className="flex flex-row gap-1.5">
+            <Button variant="primary" size="md" className="flex flex-row gap-1.5">
               Explore My Research
               <HiArrowRight className="w-5 h-5" />
             </Button>
           </Link>
           <Link href="/about">
-            <Button variant="outline" size="lg" className="flex flex-row gap-1.5">
+            <Button variant="outline" size="md" className="flex flex-row gap-1.5">
               About Me
               <HiArrowRight className="w-5 h-5" />
             </Button>
