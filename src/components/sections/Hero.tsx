@@ -12,7 +12,7 @@ import { Plant } from '@/components/garden/Plant';
 
 export function Hero() {
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FAFAF9] via-[#F4EBD0]/30 to-[#FAFAF9]">
+    <div className="h-full flex items-center justify-center overflow-hidden">
       {/* Decorative plants */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Plant type="tree" size="lg" className="absolute top-10 left-10 opacity-30" />
@@ -64,46 +64,19 @@ export function Hero() {
         {/* CTA Buttons */}
         <div className="flex flex-wrap justify-center gap-4 animate-fadeIn" style={{ animationDelay: '0.6s' }}>
           <Link href="/research">
-            <Button variant="primary" size="lg">
+            <Button variant="primary" size="lg" className="flex flex-row gap-1.5">
               Explore My Research
-              <HiArrowRight className="w-5 h-5 ml-2" />
+              <HiArrowRight className="w-5 h-5" />
             </Button>
           </Link>
           <Link href="/about">
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" className="flex flex-row gap-1.5">
               About Me
+              <HiArrowRight className="w-5 h-5" />
             </Button>
           </Link>
         </div>
-
-        {/* Scroll indicator */}
-        <div className="mt-16 animate-bounce">
-          <div className="inline-flex flex-col items-center gap-2 text-[#5C6B5C]">
-            <span className="text-sm">Scroll to explore</span>
-            <div className="w-6 h-10 border-2 border-[#9DB8A1] rounded-full flex items-start justify-center p-2">
-              <div className="w-1.5 h-3 bg-[#6B8E23] rounded-full animate-pulse" />
-            </div>
-          </div>
-        </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.8s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
     </div>
   );
 }
