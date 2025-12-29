@@ -1,6 +1,5 @@
 import { Section } from '@/components/ui/Section';
 import { TalkCard } from '@/components/sections/TalkCard';
-import { BloomOnHover } from '@/components/interactive/BloomOnHover';
 import { talks } from '@/data/talks';
 
 export default function TalksPage() {
@@ -14,9 +13,7 @@ export default function TalksPage() {
         {talks.length > 0 ? (
           <div className="space-y-6">
             {talks.map((talk, index) => (
-              <BloomOnHover key={talk.id} delay={index * 100}>
-                <TalkCard talk={talk} />
-              </BloomOnHover>
+              <TalkCard key={talk.id} talk={talk} />
             ))}
           </div>
         ) : (

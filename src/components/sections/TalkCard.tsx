@@ -39,7 +39,7 @@ export function TalkCard({ talk, className }: TalkCardProps) {
       <CardContent className="space-y-4">
         <div className="flex-1 space-y-1">
           <div className="flex flex-row">
-            <span className="text-xl md:text-2xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors mb-2">
+            <span className="text-lg md:text-xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors mb-2">
               {talk.event.label}
             </span>
             <div className="ml-auto flex flex-row flex-shrink-0 justify-center">

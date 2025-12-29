@@ -3,7 +3,6 @@ import { fleur_de_leah } from '@/lib/fonts';
 import { Section } from '@/components/ui/Section';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { BloomOnHover } from '@/components/interactive/BloomOnHover';
 import { Plant } from '@/components/garden/Plant';
 import { skills, researchInterests } from '@/data/skills';
 import { SITECONFIG } from '@/data/siteConfig';
@@ -51,23 +50,21 @@ export default function AboutPage() {
       >
         <div className="grid md:grid-cols-3 gap-6">
           {researchInterests.map((interest, index) => (
-            <BloomOnHover key={interest.id} delay={index * 150}>
-              <Card variant="bordered" className="h-full">
-                <CardHeader>
-                  <div className="text-4xl mb-3">
-                    {interest.icon === 'plant' && '🌿'}
-                    {interest.icon === 'bacteria' && '🦠'}
-                    {interest.icon === 'cell' && '🔬'}
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1A3A2A] mb-2">
-                    {interest.title}
-                  </h3>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-[#5C6B5C]">{interest.description}</p>
-                </CardContent>
-              </Card>
-            </BloomOnHover>
+            <Card variant="bordered" className="h-full">
+              <CardHeader>
+                <div className="text-4xl mb-3">
+                  {interest.icon === 'plant' && '🌿'}
+                  {interest.icon === 'bacteria' && '🦠'}
+                  {interest.icon === 'cell' && '🔬'}
+                </div>
+                <h3 className="text-xl font-bold text-[#1A3A2A] mb-2">
+                  {interest.title}
+                </h3>
+              </CardHeader>
+              <CardContent>
+                <p className="text-[#5C6B5C]">{interest.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </Section>
@@ -76,25 +73,23 @@ export default function AboutPage() {
       <Section title="Skills & Expertise">
         <div className="space-y-8">
           {skills.map((skillCategory, index) => (
-            <BloomOnHover key={skillCategory.category} delay={index * 100}>
-              <Card variant="bordered">
-                <CardHeader>
-                  <h3 className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
-                    <Plant type="leaf" size="sm" animated={false} />
-                    {skillCategory.category}
-                  </h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {skillCategory.items.map((skill) => (
-                      <Badge key={skill} variant="default">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </BloomOnHover>
+            <Card variant="bordered">
+              <CardHeader>
+                <h3 className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
+                  <Plant type="leaf" size="sm" animated={false} />
+                  {skillCategory.category}
+                </h3>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {skillCategory.items.map((skill) => (
+                    <Badge key={skill} variant="default">
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </Section>

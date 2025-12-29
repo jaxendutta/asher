@@ -1,6 +1,5 @@
 import { Section } from '@/components/ui/Section';
 import { PublicationCard } from '@/components/sections/PublicationCard';
-import { BloomOnHover } from '@/components/interactive/BloomOnHover';
 import { publications } from '@/data/publications';
 
 export default function PublicationsPage() {
@@ -13,10 +12,8 @@ export default function PublicationsPage() {
       >
         {publications.length > 0 ? (
           <div className="space-y-6">
-            {publications.map((publication, index) => (
-              <BloomOnHover key={publication.id} delay={index * 100}>
-                <PublicationCard publication={publication} />
-              </BloomOnHover>
+            {publications.map((publication) => (
+              <PublicationCard key={publication.id} publication={publication} />
             ))}
           </div>
         ) : (
