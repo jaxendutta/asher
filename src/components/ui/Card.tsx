@@ -18,7 +18,7 @@ export function Card({
   children,
   ...props
 }: CardProps) {
-  const baseStyles = 'rounded-3xl transition-all duration-300';
+  const baseStyles = 'p-2 rounded-3xl transition-all duration-300';
   
   const variants = {
     default: 'bg-white/80 backdrop-blur-sm',
@@ -27,7 +27,7 @@ export function Card({
   };
   
   const hoverStyles = hoverable
-    ? 'hover:shadow-lg hover:scale-[1.02] hover:bg-white cursor-pointer'
+    ? 'hover:shadow-lg hover:scale-[1.01] hover:bg-white'
     : '';
   
   return (
@@ -47,7 +47,7 @@ export function CardHeader({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('p-6 pb-3', className)} {...props}>
+    <div className={cn('p-4 pb-1', className)} {...props}>
       {children}
     </div>
   );

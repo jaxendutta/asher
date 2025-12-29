@@ -1,3 +1,5 @@
+import { IconType } from "react-icons";
+
 export interface textLink {
   label: string;
   url?: string;
@@ -70,6 +72,7 @@ export interface Talk {
 
 export interface Skill {
   category: string;
+  icon?: IconType;
   items: string[];
 }
 

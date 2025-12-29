@@ -24,7 +24,7 @@ export class TilemapRenderer {
 
     // Simple grass tilemap for outdoor areas
     createGrassTilemap(): PIXI.Container {
-        const { width, height, tileSize, tilesetType } = this.config;
+        const { width, height, tileSize } = this.config;
 
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
@@ -40,29 +40,44 @@ export class TilemapRenderer {
         return this.container;
     }
 
-    private createGrassTile(x: number, y: number, tileSize: number): PIXI.Sprite | null {
+    private createGrassTile(x: number, y: number, tileSize: number): PIXI.Sprite | PIXI.Graphics {
         // Get grass tile texture from outdoor tileset
-        // Assuming grass tiles are at specific coordinates in the tileset
-        // You'll need to adjust these based on your actual tileset
+        // Looking at Pokemon tilesets, grass is usually in the top-left area
+        // We'll use a variety of grass tile positions for natural look
 
-        const texture = assetLoader.getTileTexture('outdoor', 0, 0, tileSize, tileSize);
+        const grassTilePositions = [
+            { x: 0, y: 0 },    // Basic grass
+            { x: 16, y: 0 },   // Grass variation 1
+            { x: 32, y: 0 },   // Grass variation 2
+            { x: 48, y: 0 },   // Grass variation 3
+        ];
 
-        if (!texture) {
-            // Fallback: create simple grass tile
-            const graphics = new PIXI.Graphics();
-            graphics.rect(0, 0, tileSize, tileSize);
+        // Pick a grass tile based on position for variety
+        const tileIndex = (x + y) % grassTilePositions.length;
+        const tilePos = grassTilePositions[tileIndex];
 
-            // Alternate grass colors for variety
-            const grassColors = [0x6B8E23, 0x7A9B2F, 0x5A7D1B];
-            const colorIndex = (x + y) % grassColors.length;
-            graphics.fill(grassColors[colorIndex]);
+        const texture = assetLoader.getTileTexture(
+            'outdoor',
+            tilePos.x,
+            tilePos.y,
+            tileSize,
+            tileSize
+        );
 
-            const sprite = new PIXI.Sprite();
-            sprite.addChild(graphics);
-            return sprite;
+        if (texture) {
+            return new PIXI.Sprite(texture);
         }
 
-        return new PIXI.Sprite(texture);
+        // Fallback: create simple colored grass tile
+        const graphics = new PIXI.Graphics();
+        graphics.rect(0, 0, tileSize, tileSize);
+
+        // Alternate grass colors for variety
+        const grassColors = [0x6B8E23, 0x7A9B2F, 0x5A7D1B, 0x6B9328];
+        const colorIndex = (x + y) % grassColors.length;
+        graphics.fill(grassColors[colorIndex]);
+
+        return graphics;
     }
 
     // Create a path through the grass

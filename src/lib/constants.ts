@@ -110,11 +110,11 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/contact',
     gardenIcon: '🍃', // leaves
   },
-  {
+  /*{
     label: 'Explore Garden',
     href: '/explore',
     gardenIcon: '🎮', // game controller
-  },
+  },*/
 ];
 
 // ---------- Animation Durations ----------

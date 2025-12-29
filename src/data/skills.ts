@@ -3,10 +3,16 @@
 // ============================================================================
 
 import type { Skill } from '@/types';
+import { BsJournalCode } from 'react-icons/bs';
+import { GiLabCoat, GiMaterialsScience } from 'react-icons/gi';
+import { LiaLaptopCodeSolid } from 'react-icons/lia';
+import { SiScilab } from 'react-icons/si';
+import { TbDatabaseSmile } from 'react-icons/tb';
 
 export const skills: Skill[] = [
   {
     category: 'Laboratory Skills',
+    icon: GiMaterialsScience,
     items: [
       'Chlorophyll Extraction',
       'PCR',
@@ -20,6 +26,7 @@ export const skills: Skill[] = [
   },
   {
     category: 'Technical Skills',
+    icon: LiaLaptopCodeSolid,
     items: [
       'R',
       'IBM SPSS',
@@ -28,6 +35,7 @@ export const skills: Skill[] = [
   },
   {
     category: 'Databases & Bioinformatics',
+    icon: TbDatabaseSmile,
     items: [
       'PDB',
       'AlphaFold',

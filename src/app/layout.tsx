@@ -1,7 +1,5 @@
 import './globals.css';
 import { Header } from '@/components/layout/Header';
-import { CatCursor } from '@/components/cat/CatCursor';
-import { CatCompanion } from '@/components/cat/CatCompanion';
 import { inter } from '@/lib/fonts';
 
 export default function RootLayout({
@@ -12,22 +10,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="min-h-screen flex flex-col">
-        {/* Custom cat cursor */}
-        <CatCursor />
-
-        {/* Cat companion */}
-        <CatCompanion position="right" />
-
         {/* Header */}
         <Header />
 
         {/* Main content */}
-        <main className="h-full flex flex-1 justify-center items-center mt-20">
+        <main className="z-10 h-full max-w-7xl mx-auto  my-20 px-3 md:px-6 lg:px-6 flex flex-1 justify-center items-center">
           {children}
         </main>
 
-        {/* Garden background effect */}
-        <div className="garden-background" />
+        {/* Grass Tile Overlay */}
+        <div className="fixed inset-0 pointer-events-none bg-[url('/images/tilesets/grass_tile.jpg')] bg-repeat bg-[length:300px_180px] brightness-100 z--10" />
       </body>
     </html>
   );

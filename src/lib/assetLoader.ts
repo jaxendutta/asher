@@ -59,26 +59,26 @@ export class AssetLoader {
             const mainCharacter = await PIXI.Assets.load('/images/characters/main.png');
             this.assets.characters.main = mainCharacter;
 
-            // Load object sprites - books
+            // Load object sprites - books (using underscore naming)
             try {
-                const book1 = await PIXI.Assets.load('/images/objects/book1.png');
+                const book1 = await PIXI.Assets.load('/images/objects/book_01.png');
                 this.assets.objects.book1 = book1;
             } catch (e) {
-                console.log('Book1 not found, using fallback');
+                console.log('Book 1 not found, using fallback');
             }
 
             try {
-                const book2 = await PIXI.Assets.load('/images/objects/book2.png');
+                const book2 = await PIXI.Assets.load('/images/objects/book_02.png');
                 this.assets.objects.book2 = book2;
             } catch (e) {
-                console.log('Book2 not found, using fallback');
+                console.log('Book 2 not found, using fallback');
             }
 
             try {
-                const book3 = await PIXI.Assets.load('/images/objects/book3.png');
+                const book3 = await PIXI.Assets.load('/images/objects/book_03.png');
                 this.assets.objects.book3 = book3;
             } catch (e) {
-                console.log('Book3 not found, using fallback');
+                console.log('Book 3 not found, using fallback');
             }
 
             console.log('✅ All assets loaded successfully!');

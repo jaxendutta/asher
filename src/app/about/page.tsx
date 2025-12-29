@@ -1,98 +1,83 @@
 import Link from 'next/link';
 import { fleur_de_leah } from '@/lib/fonts';
-import { Section } from '@/components/ui/Section';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Plant } from '@/components/garden/Plant';
 import { skills, researchInterests } from '@/data/skills';
 import { SITECONFIG } from '@/data/siteConfig';
 import { FiLink } from 'react-icons/fi';
+import { PiMicroscope } from 'react-icons/pi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter min-h-screen flex flex-col gap-6">
       {/* Hero Section */}
-      <Section className="pt-24 pb-12">
+      <Card className="my-12 px-6 py-10 opacity-95 bg-gradient-to-br from-[#D9EAD3] to-[#F4EBD0]/70">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8 space-y-6">
-            <p className="text-base text-[#5C6B5C] uppercase">
+          <div className="space-y-6">
+            <p className="text-base uppercase">
               About Me
             </p>
-            <span className={`${fleur_de_leah.className} text-6xl md:text-7xl font-bold text-[#1A3A2A]`}>
+            <p className={`${fleur_de_leah.className} text-6xl md:text-7xl font-bold text-[#2D5F3F] mb-4`}>
               {SITECONFIG.name}
-            </span>
-            <p className="text-xl text-[#5C6B5C]">
-              {SITECONFIG.role}
             </p>
-            <div className="flex justify-center gap-2 text-sm">
-              <Badge variant="info">{SITECONFIG.role}</Badge>
+            <div className="flex flex-wrap justify-center gap-2 text-sm">
+              <Badge className="whitespace-nowrap">{SITECONFIG.role}</Badge>
               <Link href={`https://www.google.com/maps/search/${encodeURIComponent(SITECONFIG.org)}`} target="_blank" rel="noopener noreferrer">
-                <Badge variant="warning" className="flex flex-row gap-1">
+                <Badge className="flex flex-row gap-1 whitespace-nowrap">
                   {SITECONFIG.org}
                   <FiLink className="inline rounded-full p-0.25" />
                 </Badge>
               </Link>
               <Link href={SITECONFIG.supervisor.url} target="_blank" rel="noopener noreferrer">
-                <Badge variant="default" className="flex flex-row gap-1">
-                  Under {SITECONFIG.supervisor.name}
+                <Badge className="flex flex-row gap-1 whitespace-nowrap">
+                  Supervisor: {SITECONFIG.supervisor.name}
                   <FiLink className="inline rounded-full p-0.25" />
                 </Badge>
               </Link>
             </div>
           </div>
         </div>
-      </Section>
+      </Card>
 
       {/* Research Interests */}
-      <Section
-        title="Research Interests"
-        subtitle="Areas of focus in plant biology and molecular research"
-      >
-        <div className="grid md:grid-cols-3 gap-6">
-          {researchInterests.map((interest, index) => (
-            <Card variant="bordered" className="h-full">
-              <CardHeader>
-                <div className="text-4xl mb-3">
-                  {interest.icon === 'plant' && '🌿'}
-                  {interest.icon === 'bacteria' && '🦠'}
-                  {interest.icon === 'cell' && '🔬'}
-                </div>
-                <h3 className="text-xl font-bold text-[#1A3A2A] mb-2">
-                  {interest.title}
-                </h3>
-              </CardHeader>
-              <CardContent>
-                <p className="text-[#5C6B5C]">{interest.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      <Card hoverable variant="bordered">
+        <CardHeader>
+          <span className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
+            <PiMicroscope /> Research Interests
+          </span>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {researchInterests.map((interest) => (
+              <Badge key={interest.id} variant="default">
+                {interest.title}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Skills */}
-      <Section title="Skills & Expertise">
-        <div className="space-y-8">
-          {skills.map((skillCategory, index) => (
-            <Card variant="bordered">
-              <CardHeader>
-                <h3 className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
-                  <Plant type="leaf" size="sm" animated={false} />
-                  {skillCategory.category}
-                </h3>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {skillCategory.items.map((skill) => (
-                    <Badge key={skill} variant="default">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      {skills.map((skillCategory, index) => (
+      <Card hoverable variant="bordered" key={index}>
+        <CardHeader>
+          <span className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
+            {skillCategory.icon && <skillCategory.icon />}
+            {skillCategory.category}
+          </span>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {skillCategory.items.map((skill) => (
+              <Badge key={skill} variant="default">
+                {skill}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      ))}
     </div>
   );
 }
