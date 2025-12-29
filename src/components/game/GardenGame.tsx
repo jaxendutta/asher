@@ -80,39 +80,41 @@ export function GardenGame() {
 
         // Create interactive objects from game world
         const objects: PIXI.Container[] = [];
-        currentAreaRef.current.objects.forEach((obj: any, index: number) => {
-            const sprite: PIXI.Container = createInteractiveObject(obj as any, index);
-            sprite.on('pointerdown', () => {
+        currentAreaRef.current.objects.forEach((obj, index) => {
+            const sprite = createInteractiveObject(obj, index);
+
+            // Create and store the interaction callback
+            const callback = () => {
                 setCurrentDialog({
                     title: obj.title,
                     content: obj.content
                 });
-            });
+            };
+
+            sprite.on('pointerdown', callback);
+            (sprite as any).interactionCallback = callback; // Store for spacebar access
+
             stage.addChild(sprite);
             objects.push(sprite);
         });
 
         // Create NPCs
         const npcs: PIXI.Container[] = [];
-        currentAreaRef.current.npcs.forEach((npcData) => {
-            const npc: PIXI.Container = createNPC({
-                id: npcData.id,
-                sprite: npcData.sprite,
-                x: npcData.x,
-                y: npcData.y,
-                name: npcData.name,
-                currentDialogue: 0, // Set to the index of the first dialogue
-                dialogues: npcData.dialogues
-            });
-            let dialogueIndex: number = 0;
+        currentAreaRef.current.npcs.forEach(npcData => {
+            const npc = createNPC(npcData);
+            let dialogueIndex = 0;
 
-            npc.on('pointerdown', () => {
+            // Create and store the interaction callback
+            const callback = () => {
                 setCurrentDialog({
                     title: npcData.name,
                     content: npcData.dialogues[dialogueIndex]
                 });
                 dialogueIndex = (dialogueIndex + 1) % npcData.dialogues.length;
-            });
+            };
+
+            npc.on('pointerdown', callback);
+            (npc as any).interactionCallback = callback; // Store for spacebar access
 
             stage.addChild(npc);
             npcs.push(npc);
@@ -200,6 +202,9 @@ export function GardenGame() {
         const keys: { [key: string]: boolean } = {};
         const speed = 4;
 
+        // Store interaction callbacks for each object
+        const interactionCallbacks = new Map<PIXI.Container, () => void>();
+
         window.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
         });
@@ -232,18 +237,21 @@ export function GardenGame() {
             }
 
             // Check for nearby interactive objects
-            let nearestObject: string | null = null;
+            let nearestObject: PIXI.Container | null = null;
             let minDistance = Infinity;
 
-            [...objects, ...npcs].forEach((obj, index) => {
+            [...objects, ...npcs].forEach((obj) => {
                 const distance = distanceBetween(player.x, player.y, obj.x, obj.y);
                 if (distance < 80 && distance < minDistance) {
                     minDistance = distance;
-                    nearestObject = `object-${index}`;
+                    nearestObject = obj;
                 }
             });
 
-            setNearbyObject(nearestObject);
+            setNearbyObject(nearestObject ? 'nearby' : null);
+
+            // Store reference to nearest object for spacebar interaction
+            (player as any).nearestInteractable = nearestObject;
 
             // Animate NPCs
             npcs.forEach(npc => {
@@ -253,18 +261,18 @@ export function GardenGame() {
             });
         });
 
-        // Space bar to interact
+        // Space bar to interact - using stored callbacks
         window.addEventListener('keydown', (e) => {
-            if (e.key === ' ' && nearbyObject) {
+            if (e.key === ' ') {
                 e.preventDefault();
-                // Find and trigger the nearest object
-                const allObjects = [...objects, ...npcs];
-                allObjects.forEach((obj, index) => {
-                    const distance = distanceBetween(player.x, player.y, obj.x, obj.y);
-                    if (distance < 80) {
-                        obj.emit('pointerdown');
+                const nearestObj = (player as any).nearestInteractable as PIXI.Container;
+                if (nearestObj) {
+                    // Get the stored callback and call it
+                    const callback = (nearestObj as any).interactionCallback;
+                    if (callback) {
+                        callback();
                     }
-                });
+                }
             }
         });
     };
