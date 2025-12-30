@@ -4,7 +4,7 @@ import { talks } from '@/data/talks';
 
 export default function TalksPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter">
       <Section
         title="Talks & Presentations"
         subtitle="Sharing research findings and scientific insights"

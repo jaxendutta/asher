@@ -4,7 +4,7 @@ import { education } from '@/data/education';
 
 export default function EducationPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter">
       <Section
         title="Education"
         subtitle="Academic journey in plant biology and molecular research"

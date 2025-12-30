@@ -4,10 +4,10 @@
 // Header Component
 // ============================================================================
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HiHome, HiMenu, HiX } from 'react-icons/hi';
+import { HiHome, HiX } from 'react-icons/hi';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/lib/constants';
 import { SITECONFIG } from '@/data/siteConfig';
@@ -20,21 +20,15 @@ export function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
     window.addEventListener('click', handleClickOutside);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('click', handleClickOutside);
     };
   }, []);

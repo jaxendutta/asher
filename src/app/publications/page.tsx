@@ -4,7 +4,7 @@ import { publications } from '@/data/publications';
 
 export default function PublicationsPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter">
       <Section
         title="Publications & Written Work"
         subtitle="Research contributions and academic writing"

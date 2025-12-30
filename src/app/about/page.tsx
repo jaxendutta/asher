@@ -9,7 +9,7 @@ import { PiMicroscope } from 'react-icons/pi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter min-h-[100dvh] flex flex-col gap-6">
+    <div className="page-enter flex flex-col gap-6">
       {/* Hero Section */}
       <Card className="my-12 px-6 py-10 opacity-95 bg-gradient-to-br from-[#D9EAD3] to-[#F4EBD0]/70">
         <div className="max-w-4xl mx-auto text-center">

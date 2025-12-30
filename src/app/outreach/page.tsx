@@ -4,7 +4,7 @@ import { outreachExperience } from '@/data/outreach';
 
 export default function OutreachPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter">
       <Section
         title="Outreach & Teaching"
         subtitle="Sharing the joy of science with students and communities"

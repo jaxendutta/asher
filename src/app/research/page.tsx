@@ -4,7 +4,7 @@ import { researchExperience } from '@/data/research';
 
 export default function ResearchPage() {
   return (
-    <div className="page-enter min-h-screen">
+    <div className="page-enter">
       <Section
         title="Research"
         subtitle="Exploring plant biology through hands-on research and fieldwork"

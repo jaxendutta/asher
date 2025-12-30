@@ -7,7 +7,7 @@ import Link from 'next/dist/client/link';
 
 export default function ContactPage() {
     return (
-        <div className="page-enter min-h-screen">
+        <div className="page-enter">
             <Section
                 title="Get in Touch"
                 subtitle="Let's collaborate on research or discuss opportunities"
@@ -29,11 +29,11 @@ export default function ContactPage() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center gap-4">
+                            <div className="flex flex-wrap justify-center items-center gap-2">
                                 {Object.values(SOCIAL_LINKS).map((item) => (
-                                    <Link href={item.url} key={item.label} target="_blank" rel="noopener noreferrer" className="w-full max-w-md">
-                                        <Button variant="primary" size="lg" className="w-full flex items-center justify-center gap-2">
-                                            <item.icon className="w-5 h-5 mr-2" />
+                                    <Link href={item.url} key={item.label} target="_blank" rel="noopener noreferrer">
+                                        <Button variant="primary" className="w-full flex gap-1 items-center justify-center gap-2 font-light" >
+                                            <item.icon />
                                             {item.label}
                                         </Button>
                                     </Link>
@@ -41,65 +41,6 @@ export default function ContactPage() {
                             </div>
                         </CardContent>
                     </Card>
-
-                    {/* Additional info cards */}
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <Card variant="bordered" className="h-full">
-                            <CardHeader>
-                                <div className="flex items-center gap-3 mb-3">
-                                    <Plant type="flower" size="sm" animated={false} />
-                                    <h4 className="text-xl font-bold text-[#2D5F3F]">
-                                        Research Collaboration
-                                    </h4>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-[#5C6B5C] mb-4">
-                                    Interested in collaborating on plant biology research,
-                                    protein localization studies, or molecular biology projects.
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    <span className="px-3 py-1 bg-[#B8D4BE]/30 rounded-full text-xs text-[#2D5F3F]">
-                                        Plant Biology
-                                    </span>
-                                    <span className="px-3 py-1 bg-[#B8D4BE]/30 rounded-full text-xs text-[#2D5F3F]">
-                                        Molecular Research
-                                    </span>
-                                    <span className="px-3 py-1 bg-[#B8D4BE]/30 rounded-full text-xs text-[#2D5F3F]">
-                                        Data Analysis
-                                    </span>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card variant="bordered" className="h-full">
-                            <CardHeader>
-                                <div className="flex items-center gap-3 mb-3">
-                                    <Plant type="sprout" size="sm" animated={false} />
-                                    <h4 className="text-xl font-bold text-[#2D5F3F]">
-                                        Science Outreach
-                                    </h4>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-[#5C6B5C] mb-4">
-                                    Available for science communication, educational workshops,
-                                    and community outreach programs.
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    <span className="px-3 py-1 bg-[#B8D4BE]/30 rounded-full text-xs text-[#2D5F3F]">
-                                        Workshops
-                                    </span>
-                                    <span className="px-3 py-1 bg-[#B8D4BE]/30 rounded-full text-xs text-[#2D5F3F]">
-                                        Tutoring
-                                    </span>
-                                    <span className="px-3 py-1 bg-[#B8D4BE]/30 rounded-full text-xs text-[#2D5F3F]">
-                                        Public Speaking
-                                    </span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
                 </div>
             </Section>
         </div>
