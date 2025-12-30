@@ -6,6 +6,31 @@ import type { ResearchExperience } from '@/types';
 
 export const outreachExperience: ResearchExperience[] = [
   {
+    id: 'uO-ta',
+    title: 'Teaching Assistant',
+    org: {
+      label: 'University of Ottawa',
+      url: 'https://uottawa.ca/',
+    },
+    lab: {
+      label: 'Department of Biology',
+      url: 'https://uottawa.ca/biology',
+    },
+    location: {
+      label: 'Ottawa, ON',
+      url: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
+    },
+    startDate: new Date('2025-09-01'),
+    description: [
+      'Assisted in teaching undergraduate biology laboratory courses, facilitating experiments, and grading assignments of over 100 students',
+    ],
+    highlights: [
+      'BIO 2137 (F25): Introduction to Plant Science',
+      'BIO 1137 (W26): Introduction to Cell and Molecular Biology',
+    ],
+    skills: ['Teaching', 'Science Communication', 'Laboratory Management', 'Mentorship'],
+  },
+  {
     id: 'chemistry-lab-assistant',
     title: 'Chemistry Lab Assistant',
     org: {
@@ -99,7 +124,7 @@ export const outreachExperience: ResearchExperience[] = [
     },
     startDate: new Date('2022-09-01'),
     endDate: new Date('2023-04-30'),
-    description: ['Provided one-on-one tutoring in cell biology and human physiology to student athletes'],
+    description: ['Provided one-on-one tutoring in cell biology and human physiology to 20+ student athletes'],
     highlights: [
       'Tutored student athletes in cell biology',
       'Provided personalized instruction in human physiology',

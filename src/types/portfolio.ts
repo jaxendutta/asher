@@ -33,8 +33,8 @@ export interface Education {
 export interface ResearchExperience {
   id: string;
   title: string;
-  org?: textLink
-  lab?: textLink
+  org: textLink;
+  lab?: textLink;
   location: Location;
   startDate: Date;
   endDate?: Date;

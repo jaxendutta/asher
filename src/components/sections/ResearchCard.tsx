@@ -4,13 +4,13 @@
 // Research Card Component
 // ============================================================================
 
-import React from 'react';
 import Link from 'next/link';
-import { HiExternalLink, HiCalendar, HiLocationMarker } from 'react-icons/hi';
+import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
 import type { ResearchExperience } from '@/types';
+import { CgArrowTopRight } from 'react-icons/cg';
 
 interface ResearchCardProps {
   research: ResearchExperience;
@@ -23,47 +23,58 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
   return (
     <Card hoverable variant="bordered" className={cn('group', className)}>
       <CardHeader>
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <span className="text-lg md:text-xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors">
-              {research.title}
-            </span>
-            <div className="flex items-center gap-2 mt-1 text-[#5C6B5C]">
-              {research.lab?.url ? (
-                <a
-                  href={research.org?.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 hover:text-[#2D5F3F] transition-colors"
-                >
-                  <span className="font-medium">{research.org?.label}</span>
-                  <HiExternalLink className="w-4 h-4" />
-                </a>
-              ) : (
-                <span className="font-medium">{research.org?.label}</span>
-              )}
-              {research.lab && (
-                <>
-                  <span>•</span>
-                  <span className="text-sm">{research.lab?.label}</span>
-                </>
-              )}
-            </div>
-          </div>
+        <div className="text-lg md:text-xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors">
+          {research.title}
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-[#5C6B5C]">
-          <div className="flex items-center gap-1">
-            <HiCalendar className="w-4 h-4" />
+        <div className="flex w-full items-center gap-3 mt-3 text-sm text-[#5C6B5C]">
+          {research.org.url ? (
+            <Link
+              href={research.org.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
+            >
+              <Badge className="flex flex-1 items-center gap-2 mt-1">
+                <span className="font-medium">{research.org.label}</span>
+                <CgArrowTopRight className="w-4 h-4" />
+              </Badge>
+            </Link>
+          ) : (
+            <Badge className="flex flex-1 items-center gap-2 mt-1">{research.org.label}</Badge>
+          )}
+
+          {research.lab && (
+            research.lab.url ? (
+              <Link
+                href={research.lab.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
+              >
+                <Badge className="flex flex-1 items-center gap-2 mt-1">
+                  <span className="text-sm">{research.lab.label}</span>
+                  <CgArrowTopRight className="w-4 h-4" />
+                </Badge>
+              </Link>
+            ) : (
+              <Badge className="flex flex-1 items-center gap-2 mt-1">
+                <span className="text-sm">{research.lab.label}</span>
+              </Badge>
+            ))}
+        </div>
+
+        <div className="flex w-full items-center gap-3 mt-3 text-sm text-[#5C6B5C]">
+          <Badge className="flex items-center gap-2 text-xs flex-1">
+            <HiCalendar />
             <span>
               {formatDate(research.startDate)} - {formatDate(research.endDate || 'present')}
             </span>
-            {duration && <span className="text-xs ml-1">({duration})</span>}
-          </div>
-          <Link href={research.location.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
-            <HiLocationMarker className="w-4 h-4" />
+          </Badge>
+          <Badge className="flex items-center gap-1 text-xs flex-shrink-0">
+            <HiLocationMarker />
             <span>{research.location.label}</span>
-          </Link>
+          </Badge>
         </div>
       </CardHeader>
 
@@ -71,10 +82,10 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
         <p className="text-[#2C3E2C] mb-3">{research.description}</p>
 
         {research.highlights && research.highlights.length > 0 && (
-          <ul className="space-y-2 mb-4">
+          <ul className="space-y-1 mb-4">
             {research.highlights.map((highlight, index) => (
               <li key={index} className="flex gap-2 text-sm text-[#5C6B5C]">
-                <span className="text-[#6B8E23] mt-1">🌱</span>
+                <span>🌱</span>
                 <span>{highlight}</span>
               </li>
             ))}
