@@ -27,7 +27,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
           {research.title}
         </div>
 
-        <div className="flex w-full items-center gap-3 mt-3 text-sm text-[#5C6B5C]">
+        <div className="flex w-full items-center gap-3 mt-3">
           {research.org.url ? (
             <Link
               href={research.org.url}
@@ -36,8 +36,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
               className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
             >
               <Badge className="flex flex-1 items-center gap-2 mt-1">
-                <span className="font-medium">{research.org.label}</span>
-                <CgArrowTopRight className="w-4 h-4 flex-shrink-0" />
+                <span className="font-medium">{research.org.label} 🡥</span>
               </Badge>
             </Link>
           ) : (
@@ -53,8 +52,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
                 className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
               >
                 <Badge className="flex flex-1 items-center gap-2 mt-1">
-                  <span className="text-sm">{research.lab.label}</span>
-                  <CgArrowTopRight className="w-4 h-4" />
+                  <span className="text-sm">{research.lab.label} 🡥</span>
                 </Badge>
               </Link>
             ) : (
@@ -64,7 +62,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
             ))}
         </div>
 
-        <div className="flex w-full items-center gap-3 mt-3 text-sm text-[#5C6B5C]">
+        <div className="flex w-full items-center gap-3 mt-3">
           <Badge className="flex items-center gap-2 text-xs flex-1">
             <HiCalendar />
             <span>
