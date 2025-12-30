@@ -37,7 +37,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
             >
               <Badge className="flex flex-1 items-center gap-2 mt-1">
                 <span className="font-medium">{research.org.label}</span>
-                <CgArrowTopRight className="w-4 h-4" />
+                <CgArrowTopRight className="w-4 h-4 flex-shrink-0" />
               </Badge>
             </Link>
           ) : (
