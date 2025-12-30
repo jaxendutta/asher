@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { fleur_de_leah } from '@/lib/fonts';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Plant } from '@/components/garden/Plant';
 import { skills, researchInterests } from '@/data/skills';
 import { SITECONFIG } from '@/data/siteConfig';
 import { FiLink } from 'react-icons/fi';
@@ -10,7 +9,7 @@ import { PiMicroscope } from 'react-icons/pi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter min-h-screen flex flex-col gap-6">
+    <div className="page-enter min-h-[100dvh] flex flex-col gap-6">
       {/* Hero Section */}
       <Card className="my-12 px-6 py-10 opacity-95 bg-gradient-to-br from-[#D9EAD3] to-[#F4EBD0]/70">
         <div className="max-w-4xl mx-auto text-center">
