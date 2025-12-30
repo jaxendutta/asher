@@ -39,6 +39,14 @@ export function Header() {
     };
   }, []);
 
+  const handleMouseEnter = () => {
+    setIsMenuOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
       <nav className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
@@ -52,7 +60,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="items-center" ref={menuRef}>
+          <div className="items-center" ref={menuRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="group px-6 my-2 text-sm font-medium text-[#2D5F3F] bg-white/60 backdrop-blur-lg hover:bg-white/100 transition-colors flex items-center gap-2"
