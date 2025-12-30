@@ -29,7 +29,7 @@ export default function OutreachPage() {
 
         <div className="space-y-6">
           {outreachExperience.map((experience, index) => (
-            <ResearchCard research={experience} />
+            <ResearchCard research={experience} key={index} />
           ))}
         </div>
 

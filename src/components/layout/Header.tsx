@@ -4,7 +4,7 @@
 // Header Component
 // ============================================================================
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HiHome, HiMenu, HiX } from 'react-icons/hi';
@@ -17,14 +17,26 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('click', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('click', handleClickOutside);
+    };
   }, []);
 
   return (
@@ -40,7 +52,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="items-center">
+          <div className="items-center" ref={menuRef}>
             <Button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="group px-6 my-2 text-sm font-medium text-[#2D5F3F] bg-white/60 backdrop-blur-lg hover:bg-white/100 transition-colors flex items-center gap-2"
