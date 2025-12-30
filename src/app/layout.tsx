@@ -25,7 +25,12 @@ export default function RootLayout({
         </main>
 
         {/* Grass Tile Overlay */}
-        <div className="fixed inset-0 pointer-events-none bg-[url('/images/tilesets/grass_tile.jpg')] bg-repeat bg-[length:300px_180px] brightness-100 z--10" />
+        <div className="fixed inset-0 pointer-events-none bg-[url('/images/tilesets/grass_tile.jpg')] bg-repeat bg-[length:300px_180px] brightness-100 z--10" style={{
+          top: 'calc(-1 * env(safe-area-inset-top))',
+          bottom: 'calc(-1 * env(safe-area-inset-bottom))',
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)'
+        }} />
       </body>
     </html>
   );
