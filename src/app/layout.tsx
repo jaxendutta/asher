@@ -14,23 +14,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="min-h-screen flex flex-col">
+    <html lang="en" className={inter.className} style={{
+      backgroundImage: "url('/images/tilesets/grass_tile.jpg')",
+      backgroundRepeat: 'repeat',
+      backgroundSize: '300px 180px',
+      backgroundColor: 'var(--color-off-white)'
+    }}>
+      <body className="min-h-screen flex flex-col" style={{
+        backgroundColor: 'transparent',
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+        paddingLeft: 'env(safe-area-inset-left)',
+        paddingRight: 'env(safe-area-inset-right)'
+      }}>
         {/* Header */}
         <Header />
 
         {/* Main content */}
-        <main className="z-10 h-full max-w-7xl mx-auto  my-20 px-3 md:px-6 lg:px-6 flex flex-1 justify-center items-center">
+        <main className="z-10 h-full max-w-7xl mx-auto my-20 px-3 md:px-6 lg:px-6 flex flex-1 justify-center items-center">
           {children}
         </main>
-
-        {/* Grass Tile Overlay */}
-        <div className="fixed inset-0 pointer-events-none bg-[url('/images/tilesets/grass_tile.jpg')] bg-repeat bg-[length:300px_180px] brightness-100 z--10" style={{
-          top: 'calc(-1 * env(safe-area-inset-top))',
-          bottom: 'calc(-1 * env(safe-area-inset-bottom))',
-          paddingTop: 'env(safe-area-inset-top)',
-          paddingBottom: 'env(safe-area-inset-bottom)'
-        }} />
       </body>
     </html>
   );
