@@ -10,6 +10,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
 import type { ResearchExperience } from '@/types';
+import { MdOutlineArrowOutward } from 'react-icons/md';
 
 interface ResearchCardProps {
   research: ResearchExperience;
@@ -26,7 +27,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
           {research.title}
         </div>
 
-        <div className="flex w-full items-center gap-3 mt-3">
+        <div className="flex flex-wrap w-full items-center gap-2 mt-3">
           {research.org.url ? (
             <Link
               href={research.org.url}
@@ -35,7 +36,8 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
               className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
             >
               <Badge className="flex flex-1 items-center gap-2 mt-1">
-                <span className="font-medium">{research.org.label} 🡥</span>
+                <span className="whitespace-nowrap">{research.org.label}</span>
+                <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
               </Badge>
             </Link>
           ) : (
@@ -50,13 +52,14 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
                 rel="noopener noreferrer"
                 className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
               >
-                <Badge className="flex flex-1 items-center gap-2 mt-1">
-                  <span className="text-sm">{research.lab.label} 🡥</span>
+                <Badge className="flex flex-1 items-center gap-1">
+                  <span className="text-sm whitespace-nowrap">{research.lab.label}</span>
+                  <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
                 </Badge>
               </Link>
             ) : (
-              <Badge className="flex flex-1 items-center gap-2 mt-1">
-                <span className="text-sm">{research.lab.label}</span>
+              <Badge className="flex flex-1 items-center gap-1">
+                <span className="text-sm whitespace-nowrap">{research.lab.label}</span>
               </Badge>
             ))}
         </div>
