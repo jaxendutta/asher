@@ -3,23 +3,14 @@
 // ============================================================================
 
 import type { ResearchExperience } from '@/types';
+import { orgs, subOrgs } from './orgs';
 
 export const outreachExperience: ResearchExperience[] = [
   {
     id: 'uO-ta',
     title: 'Teaching Assistant',
-    org: {
-      label: 'University of Ottawa',
-      url: 'https://uottawa.ca/',
-    },
-    lab: {
-      label: 'Department of Biology',
-      url: 'https://uottawa.ca/biology',
-    },
-    location: {
-      label: 'Ottawa, ON',
-      url: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
-    },
+    org: orgs.uO,
+    subOrg: subOrgs.uO_Bio,
     startDate: new Date('2025-09-01'),
     description: [
       'Assisted in teaching undergraduate biology laboratory courses, facilitating experiments, and grading assignments of over 100 students',
@@ -33,18 +24,8 @@ export const outreachExperience: ResearchExperience[] = [
   {
     id: 'chemistry-lab-assistant',
     title: 'Chemistry Lab Assistant',
-    org: {
-      label: 'University of Waterloo',
-      url: 'https://uwaterloo.ca/',
-    },
-    lab: {
-      label: 'Chemistry Community Outreach',
-      url: 'https://uwaterloo.ca/chemistry/community-outreach',
-    },
-    location: {
-      label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/mji2ifRt1fGHFAAy7',
-    },
+    org: orgs.uO,
+    subOrg: subOrgs.uO_ChemOutreach,
     startDate: new Date('2023-12-01'),
     endDate: new Date('2024-04-30'),
     description: [
@@ -60,18 +41,8 @@ export const outreachExperience: ResearchExperience[] = [
   {
     id: 'earth-sciences-museum',
     title: 'Earth Sciences Museum Assistant',
-    org: {
-      label: 'University of Waterloo',
-      url: 'https://uwaterloo.ca/',
-    },
-    lab: {
-      label: 'Earth Sciences Museum',
-      url: 'https://maps.app.goo.gl/1p1v97g3qjScq5ac7',
-    },
-    location: {
-      label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/mji2ifRt1fGHFAAy7',
-    },
+    org: orgs.UW,
+    subOrg: subOrgs.UW_ESMuseum,
     startDate: new Date('2024-02-01'),
     endDate: new Date('2024-02-28'),
     description: ['Educated museum visitors about environmental issues including microplastics'],
@@ -85,18 +56,8 @@ export const outreachExperience: ResearchExperience[] = [
   {
     id: 'science-open-house',
     title: 'Science Open-House Assistant',
-    org: {
-      label: 'University of Waterloo',
-      url: 'https://uwaterloo.ca/',
-    },
-    lab: {
-      label: 'Science Community Outreach',
-      url: 'https://uwaterloo.ca/science/outreach',
-    },
-    location: {
-      label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/mji2ifRt1fGHFAAy7',
-    },
+    org: orgs.UW,
+    subOrg: subOrgs.UW_SciOutreach,
     startDate: new Date('2023-10-01'),
     endDate: new Date('2023-10-31'),
     description: ['Presented interactive physics demonstrations at the Science Open House'],
@@ -110,18 +71,8 @@ export const outreachExperience: ResearchExperience[] = [
   {
     id: 'biology-mentor',
     title: 'Biology Mentor',
-    org: {
-      label: 'University of Waterloo',
-      url: 'https://uwaterloo.ca/',
-    },
-    lab: {
-      label: 'Department of Athletics',
-      url: 'https://athletics.uwaterloo.ca/',
-    },
-    location: {
-      label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/T8kE2nqfSSDsZjqHA',
-    },
+    org: orgs.UW,
+    subOrg: subOrgs.UW_Athletics,
     startDate: new Date('2022-09-01'),
     endDate: new Date('2023-04-30'),
     description: ['Provided one-on-one tutoring in cell biology and human physiology to 20+ student athletes'],

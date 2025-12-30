@@ -68,7 +68,7 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {skillCategory.items.map((skill) => (
+            {skillCategory.items.sort().map((skill) => (
               <Badge key={skill} variant="default">
                 {skill}
               </Badge>

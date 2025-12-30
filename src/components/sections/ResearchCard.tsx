@@ -44,22 +44,22 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
             <Badge className="flex flex-1 items-center gap-2 mt-1">{research.org.label}</Badge>
           )}
 
-          {research.lab && (
-            research.lab.url ? (
+          {research.subOrg && (
+            research.subOrg.url ? (
               <Link
-                href={research.lab.url}
+                href={research.subOrg.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
               >
                 <Badge className="flex flex-1 items-center gap-1">
-                  <span className="text-sm whitespace-nowrap">{research.lab.label}</span>
+                  <span className="text-sm whitespace-nowrap">{research.subOrg.label}</span>
                   <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
                 </Badge>
               </Link>
             ) : (
               <Badge className="flex flex-1 items-center gap-1">
-                <span className="text-sm whitespace-nowrap">{research.lab.label}</span>
+                <span className="text-sm whitespace-nowrap">{research.subOrg.label}</span>
               </Badge>
             ))}
         </div>
@@ -73,7 +73,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
           </Badge>
           <Badge className="flex items-center gap-1 text-xs flex-shrink-0">
             <HiLocationMarker />
-            <span>{research.location.label}</span>
+            <span>{research.org.city}, {research.org.province || research.org.country}</span>
           </Badge>
         </div>
       </CardHeader>
@@ -112,7 +112,21 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
       </CardContent>
 
       {research.skills && research.skills.length > 0 && (
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-2">
+          {research.subOrg?.lead && (
+            <Link
+              href={research.subOrg.lead.url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
+            >
+              <Badge className="flex flex-1 justify-between items-center gap-2 mt-1 text-xs pl-1.5 pr-2">
+                <span className="whitespace-nowrap bg-white/40 rounded-full px-2">Supervisor</span>
+                <span className="whitespace-nowrap">{research.subOrg.lead.label}</span>
+                <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
+              </Badge>
+            </Link>
+          )}
           <div className="flex flex-wrap gap-2">
             {research.skills.map((skill, index) => (
               <Badge key={index} variant="default" size="sm">

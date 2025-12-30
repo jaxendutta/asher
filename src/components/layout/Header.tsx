@@ -53,7 +53,7 @@ export function Header() {
             </Button>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Navigation */}
           <div className="items-center" ref={menuRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Button
               onClick={() => setIsMenuOpen(!isMenuOpen)}

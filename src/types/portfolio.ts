@@ -7,7 +7,7 @@ export interface textLink {
 
 export interface Location {
   label: string;
-  url: string;
+  mapUrl: string;
   embedUrl?: string;
 }
 
@@ -33,15 +33,15 @@ export interface Education {
 export interface ResearchExperience {
   id: string;
   title: string;
-  org: textLink;
-  lab?: textLink;
-  location: Location;
+  org: Org;
+  subOrg?: SubOrg;
   startDate: Date;
   endDate?: Date;
   description: string[];
   skills?: string[];
   supervisor?: textLink;
   highlights?: string[];
+  links?: textLink[];
 }
 
 export interface Publication {
@@ -119,3 +119,16 @@ export interface NavItem {
   href: string;
   gardenIcon: string; // emoji representation
 };
+
+export interface Org extends Location {
+  url?: string;
+  city?: string;
+  province?: string;
+  country?: string;
+}
+
+export interface SubOrg extends textLink {
+  url?: string;
+  lead?: textLink;
+  parentOrg: Org;
+}

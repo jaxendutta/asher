@@ -26,7 +26,7 @@ export const talks: Talk[] = [
     },
     location: {
       label: 'University of Ottawa',
-      url: 'https://www.uottawa.ca/en',
+      mapUrl: 'https://www.uottawa.ca/en',
     },
     date: new Date('2025-11-12'),
     type: 'Presentation',
@@ -44,7 +44,7 @@ export const talks: Talk[] = [
     },
     location: {
       label: 'Federation Hall, University of Waterloo',
-      url: 'https://maps.app.goo.gl/4WbZj6hH7zwjEBn28',
+      mapUrl: 'https://maps.app.goo.gl/4WbZj6hH7zwjEBn28',
     },
     date: new Date('2025-04-16'),
     type: 'Poster',
@@ -61,7 +61,7 @@ export const talks: Talk[] = [
     },
     location: {
       label: 'Science Teaching Complex, University of Waterloo',
-      url: 'https://maps.app.goo.gl/XCzJ63TDJ7dPrNxk8',
+      mapUrl: 'https://maps.app.goo.gl/XCzJ63TDJ7dPrNxk8',
     },
     date: new Date('2025-04-04'),
     type: 'Poster',

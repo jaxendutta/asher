@@ -53,7 +53,7 @@ export function TimelineItem({ education, isLast = false, className }: TimelineI
                   {formatDate(education.startDate)} - {formatDate(education.endDate)}
                 </span>
               </div>
-              <Link href={education.location.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
+              <Link href={education.location.mapUrl} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
                 <HiLocationMarker className="w-4 h-4" />
                 <span>{education.location.label}</span>
               </Link>

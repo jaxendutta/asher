@@ -63,7 +63,7 @@ export function TalkCard({ talk, className }: TalkCardProps) {
               <HiCalendar />
               <span>{(talk.date.toLocaleDateString())}</span>
             </Badge>
-            <Link href={talk.location.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
+            <Link href={talk.location.mapUrl} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
               <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
                 <HiLocationMarker />
                 <span>{talk.location.label}</span>

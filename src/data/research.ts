@@ -3,23 +3,14 @@
 // ============================================================================
 
 import type { ResearchExperience } from '@/types';
+import { orgs, subOrgs } from './orgs';
 
 export const researchExperience: ResearchExperience[] = [
   {
     id: 'uwaterloo-wetland-lab',
     title: 'Research / Lab Assistant',
-    org: {
-      label: 'University of Waterloo',
-      url: 'https://uwaterloo.ca/',
-    },
-    lab: {
-      label: 'Waterloo Wetland Lab',
-      url: 'https://uwaterloo.ca/rooney-lab/',
-    },
-    location: {
-      label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/pYyr39iEYtgsiitY6',
-    },
+    org: orgs.UW,
+    subOrg: subOrgs.UW_WetlandLab,
     startDate: new Date('2024-02-01'),
     endDate: new Date('2024-12-01'),
     description: ['Contributed to carbon stock analysis following herbicide treatment of invasive Phragmites australis'],
@@ -37,18 +28,8 @@ export const researchExperience: ResearchExperience[] = [
   {
     id: 'uwaterloo-bird-collision',
     title: 'Bird-Window Collision Monitor',
-    org: {
-      label: 'University of Waterloo',
-      url: 'https://uwaterloo.ca/',
-    },
-    lab: {
-      label: 'Sustainability Office',
-      url: 'https://uwaterloo.ca/sustainability/',
-    },
-    location: {
-      label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/LhwgY2zCUa8suxCu9',
-    },
+    org: orgs.UW,
+    subOrg: subOrgs.UW_Sustainability,
     startDate: new Date('2024-09-01'),
     endDate: new Date('2024-11-01'),
     description: ['Documented bird-window collisions to support funding for bird-safe window designs'],

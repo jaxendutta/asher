@@ -18,7 +18,7 @@ export function Hero() {
       {/* Main heading with animation */}
       <div className="animate-fadeIn text-[#1A3A2A] flex flex-col gap-2">
         <span className="text-lg sm:text-xl md:text-2xl">WELCOME TO</span>
-        <span className={`${fleur_de_leah.className} block text-[#2D5F3F] mt-2 mb-6 text-6xl sm:text-7xl md:text-8xl`}>{SITECONFIG.siteName}</span>
+        <span className={`${fleur_de_leah.className} block text-[#2D5F3F] my-2 text-6xl sm:text-7xl md:text-8xl`}>{SITECONFIG.siteName}</span>
       </div>
 
       {/* Subtitle */}

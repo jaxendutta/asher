@@ -12,7 +12,7 @@ export const education: Education[] = [
     field: 'Honours Biology',
     location: { 
       label: 'Ottawa, ON',
-      url: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
+      mapUrl: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
     },
     startDate: new Date('2025-09-01'),
     endDate: new Date('2027-04-01'),
@@ -33,7 +33,7 @@ export const education: Education[] = [
     field: 'Honours Biology',
     location: { 
       label: 'Waterloo, ON',
-      url: 'https://maps.app.goo.gl/KMeDQQRfvthmS6cH9',
+      mapUrl: 'https://maps.app.goo.gl/KMeDQQRfvthmS6cH9',
     },
     startDate: new Date('2021-09-01'),
     endDate: new Date('2025-04-01'),

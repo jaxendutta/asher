@@ -128,7 +128,7 @@ export const laboratory: GameArea = {
     x: 200 + (index * 250),
     y: 350,
     title: research.title,
-    content: `${research.org} - ${research.lab}\n\n${research.description}\n\n${research.highlights?.join('\n• ') || ''}`,
+    content: `${research.org} - ${research.subOrg}\n\n${research.description}\n\n${research.highlights?.join('\n• ') || ''}`,
   })),
   
   npcs: [
