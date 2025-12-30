@@ -34,6 +34,10 @@ body {
   color: var(--color-charcoal);
 }
 
+html, body {
+  background-color: transparent !important;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
