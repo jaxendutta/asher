@@ -10,7 +10,6 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
 import type { ResearchExperience } from '@/types';
-import { CgArrowTopRight } from 'react-icons/cg';
 
 interface ResearchCardProps {
   research: ResearchExperience;
