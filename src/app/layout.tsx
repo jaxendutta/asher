@@ -17,8 +17,7 @@ export default function RootLayout({
     <html lang="en" className={inter.className} style={{
       backgroundImage: "url('/images/tilesets/grass_tile.jpg')",
       backgroundRepeat: 'repeat',
-      backgroundSize: '300px 180px',
-      backgroundColor: 'var(--color-off-white)'
+      backgroundSize: '300px 180px'
     }}>
       <body className="min-h-screen flex flex-col">
         {/* Header */}
