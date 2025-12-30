@@ -14,11 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className} style={{
-      backgroundImage: "url('/images/tilesets/grass_tile.jpg')",
-      backgroundRepeat: 'repeat',
-      backgroundSize: '300px 180px'
-    }}>
+    <html lang="en" className={inter.className}>
       <body className="min-h-screen flex flex-col">
         {/* Header */}
         <Header />
