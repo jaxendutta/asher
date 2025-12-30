@@ -8,7 +8,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HiHome, HiMenu, HiX } from 'react-icons/hi';
-import { fleur_de_leah } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/lib/constants';
 import { SITECONFIG } from '@/data/siteConfig';
@@ -16,7 +15,7 @@ import { Button } from '@/components/ui/Button';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -42,13 +41,16 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="items-center">
-            <div className="relative group space-y-1">
-              <Button className="group px-6 py-2 text-sm font-medium text-[#2D5F3F] bg-white/60 backdrop-blur-lg hover:bg-white/100 transition-colors flex items-center gap-2">
-                {NAV_ITEMS.find((item) => item.href === pathname)?.label || 'Menu'}
-                <HiX className="w-4 h-4 rotate-45" />
-              </Button>
+            <Button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="group px-6 my-2 text-sm font-medium text-[#2D5F3F] bg-white/60 backdrop-blur-lg hover:bg-white/100 transition-colors flex items-center gap-2"
+            >
+              {NAV_ITEMS.find((item) => item.href === pathname)?.label || 'Menu'}
+              <HiX className={`w-4 h-4 transition-transform ${isMenuOpen ? '' : 'rotate-45'}`} />
+            </Button>
 
-              <div className="absolute right-0 w-48 rounded-3xl bg-white/40 backdrop-blur-lg border border-white/20 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-1 z-50">
+            {isMenuOpen && (
+              <div className="absolute right-2 w-48 rounded-3xl bg-white/40 backdrop-blur-lg border border-white/20 shadow-lg transition-all duration-200 py-1 z-50">
                 {NAV_ITEMS.map((item) => {
                   const isActive = pathname === item.href;
                   return (
@@ -67,7 +69,7 @@ export function Header() {
                   );
                 })}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </nav>
