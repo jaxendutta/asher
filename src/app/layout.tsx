@@ -20,13 +20,7 @@ export default function RootLayout({
       backgroundSize: '300px 180px',
       backgroundColor: 'var(--color-off-white)'
     }}>
-      <body className="min-h-screen flex flex-col" style={{
-        backgroundColor: 'transparent',
-        paddingTop: 'env(safe-area-inset-top)',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        paddingLeft: 'env(safe-area-inset-left)',
-        paddingRight: 'env(safe-area-inset-right)'
-      }}>
+      <body className="min-h-screen flex flex-col">
         {/* Header */}
         <Header />
 
