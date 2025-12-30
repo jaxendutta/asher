@@ -1,11 +1,36 @@
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { inter } from '@/lib/fonts';
+import { Metadata } from 'next';
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
 }
+
+export const metadata: Metadata = {
+  title: 'Asher Kim',
+  description: 'Portfolio of Asher Kim, specializing in plant biology and molecular research.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/images/favicon.png',
+    apple: '/images/favicon.png',
+  },
+  openGraph: {
+    title: 'Asher Kim - Plant Biologist & Molecular Researcher',
+    description: 'Portfolio of Asher Kim, specializing in plant biology and molecular research.',
+    url: 'https://asherk.vercel.app',
+    siteName: 'Asher Kim',
+    images: [
+      {
+        url: '/images/tilesets/grass_tile.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Asher Kim',
+      },
+    ],
+  },
+};
 
 export default function RootLayout({
   children,
