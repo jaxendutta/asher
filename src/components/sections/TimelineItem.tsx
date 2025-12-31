@@ -76,7 +76,7 @@ export function TimelineItem({ education, className }: TimelineItemProps) {
                 <div className="text-xs text-[#5C6B5C]">
                   <Link href={education.thesis.supervisor.url} target="_blank" className="text-[#2D5F3F]">
                     <Badge className="flex justify-between items-center gap-1 text-xs pl-1 pr-2">
-                      <span className="bg-white/80 px-1.5 rounded-full">Supervisor</span>
+                      <span className="bg-white/40 px-1.5 rounded-full">Supervisor</span>
                       <span>{education.thesis.supervisor.label}</span>
                       <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
                     </Badge>

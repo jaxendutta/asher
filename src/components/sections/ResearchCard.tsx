@@ -114,7 +114,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
             className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
           >
             <Badge className="flex flex-1 justify-between items-center gap-2 text-xs pl-1 pr-2">
-              <span className="whitespace-nowrap bg-white/40 rounded-full px-2">Supervisor</span>
+              <span className="bg-white/40 rounded-full px-2">Supervisor</span>
               <span className="whitespace-nowrap">{research.subOrg.lead.label}</span>
               <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
             </Badge>
