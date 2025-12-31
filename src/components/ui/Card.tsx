@@ -59,7 +59,7 @@ export function CardContent({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('px-6 py-4', className)} {...props}>
+    <div className={cn('px-4 md:px-6 py-4', className)} {...props}>
       {children}
     </div>
   );
