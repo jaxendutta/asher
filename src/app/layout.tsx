@@ -17,15 +17,13 @@ export const metadata: Metadata = {
     apple: '/images/favicon.png',
   },
   openGraph: {
-    title: 'Asher Kim - Plant Biologist & Molecular Researcher',
+    title: 'Asher Kim',
     description: 'Portfolio of Asher Kim, specializing in plant biology and molecular research.',
     url: 'https://asherk.vercel.app',
     siteName: 'Asher Kim',
     images: [
       {
-        url: '/images/tilesets/grass_tile.jpg',
-        width: 1200,
-        height: 630,
+        url: '/images/og.png',
         alt: 'Asher Kim',
       },
     ],
