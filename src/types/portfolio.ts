@@ -91,28 +91,6 @@ export interface ResearchInterest {
   icon?: string;
 }
 
-export interface GardenTheme {
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    foreground: string;
-    muted: string;
-    border: string;
-  };
-  fonts: {
-    heading: string;
-    body: string;
-    mono: string;
-  };
-  animations: {
-    bloomDuration: number;
-    growthDuration: number;
-    transitionDuration: number;
-  };
-};
-
 export interface NavItem {
   label: string;
   href: string;
