@@ -2,7 +2,7 @@ import { IconType } from "react-icons";
 
 export interface textLink {
   label: string;
-  url?: string;
+  url: string;
 }
 
 export interface Location {
@@ -58,8 +58,8 @@ export interface Publication {
 
 export interface Talk {
   title: string;
-  event: textLink;
-  location: Location;
+  event: textLink & { shortLabel?: string };
+  host: Org;
   date: Date;
   type: 'Presentation' | 'Poster' | 'Seminar' | 'Workshop';
   description?: string;
@@ -120,14 +120,13 @@ export interface NavItem {
 };
 
 export interface Org extends Location {
-  url?: string;
-  city?: string;
-  province?: string;
-  country?: string;
+  url: string;
+  city: string;
+  province: string;
+  country: string;
 }
 
 export interface SubOrg extends textLink {
-  url?: string;
   lead?: textLink;
   parentOrg: Org;
 }

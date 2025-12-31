@@ -15,6 +15,7 @@ Example structure:
 },*/
 
 import type { Talk } from '@/types';
+import { orgs } from './orgs';
 
 export const talks: Record<string, Talk> = {
   uogradflix_2025_26: {
@@ -23,10 +24,7 @@ export const talks: Record<string, Talk> = {
       label: 'uOGRADflix 2025-2026',
       url: 'https://www.uottawa.ca/study/graduate-studies/uogradflix-competition',
     },
-    location: {
-      label: 'University of Ottawa',
-      mapUrl: 'https://www.uottawa.ca/en',
-    },
+    host: orgs.uOttawa,
     date: new Date('2025-11-12'),
     type: 'Presentation',
     video: [{
@@ -38,12 +36,10 @@ export const talks: Record<string, Talk> = {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
       label: '1st Pursuits in Applied and Theoretical Science (PATH) Symposium',
+      shortLabel: '1st PATH Symposium',
       url: 'https://uwaterloo.ca/science/events/pursuits-applied-and-theoretical-science-path-symposium'
     },
-    location: {
-      label: 'Federation Hall, University of Waterloo',
-      mapUrl: 'https://maps.app.goo.gl/4WbZj6hH7zwjEBn28',
-    },
+    host: orgs.UW,
     date: new Date('2025-04-16'),
     type: 'Poster',
     poster: {
@@ -54,12 +50,10 @@ export const talks: Record<string, Talk> = {
   uw_showcase_2025: {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
-      label: 'Biology Senior Honours Thesis: Poster Showcase',
+      label: 'Senior Honours Thesis Showcase',
+      url: 'https://uwaterloo.ca/biology/undergraduate-studies/biol-499-senior-honours-project'
     },
-    location: {
-      label: 'Science Teaching Complex, University of Waterloo',
-      mapUrl: 'https://maps.app.goo.gl/XCzJ63TDJ7dPrNxk8',
-    },
+    host: orgs.UW,
     date: new Date('2025-04-04'),
     type: 'Poster',
     poster: {

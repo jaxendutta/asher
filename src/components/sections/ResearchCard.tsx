@@ -93,51 +93,52 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
         )}
       </CardContent>
 
-      {research.skills && research.skills.length > 0 && (
-        <CardFooter className="flex flex-col gap-2">
-          {research.subOrg?.lead && (
-            <Link
-              href={research.subOrg.lead.url!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
-            >
-              <Badge className="flex flex-1 justify-between items-center gap-2 mt-1 text-xs pl-1 pr-2">
-                <span className="whitespace-nowrap bg-white/40 rounded-full px-2">Supervisor</span>
-                <span className="whitespace-nowrap">{research.subOrg.lead.label}</span>
-                <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
-              </Badge>
-            </Link>
-          )}
 
-          {research.talks && research.talks.length > 0 && (
-            <div className="flex flex-wrap w-full gap-2">
-              {Object.entries(research.talks).map(([id, talk]) => (
-                <Link
-                  href={`/talks#${id}`}
-                  key={id}
-                  rel="noopener noreferrer"
-                  className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
-                >
-                  <Badge className="flex flex-1 justify-between items-center gap-2 mt-1 text-xs pl-1 pr-2">
+      <CardFooter className="flex flex-col gap-2">
+        {research.subOrg?.lead && (
+          <Link
+            href={research.subOrg.lead.url!}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
+          >
+            <Badge className="flex flex-1 justify-between items-center gap-2 text-xs pl-1 pr-2">
+              <span className="whitespace-nowrap bg-white/40 rounded-full px-2">Supervisor</span>
+              <span className="whitespace-nowrap">{research.subOrg.lead.label}</span>
+              <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
+            </Badge>
+          </Link>
+        )}
+
+        {research.talks && research.talks.length > 0 && (
+          <div className="flex flex-wrap w-full gap-2">
+            {Object.entries(research.talks).sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([id, talk]) => (
+              <Link
+                href={`/talks#${id}`}
+                key={id}
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
+              >
+                <Badge className="flex flex-1 justify-between items-center gap-2 text-xs pl-1 pr-2">
+                  <div className="flex items-center gap-2">
                     <span className="whitespace-nowrap bg-white/40 rounded-full px-2">{talk.type}</span>
-                    <span>{talk.event.label}</span>
-                    <MdArrowForward className="w-4 h-4 inline flex-shrink-0" />
-                  </Badge>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-2">
-            {research.skills.map((skill, index) => (
-              <Badge key={index} variant="default" size="sm">
-                {skill}
-              </Badge>
+                    <span>{talk.event.shortLabel || talk.event.label}</span>
+                  </div>
+                  <MdArrowForward className="w-4 h-4 inline flex-shrink-0" />
+                </Badge>
+              </Link>
             ))}
           </div>
-        </CardFooter>
-      )}
+        )}
+
+        {research.skills && research.skills.length > 0 && (<div className="flex flex-wrap gap-2">
+          {research.skills.map((skill, index) => (
+            <Badge key={index} variant="default" size="sm">
+              {skill}
+            </Badge>
+          ))}
+        </div>)}
+      </CardFooter>
     </Card>
   );
 }
