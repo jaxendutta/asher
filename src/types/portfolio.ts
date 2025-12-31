@@ -1,4 +1,7 @@
 import { IconType } from "react-icons";
+import { people } from "@/data/orgs";
+
+type ValueOf<T> = T[keyof T];
 
 export interface textLink {
   label: string;
@@ -15,6 +18,7 @@ export interface Education {
   id: string;
   institution: string;
   degree: string;
+  degree_abbr?: string;
   field: string;
   location: Location;
   startDate: Date;
@@ -22,8 +26,7 @@ export interface Education {
   gpa?: string;
   thesis?: {
     title: string;
-    supervisor: string;
-    supervisorLink?: string;
+    supervisor: ValueOf<typeof people>;
   };
   awards?: string[];
   highlights?: string[];
@@ -56,12 +59,12 @@ export interface Publication {
   tags?: string[];
 }
 
-export interface Talk {
+export interface Presentation {
   title: string;
   event: textLink & { shortLabel?: string };
   host: Org;
   date: Date;
-  type: 'Presentation' | 'Poster' | 'Seminar' | 'Workshop';
+  type: 'Video' | 'Poster' | 'Seminar' | 'Workshop';
   description?: string;
   slides?: textLink[];
   video?: textLink[];

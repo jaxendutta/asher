@@ -9,19 +9,20 @@ import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
-import type { Talk } from '@/types';
+import type { Presentation } from '@/types';
 import { VscGlobe, VscFilePdf } from 'react-icons/vsc';
 import { RxVideo } from 'react-icons/rx';
+import { newsreader } from '@/lib/fonts';
 
 interface TalkCardProps {
-  talk: Talk;
+  talk: Presentation;
   className?: string;
 }
 
 export function TalkCard({ talk, className }: TalkCardProps) {
   const getTypeColor = () => {
     switch (talk.type) {
-      case 'Presentation':
+      case 'Video':
         return 'text-blue-600 bg-blue-100 border-blue-400';
       case 'Poster':
         return 'border-green-800/40 text-[#2D5F3F] bg-green-100';
@@ -61,7 +62,7 @@ export function TalkCard({ talk, className }: TalkCardProps) {
             </Badge>
             <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
               <HiCalendar />
-              <span>{(talk.date.toLocaleDateString())}</span>
+              <span>{(talk.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</span>
             </Badge>
             {talk.host && (<Link href={talk.host.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
               <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
@@ -73,7 +74,7 @@ export function TalkCard({ talk, className }: TalkCardProps) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors" dangerouslySetInnerHTML={{ __html: talk.title }} />
+          <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors italic ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
           {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
             {talk.description}
           </p>)}

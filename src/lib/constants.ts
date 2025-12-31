@@ -72,8 +72,8 @@ export const NAV_ITEMS: NavItem[] = [
     gardenIcon: '🌸', // cherry blossom
   },
   {
-    label: 'Talks',
-    href: '/talks',
+    label: 'Presentations',
+    href: '/presentations',
     gardenIcon: '🌺', // hibiscus
   },
   {

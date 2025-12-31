@@ -10,7 +10,7 @@ import { MdArrowForward, MdOutlineArrowOutward } from 'react-icons/md';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
-import type { Experience, Talk } from '@/types';
+import type { Experience, Presentation } from '@/types';
 import { talks } from '@/data/talks';
 
 
@@ -20,13 +20,13 @@ interface ResearchCardProps {
 }
 
 export function ResearchCard({ research, className }: ResearchCardProps) {
-  const talkData: Record<string, Talk> = research.talks ? research.talks.reduce((acc, key) => {
+  const talkData: Record<string, Presentation> = research.talks ? research.talks.reduce((acc, key) => {
     const talk = talks[key];
     if (talk) {
       acc[key] = talk;
     }
     return acc;
-  }, {} as Record<string, Talk>) : {};
+  }, {} as Record<string, Presentation>) : {};
 
   // Sort talks by date descending
   const sortedTalks = Object.entries(talkData).sort((a, b) => b[1].date.getTime() - a[1].date.getTime());

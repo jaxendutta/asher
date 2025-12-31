@@ -14,10 +14,10 @@ Example structure:
   slides: 'url-to-slides',
 },*/
 
-import type { Talk } from '@/types';
+import type { Presentation } from '@/types';
 import { orgs } from './orgs';
 
-export const talks: Record<string, Talk> = {
+export const talks: Record<string, Presentation> = {
   uogradflix_2025_26: {
   title: 'Alleviating Waterlogging Stress in Barley by Applying Plant Growth-Promoting Microbes (PGPMs)',
     event: {
@@ -26,7 +26,7 @@ export const talks: Record<string, Talk> = {
     },
     host: orgs.uOttawa,
     date: new Date('2025-11-12'),
-    type: 'Presentation',
+    type: 'Video',
     video: [{
       label: 'YouTube Video',
       url: 'https://youtu.be/Wrqo4ujlwKw',

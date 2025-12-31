@@ -22,7 +22,7 @@ export function Card({
   
   const variants = {
     default: 'bg-white/80 backdrop-blur-sm',
-    bordered: 'bg-white/60 backdrop-blur-sm border-2 border-[#B8D4BE]',
+    bordered: 'bg-white/80 backdrop-blur-sm border-2 border-[#B8D4BE]',
     elevated: 'bg-white shadow-md',
   };
   

@@ -64,7 +64,7 @@ export function Header() {
             </Button>
 
             {isMenuOpen && (
-              <div className="absolute right-2 w-48 rounded-3xl bg-white/40 backdrop-blur-lg border border-white/20 shadow-lg transition-all duration-200 py-1 z-50">
+              <div className="absolute right-2 rounded-3xl bg-white/40 backdrop-blur-lg border border-white/20 shadow-lg transition-all duration-200 py-1 z-50">
                 {NAV_ITEMS.map((item) => {
                   const isActive = pathname === item.href;
                   return (

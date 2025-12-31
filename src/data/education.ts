@@ -3,33 +3,34 @@
 // ============================================================================
 
 import type { Education } from '@/types';
+import { people } from './orgs';
 
 export const education: Education[] = [
   {
     id: 'uottawa-biology',
     institution: 'University of Ottawa',
-    degree: 'Master of Science - MSc (Biology)',
-    field: 'Honours Biology',
+    degree: 'Master of Science',
+    degree_abbr: 'MSc',
+    field: 'Biology',
     location: { 
       label: 'Ottawa, ON',
       mapUrl: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
     },
     startDate: new Date('2025-09-01'),
     endDate: new Date('2027-04-01'),
-    gpa: 'In progress',
     thesis: {
       title:'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
-      supervisor: 'Dr. Marina Cvetkovska',
-      supervisorLink: 'https://www.uottawa.ca/faculty-science/professors/marina-cvetkovska',
+      supervisor: people.marinaCvetkovska,
     },
     awards: [
       'President\'s Scholarship of Distinction',
     ],
   },
   {
-    id: 'uwaterloo-biology',
+    id: 'uw_biology',
     institution: 'University of Waterloo',
-    degree: 'Bachelor of Science - BSc (Biology)',
+    degree: 'Bachelor of Science',
+    degree_abbr: 'BSc',
     field: 'Honours Biology',
     location: { 
       label: 'Waterloo, ON',
@@ -40,8 +41,7 @@ export const education: Education[] = [
     gpa: '93/100',
     thesis: {
       title:'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
-      supervisor: 'Dr. Simon Chuong',
-      supervisorLink: 'https://uwaterloo.ca/biology/profile/schuong',
+      supervisor: people.simonChuong,
     },
     awards: [
       'President\'s Scholarship of Distinction',
