@@ -10,10 +10,10 @@ export default function TalksPage() {
         subtitle="Sharing research findings and scientific insights"
         centered
       >
-        {talks.length > 0 ? (
+        {Object.values(talks).length > 0 ? (
           <div className="space-y-6">
-            {talks.map((talk, index) => (
-              <TalkCard key={talk.id} talk={talk} />
+            {Object.entries(talks).map(([id, talk]) => (
+              <TalkCard key={id} talk={talk} />
             ))}
           </div>
         ) : (

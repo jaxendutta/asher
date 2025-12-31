@@ -25,7 +25,7 @@ export default function OutreachPage() {
         </div>
 
         <div className="space-y-6">
-          {outreachExperience.map((experience, index) => (
+          {Object.values(outreachExperience).map((experience, index) => (
             <ResearchCard research={experience} key={index} />
           ))}
         </div>

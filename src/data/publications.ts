@@ -4,8 +4,8 @@
 
 import type { Publication } from '@/types';
 
-export const publications: Publication[] = [
-  // Thesis
+export const publications: Record<string, Publication> = {
+  honours_thesis_2025:
   {
     id: 'honours-thesis-2025',
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
@@ -17,5 +17,4 @@ export const publications: Publication[] = [
     url: '/docs/asher-kim-thesis-honours-2025.pdf',
     tags: ['Protein Localization', 'GFP', 'Plant Biology', 'Molecular Biology'],
   },
-  // Add future publications here
-];
+};

@@ -9,11 +9,11 @@ import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
-import type { ResearchExperience } from '@/types';
-import { MdOutlineArrowOutward } from 'react-icons/md';
+import type { Experience } from '@/types';
+import { MdArrowForward, MdOutlineArrowOutward, MdOutlineArrowRight } from 'react-icons/md';
 
 interface ResearchCardProps {
-  research: ResearchExperience;
+  research: Experience;
   className?: string;
 }
 
@@ -79,35 +79,17 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
       </CardHeader>
 
       <CardContent>
-        <p className="text-[#2C3E2C] mb-3">{research.description}</p>
+        <p className="text-[#2C3E2C] mb-3 text-sm md:text-base">{research.description}</p>
 
         {research.highlights && research.highlights.length > 0 && (
-          <ul className="space-y-1 mb-4">
+          <ul className="space-y-1">
             {research.highlights.map((highlight, index) => (
-              <li key={index} className="flex gap-2 text-sm text-[#5C6B5C]">
+              <li key={index} className="flex gap-2 text-xs md:text-sm text-[#5C6B5C]">
                 <span>🌱</span>
                 <span>{highlight}</span>
               </li>
             ))}
           </ul>
-        )}
-
-        {research.supervisor && (
-          <div className="text-sm text-[#5C6B5C] mt-3">
-            <span className="font-medium">Supervisor: </span>
-            {research.supervisor.url ? (
-              <Link
-                href={research.supervisor.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#2D5F3F] hover:underline"
-              >
-                {research.supervisor.label}
-              </Link>
-            ) : (
-              <span>{research.supervisor.label}</span>
-            )}
-          </div>
         )}
       </CardContent>
 
@@ -120,13 +102,33 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
               rel="noopener noreferrer"
               className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
             >
-              <Badge className="flex flex-1 justify-between items-center gap-2 mt-1 text-xs pl-1.5 pr-2">
+              <Badge className="flex flex-1 justify-between items-center gap-2 mt-1 text-xs pl-1 pr-2">
                 <span className="whitespace-nowrap bg-white/40 rounded-full px-2">Supervisor</span>
                 <span className="whitespace-nowrap">{research.subOrg.lead.label}</span>
                 <MdOutlineArrowOutward className="w-4 h-4 inline flex-shrink-0" />
               </Badge>
             </Link>
           )}
+
+          {research.talks && research.talks.length > 0 && (
+            <div className="flex flex-wrap w-full gap-2">
+              {Object.entries(research.talks).map(([id, talk]) => (
+                <Link
+                  href={`/talks#${id}`}
+                  key={id}
+                  rel="noopener noreferrer"
+                  className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"
+                >
+                  <Badge className="flex flex-1 justify-between items-center gap-2 mt-1 text-xs pl-1 pr-2">
+                    <span className="whitespace-nowrap bg-white/40 rounded-full px-2">{talk.type}</span>
+                    <span>{talk.event.label}</span>
+                    <MdArrowForward className="w-4 h-4 inline flex-shrink-0" />
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-2">
             {research.skills.map((skill, index) => (
               <Badge key={index} variant="default" size="sm">

@@ -11,8 +11,8 @@ export default function ResearchPage() {
         centered
       >
         <div className="space-y-6">
-          {researchExperience.map((research, index) => (
-            <ResearchCard research={research} key={index} />
+          {Object.entries(researchExperience).map(([id, research]) => (
+            <ResearchCard research={research} key={id} />
           ))}
         </div>
       </Section>

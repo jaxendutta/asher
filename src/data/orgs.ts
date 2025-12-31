@@ -2,7 +2,7 @@
 // Organization Data
 // ============================================================================
 
-import type { Org, SubOrg } from '@/types';
+import type { Org, SubOrg, textLink } from '@/types';
 
 export const orgs: Record<string, Org> = {
     uO: {
@@ -21,7 +21,22 @@ export const orgs: Record<string, Org> = {
         province: 'ON',
         country: 'CA',
     }
-}
+};
+
+export const people: Record<string, textLink> = {
+    marinaCvetkovska: {
+        label: 'Dr. Marina Cvetkovska',
+        url: 'https://www.uottawa.ca/faculty-science/professors/marina-cvetkovska',
+    },
+    simonChuong: {
+        label: 'Dr. Simon D. X. Chuong',
+        url: 'https://uwaterloo.ca/biology/profile/schuong',
+    },
+    rebeccaRooney: {
+        label: 'Dr. Rebecca Rooney',
+        url: 'https://uwaterloo.ca/biology/profile/rrooney',
+    },
+};
 
 export const subOrgs: Record<string, SubOrg> = {
     uO_Bio: {
@@ -29,23 +44,32 @@ export const subOrgs: Record<string, SubOrg> = {
         url: 'https://uottawa.ca/biology',
         parentOrg: orgs.uO,
     },
+    uO_CvetkovskaLab: {
+        label: 'Cvetkovska Lab',
+        lead: people.marinaCvetkovska,
+        url: 'https://cvetkovskalab.weebly.com/',
+        parentOrg: orgs.uO,
+    },
     UW_Bio: {
         label: 'Department of Biology',
         url: 'https://uwaterloo.ca/biology',
         parentOrg: orgs.UW,
     },
+    UW_ChuongLab: {
+        label: 'Chuong Lab',
+        lead: people.simonChuong,
+        url: 'https://uwaterloo.ca/biology/profile/schuong',
+        parentOrg: orgs.UW,
+    },
     UW_WetlandLab: {
         label: 'Waterloo Wetland Laboratory',
-        lead: {
-            label: 'Dr. Rebecca Rooney',
-            url: 'https://uwaterloo.ca/biology/profile/rrooney',
-        },
+        lead: people.rebeccaRooney,
         url: 'https://uwaterloo.ca/rooney-lab/',
         parentOrg: orgs.UW,
     },
-    UW_Sustainability: {
-        label: 'Sustainability Office',
-        url: 'https://uwaterloo.ca/sustainability/',
+    UW_SER: {
+        label: 'Society of Ecological Restoration',
+        url: 'https://uwaterloo.ca/sustainability/news/supporting-bird-friendly-campus',
         parentOrg: orgs.UW,
     },
     UW_ChemOutreach: {
@@ -68,4 +92,4 @@ export const subOrgs: Record<string, SubOrg> = {
         url: 'https://uwaterloo.ca/athletics/',
         parentOrg: orgs.UW,
     },
-}
+};

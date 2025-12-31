@@ -10,10 +10,10 @@ export default function PublicationsPage() {
         subtitle="Research contributions and academic writing"
         centered
       >
-        {publications.length > 0 ? (
+        {Object.entries(publications).length > 0 ? (
           <div className="space-y-6">
-            {publications.map((publication) => (
-              <PublicationCard key={publication.id} publication={publication} />
+            {Object.entries(publications).map(([id, publication]) => (
+              <PublicationCard key={id} publication={publication} />
             ))}
           </div>
         ) : (

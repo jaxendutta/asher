@@ -1,25 +1,24 @@
 // ============================================================================
 // Talks & Presentations Data
 // ============================================================================
+/* Add presentations and talks here as they occur
+Example structure:
+{
+  id: 'presentation-id',
+  title: 'Presentation Title',
+  event: 'Conference Name',
+  location: 'Location',
+  date: 'YYYY-MM',
+  type: 'presentation',
+  description: 'Brief description',
+  slides: 'url-to-slides',
+},*/
 
 import type { Talk } from '@/types';
 
-export const talks: Talk[] = [
-  // Add presentations and talks here as they occur
-  // Example structure:
-  // {
-  //   id: 'presentation-id',
-  //   title: 'Presentation Title',
-  //   event: 'Conference Name',
-  //   location: 'Location',
-  //   date: 'YYYY-MM',
-  //   type: 'presentation',
-  //   description: 'Brief description',
-  //   slides: 'url-to-slides',
-  // },
-  {
-    id: 'uogradflix-2025-26',
-    title: 'Exploring the Subcellular Localization of Hydroperoxide Lyase I (At4g15440) in <i>Arabidopsis thaliana</i>',
+export const talks: Record<string, Talk> = {
+  uogradflix_2025_26: {
+  title: 'Alleviating Waterlogging Stress in Barley by Applying Plant Growth-Promoting Microbes (PGPMs)',
     event: {
       label: 'uOGRADflix 2025-2026',
       url: 'https://www.uottawa.ca/study/graduate-studies/uogradflix-competition',
@@ -35,8 +34,7 @@ export const talks: Talk[] = [
       url: 'https://youtu.be/Wrqo4ujlwKw',
     }],
   },
-  {
-    id: 'path-2025',
+  path_2025: {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
       label: '1st Pursuits in Applied and Theoretical Science (PATH) Symposium',
@@ -53,8 +51,7 @@ export const talks: Talk[] = [
       url: '/docs/asher-kim-poster-2025.pdf',
     },
   },
-  {
-    id: 'uw-showcase-2025',
+  uw_showcase_2025: {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
       label: 'Biology Senior Honours Thesis: Poster Showcase',
@@ -70,4 +67,4 @@ export const talks: Talk[] = [
       url: '/docs/asher-kim-poster-2025.pdf',
     },
   },
-];
+};

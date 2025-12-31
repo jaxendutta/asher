@@ -30,18 +30,18 @@ export interface Education {
   description?: string;
 }
 
-export interface ResearchExperience {
-  id: string;
+export interface Experience {
   title: string;
   org: Org;
   subOrg?: SubOrg;
   startDate: Date;
   endDate?: Date;
-  description: string[];
+  description: string;
   skills?: string[];
   supervisor?: textLink;
   highlights?: string[];
   links?: textLink[];
+  talks?: Talk[];
 }
 
 export interface Publication {
@@ -57,7 +57,6 @@ export interface Publication {
 }
 
 export interface Talk {
-  id: string;
   title: string;
   event: textLink;
   location: Location;
