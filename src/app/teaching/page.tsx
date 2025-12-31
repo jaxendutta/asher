@@ -6,7 +6,7 @@ export default function OutreachPage() {
   return (
     <div className="page-enter">
       <Section
-        title="Outreach & Teaching"
+        title="Teaching & Outreach"
         subtitle="Sharing the joy of science with students and communities"
         centered
       >

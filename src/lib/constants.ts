@@ -2,7 +2,7 @@
 // Constants and Configuration
 // ============================================================================
 
-import type { GardenTheme, NavItem } from '@/types';
+import type { NavItem } from '@/types';
 import { BsEnvelopeHeart, BsLinkedin, BsFileEarmarkText } from 'react-icons/bs';
 
 // ---------- Color Palette ----------
@@ -37,30 +37,6 @@ export const COLORS = {
   warning: '#F59E0B',
   error: '#EF4444',
 } as const;
-
-// ---------- Garden Theme ----------
-
-export const GARDEN_THEME: GardenTheme = {
-  colors: {
-    primary: COLORS.forest,
-    secondary: COLORS.sage,
-    accent: COLORS.lavender,
-    background: COLORS.offWhite,
-    foreground: COLORS.charcoal,
-    muted: COLORS.stone,
-    border: COLORS.mint,
-  },
-  fonts: {
-    heading: 'var(--font-geist-sans)',
-    body: 'var(--font-geist-sans)',
-    mono: 'var(--font-geist-mono)',
-  },
-  animations: {
-    bloomDuration: 800,
-    growthDuration: 1200,
-    transitionDuration: 300,
-  },
-};
 
 // ---------- Breakpoints ----------
 
@@ -101,8 +77,8 @@ export const NAV_ITEMS: NavItem[] = [
     gardenIcon: '🌺', // hibiscus
   },
   {
-    label: 'Outreach',
-    href: '/outreach',
+    label: 'Teaching + Outreach',
+    href: '/teaching',
     gardenIcon: '🌻', // sunflower
   },
   {
@@ -110,48 +86,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/contact',
     gardenIcon: '🍃', // leaves
   },
-  /*{
-    label: 'Explore Garden',
-    href: '/explore',
-    gardenIcon: '🎮', // game controller
-  },*/
 ];
-
-// ---------- Animation Durations ----------
-
-export const ANIMATION = {
-  // Durations in ms
-  fast: 200,
-  normal: 300,
-  slow: 500,
-  verySlow: 800,
-  
-  // Bloom animations
-  bloomDelay: 100, // stagger delay between items
-  bloomDuration: 600,
-  
-  // Growth animations
-  growthDuration: 1000,
-  
-  // Cat animations
-  catWalkSpeed: 2000,
-  catIdleDuration: 3000,
-  
-  // Page transitions
-  pageTransition: 400,
-} as const;
-
-// ---------- Z-Index Layers ----------
-
-export const Z_INDEX = {
-  base: 0,
-  garden: 1,
-  content: 10,
-  navigation: 50,
-  catCompanion: 60,
-  modal: 100,
-  cursor: 9999,
-} as const;
 
 // ---------- Layout Sizes ----------
 
@@ -165,15 +100,6 @@ export const LAYOUT = {
     md: '2rem',
     lg: '3rem',
   },
-} as const;
-
-// ---------- Cat Easter Egg Config ----------
-
-export const CAT_CONFIG = {
-  showProbability: 0.3, // 30% chance to show cat on page
-  walkInterval: 15000, // cat walks across every 15 seconds
-  hideAfterWalk: true,
-  easterEggKey: 'KeyC', // press 'C' to summon cat
 } as const;
 
 // ---------- Social Links ----------
