@@ -6,11 +6,13 @@
 
 import Link from 'next/link';
 import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
+import { MdArrowForward, MdOutlineArrowOutward } from 'react-icons/md';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
-import type { Experience } from '@/types';
-import { MdArrowForward, MdOutlineArrowOutward, MdOutlineArrowRight } from 'react-icons/md';
+import type { Experience, Talk } from '@/types';
+import { talks } from '@/data/talks';
+
 
 interface ResearchCardProps {
   research: Experience;
@@ -18,7 +20,16 @@ interface ResearchCardProps {
 }
 
 export function ResearchCard({ research, className }: ResearchCardProps) {
-  const duration = calculateDuration(research.startDate, research.endDate || new Date());
+  const talkData: Record<string, Talk> = research.talks ? research.talks.reduce((acc, key) => {
+    const talk = talks[key];
+    if (talk) {
+      acc[key] = talk;
+    }
+    return acc;
+  }, {} as Record<string, Talk>) : {};
+
+  // Sort talks by date descending
+  const sortedTalks = Object.entries(talkData).sort((a, b) => b[1].date.getTime() - a[1].date.getTime());
 
   return (
     <Card hoverable variant="bordered" className={cn('group', className)}>
@@ -112,7 +123,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
 
         {research.talks && research.talks.length > 0 && (
           <div className="flex flex-wrap w-full gap-2">
-            {Object.entries(research.talks).sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([id, talk]) => (
+            {sortedTalks.map(([id, talk]) => (
               <Link
                 href={`/talks#${id}`}
                 key={id}

@@ -19,7 +19,7 @@ export const researchExperience: Record<string, Experience> = {
       'Collaborating with lab members on data collection and analysis',
     ],
     skills: ['Plant Physiology', 'Molecular Biology', 'Data Analysis'],
-    talks: [talks.uogradflix_2025_26]
+    talks: ["uogradflix_2025_26"],
   },
   uw_thesis: {
     title: 'Honours Thesis Researcher Student',
@@ -34,7 +34,7 @@ export const researchExperience: Record<string, Experience> = {
       'Analyzed data on protein function in plant stress responses',
     ],
     skills: ['Molecular Cloning', 'Plant Transformation', 'Confocal Microscopy'],
-    talks: [talks.uw_showcase_2025, talks.path_2025],
+    talks: ["uw_showcase_2025", "path_2025"],
   },
   uw_wetland_lab: {
     title: 'Research / Lab Assistant',
