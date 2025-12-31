@@ -4,13 +4,11 @@
 // Hero Component
 // ============================================================================
 
-import React from 'react';
 import Link from 'next/link';
 import { SITECONFIG } from '@/data/siteConfig';
 import { fleur_de_leah } from '@/lib/fonts';
 import { HiArrowRight } from 'react-icons/hi';
 import { Button } from '@/components/ui/Button';
-import { Plant } from '@/components/garden/Plant';
 
 export function Hero() {
   return (
