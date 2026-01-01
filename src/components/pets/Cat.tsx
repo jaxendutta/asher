@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import { tiny5 } from '@/lib/fonts';
 
 const Cat: React.FC = () => {
     const catWrapperRef = useRef<HTMLDivElement>(null);
@@ -14,12 +15,29 @@ const Cat: React.FC = () => {
     const [isFaceRight, setIsFaceRight] = useState(false);
     const [isJumping, setIsJumping] = useState(false);
     const [isWalking, setIsWalking] = useState(false);
+    const [isMeowing, setIsMeowing] = useState(false);
     const [catPosition, setCatPosition] = useState({ left: 100, top: -30 });
     const [isAutoMode, setIsAutoMode] = useState(false);
 
     const posRef = useRef({ x: null as number | null, y: null as number | null });
     const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
     const autoWalkTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const meowTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Meow function
+    const meow = () => {
+        if (isMeowing) return;
+
+        setIsMeowing(true);
+        
+        setTimeout(() => {
+            setIsMeowing(false);
+            
+            // Schedule next meow randomly
+            const nextMeowDelay = Math.random() * 1000 + 1000; // 1-2 seconds
+            meowTimerRef.current = setTimeout(meow, nextMeowDelay);
+        }, 1000); // Meow displays for 1 second
+    };
 
     useEffect(() => {
         legsRef.current = document.querySelectorAll('.leg');
@@ -40,16 +58,6 @@ const Cat: React.FC = () => {
             inactivityTimerRef.current = setTimeout(() => {
                 setIsAutoMode(true);
             }, 2000);
-        };
-
-        const generateRandomPosition = () => {
-            if (!wrapperRef.current) return null;
-            const maxX = window.innerWidth - 100;
-            const minX = 50;
-            const randomX = Math.random() * (maxX - minX) + minX;
-            const wrapperRect = wrapperRef.current.getBoundingClientRect();
-            const randomY = wrapperRect.top + Math.random() * wrapperRect.height;
-            return { x: randomX, y: randomY };
         };
 
         const handleMouseMotion = (e: MouseEvent) => {
@@ -144,8 +152,13 @@ const Cat: React.FC = () => {
         document.addEventListener('mousemove', handleMouseMotion);
         document.addEventListener('touchmove', handleTouchMotion);
 
-        // Start inactivity timer on mount
+        // Start inactivity timer and initial meow timer
         resetInactivityTimer();
+        
+        // Start meowing after a longer delay
+        const initialMeowDelay = Math.random() * 1000 + 5000; // 5-6 seconds
+        meowTimerRef.current = setTimeout(meow, initialMeowDelay);
+        
         return () => {
             clearInterval(motionInterval);
             clearInterval(jumpInterval);
@@ -158,10 +171,14 @@ const Cat: React.FC = () => {
                 clearTimeout(autoWalkTimerRef.current);
             }
 
+            if (meowTimerRef.current) {
+                clearTimeout(meowTimerRef.current);
+            }
+
             document.removeEventListener('mousemove', handleMouseMotion);
             document.removeEventListener('touchmove', handleTouchMotion);
         };
-    }, [isFaceLeft, isFaceRight]);
+    }, [isFaceLeft, isFaceRight, isMeowing]);
 
     // Trigger auto-walk when entering auto mode
     useEffect(() => {
@@ -410,7 +427,7 @@ const Cat: React.FC = () => {
           transform-origin: center;
           transform: rotate(50deg);
         }
-        
+       
         .cat_wrapper.jump .cat.face_left .back-legs {
           transform-origin: center;
           transform: rotate(-50deg);
@@ -468,6 +485,78 @@ const Cat: React.FC = () => {
         .cat-svg polygon.cat-eyes {
           fill: #2d2d2d;
         }
+
+        /* Speech bubble for cat */
+        .cat-speech-anchor {
+          position: absolute;
+          left: 50%;
+          top: -35px;
+          transform: translateX(-50%);
+          width: 0px;
+          height: 0px;
+          display: flex;
+          justify-content: center;
+          align-items: end;
+        }
+
+        .cat-speech-bubble {
+          position: absolute;
+          bottom: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #FFF;
+          padding: 4px 12px;
+          border: 1px dashed #000;
+          border-radius: 8px;
+          font-size: 14px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          z-index: 999;
+        }
+
+        .cat-speech-bubble::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 6px dashed transparent;
+          border-right: 6px dashed transparent;
+          border-top: 6px dashed #FFF;
+        }
+
+        .cat-speech-bubble::before {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 4px dashed transparent;
+          border-right: 4px dashed transparent;
+          border-top: 4px dashed #FFF;
+          z-index: 1;
+        }
+
+        .cat_wrapper.meow .cat-speech-bubble {
+          opacity: 1;
+          animation: fade-in-cat 0.2s;
+        }
+
+        @keyframes fade-in-cat {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(4px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
         
         .yarn-ball {
           position: fixed;
@@ -487,12 +576,15 @@ const Cat: React.FC = () => {
 
             <div className="cat-outer-wrapper">
                 <div className="cat-wrapper-container" ref={wrapperRef}>
-                    <div className={`cat_wrapper ${isJumping ? 'jump' : ''}`} ref={catWrapperRef}>
+                    <div className={`cat_wrapper ${isJumping ? 'jump' : ''} ${isMeowing ? 'meow' : ''}`} ref={catWrapperRef}>
                         <div
                             className={`cat ${isFirstPose ? 'first_pose' : ''} ${isFaceLeft ? 'face_left' : ''} ${isFaceRight ? 'face_right' : ''}`}
                             ref={catRef}
                             style={{ left: `${catPosition.left}px` }}
                         >
+                            <div className="cat-speech-anchor">
+                                <div className={`cat-speech-bubble ${tiny5.className}`}>meow</div>
+                            </div>
                             <div
                                 className="cat-head"
                                 ref={headRef}
