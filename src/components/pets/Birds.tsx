@@ -820,7 +820,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
           }
 
           .right-wing::after {
-            transform: scale(-1, 1);
+            transform: scaleX(-1);
           }
 
           .left-wing {
@@ -958,8 +958,9 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             display: none;
           }
 
-          .fly .right-wing {
-            display: flex !important;
+          .fly.up .right-wing,
+          .fly.down .right-wing {
+            display: flex;
           }
 
           .fly.d-up .right-wing::after,
@@ -1063,9 +1064,9 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
 
           .speech-bubble {
             position: absolute;
-            bottom: calc(var(--m) * 8px);
+            bottom: calc(var(--m) * 6px);
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-20%);
             background-color: #fff;
             padding: calc(var(--m) * 4px) calc(var(--m) * 6px);
             border: calc(var(--m) * 1px) dotted;
