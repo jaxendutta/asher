@@ -49,7 +49,6 @@ interface BirdState {
     hopCount: number;
     zone: number;
     twitchPos: number;
-    color: string;
     hopInterval: NodeJS.Timeout | null;
     twitchInterval: NodeJS.Timeout | null;
     animationTimer: NodeJS.Timeout | null;
@@ -67,11 +66,11 @@ const dirConfig: Record<number, string[]> = {
     315: ['d-up', 'left'],
 };
 
-export default function Birds({ birdCount = 4, children }: BirdsProps) {
+export default function Birds({ birdCount = 6, children }: BirdsProps) {
     const [birds, setBirds] = useState<BirdState[]>([]);
     const branchesRef = useRef<Map<string, HTMLElement>>(new Map());
     const birdsRef = useRef<BirdState[]>([]);
-    const branchAssignments = useRef<Map<number, number>>(new Map()); // branch index -> bird id
+    const branchAssignments = useRef<Map<number, number>>(new Map());
     const settingsRef = useRef({ isResizing: false, resizeTimer: null as NodeJS.Timeout | null });
 
     const registerBranch = (id: string, element: HTMLElement) => {
@@ -153,11 +152,10 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                     currentBird.isHopping = false;
                     setBirds([...birdsRef.current]);
 
-                    // Start next behaviour after random delay
                     setTimeout(() => {
                         if (!currentBird.isFlying && !currentBird.isHopping) {
                             const rand = Math.random();
-                            if (rand < 0.6) {
+                            if (rand < 0.5) {
                                 twitch(currentBird);
                             } else {
                                 tweet(currentBird);
@@ -183,22 +181,21 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                 currentBird.isTweeting = false;
                 setBirds([...birdsRef.current]);
 
-                // Start next behavior after random delay
                 setTimeout(() => {
                     if (!currentBird.isFlying && !currentBird.isHopping) {
                         const rand = Math.random();
                         const branches = Array.from(branchesRef.current.values());
                         const box = branches[currentBird.zone];
 
-                        if (rand < 0.6) {
+                        if (rand < 0.5) {
                             twitch(currentBird);
-                        } else if (rand < 0.9 && box) {
+                        } else if (rand < 0.8 && box) {
                             hop(currentBird, box);
                         } else {
                             tweet(currentBird);
                         }
                     }
-                }, Math.random() * 2000 + 1000);
+                }, Math.random() * 1500 + 500);
             }
         }, 1000);
     };
@@ -207,7 +204,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
         if (bird.twitchInterval) clearInterval(bird.twitchInterval);
 
         let twitchCount = 0;
-        const maxTwitches = Math.floor(Math.random() * 5) + 3; // 3-7 twitches
+        const maxTwitches = Math.floor(Math.random() * 5) + 3;
 
         const interval = setInterval(() => {
             const currentBird = birdsRef.current[bird.id];
@@ -220,22 +217,21 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                     clearInterval(interval);
                     currentBird.twitchInterval = null;
 
-                    // Start next behaviour after random delay
                     setTimeout(() => {
                         if (!currentBird.isFlying && !currentBird.isHopping) {
                             const rand = Math.random();
                             const branches = Array.from(branchesRef.current.values());
                             const box = branches[currentBird.zone];
 
-                            if (rand < 0.5 && box) {
+                            if (rand < 0.4 && box) {
                                 hop(currentBird, box);
-                            } else if (rand < 0.8) {
+                            } else if (rand < 0.7) {
                                 tweet(currentBird);
                             } else {
                                 twitch(currentBird);
                             }
                         }
-                    }, Math.random() * 2000 + 1000);
+                    }, Math.random() * 2000 + 500);
                 }
             }
         }, 800);
@@ -247,21 +243,17 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
         const branches = Array.from(branchesRef.current.values());
         if (bird.isFlying || bird.isHopping || !branches[branchIndex]) return;
 
-        // Check if this branch is already occupied by another bird
         const occupyingBirdId = branchAssignments.current.get(branchIndex);
         if (occupyingBirdId !== undefined && occupyingBirdId !== bird.id) {
-            console.log(`Branch ${branchIndex} occupied by bird ${occupyingBirdId}, bird ${bird.id} cannot land`);
-            return; // Branch is occupied by another bird
+            return;
         }
 
         const box = branches[branchIndex];
 
-        // Calculate absolute position within birds-wrapper
         let top = box.offsetTop;
         let left = box.offsetLeft;
         let element = box.offsetParent as HTMLElement;
 
-        // Traverse up to birds-wrapper
         while (element && !element.classList.contains('birds-wrapper')) {
             top += element.offsetTop;
             left += element.offsetLeft;
@@ -273,7 +265,6 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             y: top - 17,
         };
 
-        // If on same level, just hop instead of fly
         if (!alwaysFly && bird.pos.y === newPos.y) {
             bird.isHopping = true;
             bird.animationTimer = setTimeout(() => {
@@ -281,10 +272,8 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                 const currentBird = birdsRef.current[bird.id];
                 if (!currentBird) return;
 
-                if (rand < 0.9) {
+                if (rand < 0.7) {
                     twitch(currentBird);
-                } else if (rand < 0.7) {
-                    hop(currentBird, box);
                 } else {
                     tweet(currentBird);
                 }
@@ -297,17 +286,14 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             return;
         }
 
-        // Clear existing intervals
         if (bird.twitchInterval) {
             clearInterval(bird.twitchInterval);
             bird.twitchInterval = null;
         }
 
-        // Clear previous branch assignment
         if (bird.zone >= 0 && bird.zone !== branchIndex) {
             const previousOccupant = branchAssignments.current.get(bird.zone);
             if (previousOccupant === bird.id) {
-                console.log(`Bird ${bird.id} leaving branch ${bird.zone}`);
                 branchAssignments.current.delete(bird.zone);
             }
         }
@@ -317,13 +303,10 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
         bird.isFlying = true;
         bird.zone = branchIndex;
 
-        // Claim this branch
-        console.log(`Bird ${bird.id} claiming branch ${branchIndex}`);
         branchAssignments.current.set(branchIndex, bird.id);
 
         setBirds([...birdsRef.current]);
 
-        // Land after flying animation
         if (bird.animationTimer) clearTimeout(bird.animationTimer);
         bird.animationTimer = setTimeout(() => {
             const currentBird = birdsRef.current[bird.id];
@@ -332,13 +315,12 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                 currentBird.dirClasses = dirConfig[[135, 180, 225][Math.floor(Math.random() * 3)]];
                 setBirds([...birdsRef.current]);
 
-                // Start behaviors with random delay
                 const behaviorDelay = Math.random() * 1000 + 500;
                 setTimeout(() => {
                     const rand = Math.random();
-                    if (rand < 0.4) {
+                    if (rand < 0.3) {
                         twitch(currentBird);
-                    } else if (rand < 0.7) {
+                    } else if (rand < 0.6) {
                         hop(currentBird, box);
                     } else {
                         tweet(currentBird);
@@ -348,25 +330,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
         }, 2000);
     };
 
-    const getIndex = () => {
-        const branches = Array.from(branchesRef.current.entries());
-        if (branches.length === 0) return undefined;
-
-        const scrollY = window.scrollY;
-        const viewportMiddle = scrollY + window.innerHeight / 2;
-
-        const positions = branches.map(([id, el], i) => ({
-            i,
-            y: el.getBoundingClientRect().top + scrollY,
-        }));
-
-        return positions.find(b => b.y < viewportMiddle)?.i;
-    };
-
     useEffect(() => {
-        // Initialize birds
-        const brightColors = ['#FF6B9D', '#4ECDC4', '#FFD93D', '#95E1D3']; // Bright pink, teal, yellow, mint
-
         const initialBirds: BirdState[] = Array.from({ length: birdCount }, (_, i) => ({
             id: i,
             pos: { x: -100, y: 100 },
@@ -377,7 +341,6 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             hopCount: 0,
             zone: -1,
             twitchPos: 0,
-            color: brightColors[i % brightColors.length],
             hopInterval: null,
             twitchInterval: null,
             animationTimer: null,
@@ -386,31 +349,25 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
         birdsRef.current = initialBirds;
         setBirds(initialBirds);
 
-        // Initial positioning
         setTimeout(() => {
             const branches = Array.from(branchesRef.current.values());
             if (branches.length > 0) {
-                // Clear all branch assignments
                 branchAssignments.current.clear();
 
-                // Assign each bird to a unique branch from the top
                 initialBirds.forEach((bird, i) => {
                     if (i < branches.length) {
-                        console.log(`Initial: Assigning bird ${i} to branch ${i}`);
                         flyToPos(bird, i);
                     }
                 });
             }
         }, 200);
 
-        // Scroll interval
         const scrollInterval = setInterval(() => {
             if (settingsRef.current.isResizing) return;
 
             const branches = Array.from(branchesRef.current.values());
             if (branches.length === 0) return;
 
-            // Calculate which branches are currently visible
             const scrollY = window.scrollY;
             const viewportTop = scrollY;
             const viewportBottom = scrollY + window.innerHeight;
@@ -420,27 +377,20 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                 const rect = branch.getBoundingClientRect();
                 const branchY = rect.top + scrollY;
 
-                // Branch is visible if it's within the viewport
                 if (branchY >= viewportTop && branchY <= viewportBottom) {
                     visibleBranches.push(i);
                 }
             });
 
-            console.log('Visible branches:', visibleBranches);
-
-            // Assign birds to visible branches
-            birdsRef.current.forEach((bird, birdIndex) => {
+            birdsRef.current.forEach((bird) => {
                 const isOnVisibleBranch = bird.zone >= 0 && visibleBranches.includes(bird.zone);
 
-                // If bird is on a visible branch and not flying, let it stay
                 if (isOnVisibleBranch && !bird.isFlying) {
                     return;
                 }
 
-                // Bird needs to move - find an unoccupied visible branch
                 if (!bird.isFlying) {
-                    // Add random chance to delay movement for more natural behavior
-                    const shouldMoveNow = Math.random() < 0.6; // 60% chance to move immediately
+                    const shouldMoveNow = Math.random() < 0.6;
 
                     if (shouldMoveNow) {
                         let targetBranch = -1;
@@ -452,9 +402,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                             }
                         }
 
-                        // If we found an available branch and it's different from current
                         if (targetBranch !== -1 && targetBranch !== bird.zone) {
-                            console.log(`Moving bird ${bird.id} from branch ${bird.zone} to branch ${targetBranch}`);
                             flyToPos(bird, targetBranch);
                         }
                     }
@@ -462,26 +410,22 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             });
         }, 1000);
 
-        // Resize handler
         const handleResize = () => {
             settingsRef.current.isResizing = true;
             if (settingsRef.current.resizeTimer) {
                 clearTimeout(settingsRef.current.resizeTimer);
             }
 
-            const index = getIndex();
-            if (index !== undefined) {
-                birdsRef.current.forEach((bird) => {
-                    bird.isHopping = false;
-                    bird.isFlying = false;
-                    if (bird.animationTimer) clearTimeout(bird.animationTimer);
+            birdsRef.current.forEach((bird) => {
+                bird.isHopping = false;
+                bird.isFlying = false;
+                if (bird.animationTimer) clearTimeout(bird.animationTimer);
 
-                    const branches = Array.from(branchesRef.current.values());
-                    if (bird.zone < branches.length) {
-                        flyToPos(bird, bird.zone, true);
-                    }
-                });
-            }
+                const branches = Array.from(branchesRef.current.values());
+                if (bird.zone >= 0 && bird.zone < branches.length) {
+                    flyToPos(bird, bird.zone, true);
+                }
+            });
 
             settingsRef.current.resizeTimer = setTimeout(() => {
                 settingsRef.current.isResizing = false;
@@ -511,11 +455,12 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
                             } ${bird.twitchPos ? `pos-${bird.twitchPos}` : ''} ${bird.dirClasses.join(' ')}`}
                         style={{
                             transform: `translate(${bird.pos.x}px, ${bird.pos.y}px)`,
-                            '--bird-color': bird.color,
-                        } as React.CSSProperties}
+                        }}
                     >
                         <div className="bird">
-                            <div className="anchor"></div>
+                            <div className="anchor">
+                                <div className="speech-bubble">tweet</div>
+                            </div>
                             <div className="head"></div>
                             <div className="body"></div>
                             <div className="wing left-wing"></div>
@@ -608,7 +553,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF8AAABaCAYAAADegYpGAAAAAXNSR0IArs4c6QAABYlJREFUeF7tXVF2FDEM6/7DfeA0cDQ4DdwH/peX95piTBJJjjOz3Uk/O7NaW1YSR5NOby/75zQGbqd98xN/8ZdPH+7ff/6G3A5vuN/vd8/R7XaDoI/OK0tONA8Wv0lki/SsInjsaDFnhVEIKjlVhc7iFSwV4z/yGeJrIRTiEC6LhXBKbAxWIf/bj1+UuBFeNKZ/yGdAIiOAxc1IkhUGGxMq5gzOcvKV4DITHWHZmL5+/vjCjICWMNTcfExv5EeAGJWpuD31qziXJz9CmCWtLorld16dRyvWFzOam8VpKh8l5q9nqtUnWQuwyX+dZ2bJR8XNml97U09UtTauKEZT+b0+tfx+RNaoQykBtj4bwYski2Kj+szXm7IEYXHgJqsQVX/s0EdtYfnMaM62iTNYI3FE2l8Wj4mNEUYLh7IK2O2yoqR978sLRf4mag0Dm/w1vFKom3yKpthNaLq+pKVsqUQExWj/22yMfH3Y7fS+nOkC/GdVy3WUeBbWyN1cneNlLWW21ext1BhhoXZ6uauZmSTTT9eEkWorFtptI/JnYlpOvhJcZqIsFkN+D0vNzeNc3lJWFlQ/mh6a/EhwXh2XczUZNdjhuspSvqSfX8hHc+Es+aqzmTGKqqgysKIYdmR3F1xPTo8sxrZVbOXMUcTExozy5QuuDaJV1WotV1sZtXJWZf6zrYQVPETY0VjMKAhbyjXZyFY88hlE7rNc38baiZXc5G/yT2TgxK++vKWczb2yxh1qKbdMNrYzaZEUtZU9Qb1uRY1NjecpLWVkqpXr+5SykzNSGtNPW8isTdYqnHdjKavEj9SvePm1mEsPTUWSGwUW9VFskuyhq9GiOSIN+VdoFEU5qzHtg7JCu7PsrKatIjLVZg/KIteUGeKsahkslv9DyLfB9M5qoiFp28qWsbYtZXdcMDKHoU6AcTSZQrb2CEixKDb0eRTXLF/LN1lMgKjFtCRk4mVhRXG2sabIP/neTX4yoQrcJl9hK/neTX4yodOu5mh3qiyOyXmlwikkKV+s4C7vdnzgvjOIFlO1b30c+8UXhhG2CNG2zpLfOwXXUziKLRrTcldT2RxlJFkJPAqLIb4X03LyleBKkKt3pV4MR3tENr/Ln1J+WvJV1fvhecmDskgNGZbyqH3zU0/reSuKcTT3z4pCWcdaeUoPU5C/rx5uRcT5p1nlL/oyCBvtX5hefpmf36tmJSpySjnyhw1qIZURpLqj9v6shzLNBbcXWI981MpZlSlKH5HJql+JDSmewWLiauFQ3o6yZW7tJJkXfCISnvE6Rf4zJv4IOW3yT6zC5cmfmVJHdWNwL3tKuZLDkKQODu+Ydg271oXo6o2CnLWBUavIdCYWA7mbKl6vXe/hPOUpZZY0RmTI7GM3brDVZINBmw8/AlhcRBqLwxCmHJbNclo9ziUtZTs9oA1gFdLSHa6iKq/sLGWMFBuJL9OqaMU2G9NSPz8SnE3ykpYy6lrK9dl3L4y+49KWsie3RdQs+ewp5dqHz44i1KYygjvMUm55+DVA9rW+o45Ctagj5K9ei2Zjos/tsE+vWm0mc0wctZlsP820mdlYTBFgn4+GXmQrvnIbj+J99OuXN9bOLNAm/0T2N/nJ5CtT82Ut5WTO3+CmyY+u3kxCWaeUrT+jGn37xReuUpmtJtNu7hdfiAVgRiQzChTiUSGVmN6VpWynByXJWgDkarJ2cq8AszEtdTV787JqqpX7mf9f2MId+fBnkG8L+fAvvijB7oOy5n/Hsj5PGZY9dc26mqxqs55A+aknMuX46RBOO+ig7GhBsq6mnzpY8hUTTJ12mNa4t4Cnkj+an1WiPGGsSjM7iyOwIgWQTin31MH25Uxbx2KxCziLx5DHYEVxtrejzj2J92/yE8lUof4AX4lUtcFJ+m8AAAAASUVORK5CYII=);
             top: calc(var(--m) * -2px);
             left: calc(var(--m) * 1px);
-            z-index: 2;
+            z-index: 3;
             --tweet-offset: 0;
             --bw: 0;
             --bh: calc(0 - var(--tweet-offset));
@@ -628,16 +573,194 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
 
           .body {
             position: absolute;
-            --w: 21px;
+            --w: 18px;
             --h: 14px;
-            width: calc(var(--m) * var(--w));
-            height: calc(var(--m) * var(--h));
-            top: calc(var(--m) * 5px);
-            left: 0;
+            width: calc(var(--m) * 1px);
+            height: calc(var(--m) * 1px);
+            top: calc(var(--m) * 6px);
+            left: calc(var(--m) * 2px);
             z-index: 1;
-            background-color: #8b6f47;
-            border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
-            box-shadow: inset 0 -2px 3px rgba(0,0,0,0.2);
+            background-color: #fff8e7;
+            box-shadow:
+              /* Row 1 (top) - 6 pixels */
+              calc(var(--m) * 6px) calc(var(--m) * 0px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 0px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 0px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 0px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 0px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 0px) 0 #fff8e7,
+              /* Row 2 - 10 pixels */
+              calc(var(--m) * 4px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 1px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 1px) 0 #fff8e7,
+              /* Row 3 - 14 pixels */
+              calc(var(--m) * 2px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 2px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 2px) 0 #fff8e7,
+              /* Row 4 - 16 pixels */
+              calc(var(--m) * 1px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 2px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 3px) 0 #fff8e7,
+              calc(var(--m) * 16px) calc(var(--m) * 3px) 0 #fff8e7,
+              /* Row 5 - 18 pixels (widest) */
+              calc(var(--m) * 0px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 1px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 2px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 16px) calc(var(--m) * 4px) 0 #fff8e7,
+              calc(var(--m) * 17px) calc(var(--m) * 4px) 0 #fff8e7,
+              /* Row 6 - 18 pixels */
+              calc(var(--m) * 0px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 1px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 2px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 16px) calc(var(--m) * 5px) 0 #fff8e7,
+              calc(var(--m) * 17px) calc(var(--m) * 5px) 0 #fff8e7,
+              /* Row 7 - 18 pixels */
+              calc(var(--m) * 0px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 1px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 2px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 16px) calc(var(--m) * 6px) 0 #fff8e7,
+              calc(var(--m) * 17px) calc(var(--m) * 6px) 0 #fff8e7,
+              /* Row 8 - 18 pixels */
+              calc(var(--m) * 0px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 1px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 2px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 16px) calc(var(--m) * 7px) 0 #fff8e7,
+              calc(var(--m) * 17px) calc(var(--m) * 7px) 0 #fff8e7,
+              /* Row 9 - 16 pixels */
+              calc(var(--m) * 1px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 2px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 8px) 0 #fff8e7,
+              calc(var(--m) * 16px) calc(var(--m) * 8px) 0 #fff8e7,
+              /* Row 10 - 14 pixels */
+              calc(var(--m) * 2px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 3px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 4px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 14px) calc(var(--m) * 9px) 0 #fff8e7,
+              calc(var(--m) * 15px) calc(var(--m) * 9px) 0 #fff8e7,
+              /* Row 11 - 10 pixels */
+              calc(var(--m) * 4px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 5px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 10px) 0 #fff8e7,
+              calc(var(--m) * 13px) calc(var(--m) * 10px) 0 #fff8e7,
+              /* Row 12 - 8 pixels */
+              calc(var(--m) * 5px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 6px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 7px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 8px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 9px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 10px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 11px) calc(var(--m) * 11px) 0 #fff8e7,
+              calc(var(--m) * 12px) calc(var(--m) * 11px) 0 #fff8e7;
+            image-rendering: pixelated;
           }
 
           .fly .bird {
@@ -729,6 +852,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             z-index: 1;
           }
 
+
           .legs {
             position: absolute;
             bottom: 0;
@@ -745,12 +869,12 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
           }
 
           .leg {
-            background-color: var(--bird-color, var(--brown));
+            background-color: var(--brown);
             --w: 1px;
             --h: 3px;
             width: calc(var(--m) * var(--w));
             height: calc(var(--m) * var(--h));
-            z-index: 1;
+            z-index: 3;
           }
 
           .up .head {
@@ -784,7 +908,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
           .side .left-wing {
             left: calc(var(--m) * 6px);
             top: calc(var(--m) * 10px);
-            z-index: 2;
+            z-index: 4;
           }
 
           .side .left-wing::after {
@@ -796,14 +920,14 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
           .d-up .left-wing {
             left: calc(var(--m) * 2px);
             top: calc(var(--m) * 11px);
-            z-index: 2;
+            z-index: 4;
           }
 
           .d-up .left-wing::after {
             --w: 8px;
             --h: 7px;
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAHCAYAAAA1WQxeAAAAAXNSR0IArs4c6QAAADhJREFUGFdjZGBgYIi34PkPomFg4YkvjDA2I7okuiKcCkAKQSYRVoDNDcjugTsGl1vgCmC60BUCAEivFO6lToiVAAAAAElFTkSuQmCC);
-            z-index: 2;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAHCAYAAAA1WQxeAAAAAXNSR0IArs4c6QAAADhJREFUGFdjZGBgYIi34/kPomFg4YkvjDA2I7okuiKcCkAKQSYRVoDNDcjugTsGl1vgCmC60BUCAEivFO6lToiVAAAAAElFTkSuQmCC);
+            z-index: 4;
           }
 
           .side .left-wing,
@@ -825,13 +949,25 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
 
           .d-down .wing::after {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAYAAAD+Bd/7AAAAAXNSR0IArs4c6QAAACxJREFUGFdjZEAC8RY8/2HchSe+MILYYAJZAlkDWAE+SZAp5CvA6waYJMgNANQvFamdLq05AAAAAElFTkSuQmCC);
-            z-index: 2;
+            z-index: 4;
           }
 
           .d-down .right-wing,
           .d-up .right-wing,
           .side .right-wing {
             display: none;
+          }
+
+          .fly .right-wing {
+            display: flex !important;
+          }
+
+          .fly.d-up .right-wing::after,
+          .fly.side .right-wing::after,
+          .fly.d-down .right-wing::after {
+            animation: infinite wing-flap-side 0.2s steps(1);
+            --w: 9px;
+            z-index: 1;
           }
 
           .hop {
@@ -851,53 +987,61 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
 
           .tail {
             position: absolute;
+            image-rendering: pixelated;
             width: calc(var(--m) * var(--w));
             height: calc(var(--m) * var(--h));
-            --m: 2;
-            background-color: var(--bird-color, var(--brown));
-            opacity: 0.8;
+            background-repeat: no-repeat;
+            background-size: cover;
           }
 
           .up .tail {
-            --w: 5px;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAGCAYAAAAL+1RLAAAAAXNSR0IArs4c6QAAACZJREFUGFdjZICCeAue/wtPfGEEccEESAAmCZJgRBaASZAgiM1MAHf4EO3J5G9wAAAAAElFTkSuQmCC);
+            --w: 12px;
             --h: 6px;
-            left: calc(var(--m) * 8px);
-            top: calc(var(--m) * 15px);
+            left: calc(var(--m) * 9px);
+            top: calc(var(--m) * 16px);
             z-index: 1;
-            border-radius: 0 0 50% 50%;
           }
 
           .side .tail {
-            --w: 7px;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAACCAYAAACUn8ZgAAAAAXNSR0IArs4c6QAAABdJREFUGFdjjLfg+c+AAzDiklx44gsjAIuGBaUigwNFAAAAAElFTkSuQmCC);
+            --w: 12px;
             --h: 2px;
-            left: calc(var(--m) * 19px);
-            top: calc(var(--m) * 12px);
-            border-radius: 0 50% 50% 0;
+            left: calc(var(--m) * 15px);
+            top: calc(var(--m) * 11px);
           }
 
           .hop .tail,
+          .down .tail,
           .d-down .tail {
-            --w: 7px;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAGCAYAAAAPDoR2AAAAAXNSR0IArs4c6QAAADRJREFUGFdjZEAD8RY8/0FCC098YWREloNJwMTgkugScJ3YJEC6GZElQKqRrYFLokuAFAEA55wVqU/qlJAAAAAASUVORK5CYII=);
+            --w: 12px;
             --h: 6px;
-            border-radius: 50%;
+            rotate: -40deg;
           }
 
           .hop .tail {
-            top: calc(var(--m) * 8px);
+            top: calc(var(--m) * 7px);
+            left: calc(var(--m) * 7px);
+          }
+
+          .down .tail {
+            left: calc(var(--m) * 9px);
+            top: calc(var(--m) * 7px);
           }
 
           .d-up .tail {
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAAXNSR0IArs4c6QAAACZJREFUGFdjjLfg+c8ABQtPfGEEsRmRJWCCIBqsApskXCuyApCRAD3YC0k2Q+wLAAAAAElFTkSuQmCC);
             --w: 6px;
             --h: 4px;
-            left: calc(var(--m) * 17px);
-            top: calc(var(--m) * 14px);
+            left: calc(var(--m) * 14px);
+            top: calc(var(--m) * 13px);
             z-index: 1;
-            border-radius: 50% 50% 0 0;
           }
 
           .d-down .tail {
-            left: calc(var(--m) * 17px);
-            top: calc(var(--m) * 7px);
+            left: calc(var(--m) * 14px);
+            top: calc(var(--m) * 6px);
           }
 
           .anchor {
@@ -915,6 +1059,54 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             left: 50%;
             top: -12px;
             transform: translateX(-50%);
+          }
+
+          .speech-bubble {
+            position: absolute;
+            bottom: calc(var(--m) * 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            padding: calc(var(--m) * 4px) calc(var(--m) * 6px);
+            border: calc(var(--m) * 1px) dotted;
+            font-family: 'Press Start 2P', cursive, monospace;
+            font-size: calc(var(--m) * 6px);
+            font-weight: bold;
+            white-space: nowrap;
+            image-rendering: pixelated;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            border-radius: calc(var(--m) * 4px);
+          }
+
+          .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: calc(var(--m) * -3px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: calc(var(--m) * 3px) solid transparent;
+            border-right: calc(var(--m) * 3px) solid transparent;
+            border-top: calc(var(--m) * 3px) solid #5f380c;
+          }
+
+          .tweet .speech-bubble {
+            opacity: 1;
+            animation: fade-in 0.2s;
+          }
+
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+              transform: translateX(-50%) translateY(calc(var(--m) * 2px));
+            }
+            to {
+              opacity: 1;
+              transform: translateX(-50%) translateY(0);
+            }
           }
 
           @keyframes tweet {
@@ -963,7 +1155,7 @@ export default function Birds({ birdCount = 4, children }: BirdsProps) {
             }
             25%,
             75% {
-              background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAECAYAAABcDxXOAAAAAXNSR0IArs4c6QAAACNJREFUGFdjZGBgYIi34PkPorGBhSe+MDLiUwDTRJwiYqwDAFHXC0mhFNqMAAAAAElFTkSuQmCC);
+              background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAECAYAAABcDxXOAAAAAXNSR0IArs4c6QAAACNJREFUGFdjZGBgYIi34/kPorGBhSe+MDLiUwDTRJwiYqwDAFHXC0mhFNqMAAAAAElFTkSuQmCC);
               --h: 4px;
               top: calc(var(--m) * 0px);
             }
