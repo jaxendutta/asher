@@ -59,6 +59,9 @@ const Ducks: React.FC = () => {
   const ducklingTargetsRef = useRef<DucklingTarget[]>([]);
   const duckDirectionRef = useRef('down');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const wanderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isWanderingRef = useRef(false);
+  const lastMouseMoveRef = useRef<number>(Date.now());
 
   const offsetPosition = (duck: Duck): Position => ({
     x: duck.x + duck.offset.x,
@@ -129,6 +132,12 @@ const Ducks: React.FC = () => {
 
   const updateCursorPos = (e: MouseEvent) => {
     cursorRef.current = { x: e.pageX, y: e.pageY };
+    lastMouseMoveRef.current = Date.now();
+    isWanderingRef.current = false;
+    if (wanderTimeoutRef.current) {
+      clearTimeout(wanderTimeoutRef.current);
+      wanderTimeoutRef.current = null;
+    }
   };
 
   const createDuckling = () => {
@@ -179,6 +188,7 @@ const Ducks: React.FC = () => {
       window.removeEventListener('click', handleClick);
       window.removeEventListener('mousemove', handleMove);
       if (intervalRef.current) clearInterval(intervalRef.current);
+      if (wanderTimeoutRef.current) clearTimeout(wanderTimeoutRef.current);
     };
   }, []);
 
@@ -200,14 +210,44 @@ const Ducks: React.FC = () => {
       intervalRef.current = setInterval(() => {
         setMotherDuck((prevDuck) => {
           const duckPos = offsetPosition(prevDuck);
+
+          // Check if we should start wandering
+          const timeSinceLastMove = Date.now() - lastMouseMoveRef.current;
+          const fullDistanceToCursor = distanceBetween(duckPos, cursorRef.current);
+
+          // If close to cursor and mouse hasn't moved in 2 seconds, start wandering
+          if (fullDistanceToCursor < 80 && timeSinceLastMove > 2000 && !isWanderingRef.current) {
+            isWanderingRef.current = true;
+            // Generate a random target within viewport
+            if (wrapperRef.current) {
+              const { width, height } = wrapperRef.current.getBoundingClientRect();
+              cursorRef.current = {
+                x: Math.random() * (width - 100) + 50,
+                y: Math.random() * (height - 100) + 50,
+              };
+            }
+          }
+
           const fullDistance = distanceBetween(duckPos, cursorRef.current);
 
           if (!fullDistance || fullDistance < 80) {
-            return { ...prevDuck, direction: prevDuck.direction.replace(' waddle', '') };
+            // When we reach the target while wandering, pick a new random target
+            if (isWanderingRef.current && wrapperRef.current) {
+              const { width, height } = wrapperRef.current.getBoundingClientRect();
+              cursorRef.current = {
+                x: Math.random() * (width - 100) + 50,
+                y: Math.random() * (height - 100) + 50,
+              };
+              // Fall through to continue moving to new target
+            } else {
+              return { ...prevDuck, direction: prevDuck.direction.replace(' waddle', '') };
+            }
           }
 
-          const distanceToMove = fullDistance > 80 ? 80 : fullDistance;
-          const newTarget = getNewPosBasedOnTarget(duckPos, cursorRef.current, distanceToMove, fullDistance);
+          // Recalculate distance in case we just set a new wander target
+          const actualDistance = distanceBetween(duckPos, cursorRef.current);
+          const distanceToMove = actualDistance > 80 ? 80 : actualDistance;
+          const newTarget = getNewPosBasedOnTarget(duckPos, cursorRef.current, distanceToMove, actualDistance);
           newTargetRef.current = newTarget;
           duckDirectionRef.current = getDirection(duckPos, targetRef.current, newTarget);
 
@@ -269,6 +309,7 @@ const Ducks: React.FC = () => {
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      if (wanderTimeoutRef.current) clearTimeout(wanderTimeoutRef.current);
     };
   }, []);
 
