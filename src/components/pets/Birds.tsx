@@ -1088,9 +1088,9 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: calc(var(--m) * 3px) solid transparent;
-            border-right: calc(var(--m) * 3px) solid transparent;
-            border-top: calc(var(--m) * 3px) solid #5f380c;
+            border-left: calc(var(--m) * 3px) dotted transparent;
+            border-right: calc(var(--m) * 3px) dotted transparent;
+            border-top: calc(var(--m) * 3px) dotted;
           }
 
           .tweet .speech-bubble {
