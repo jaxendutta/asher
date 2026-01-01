@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import { micro_5, tiny5 } from '@/lib/fonts';
 
 interface Position {
   x: number;
@@ -14,6 +15,7 @@ interface Duck {
   direction: string;
   offset: Position;
   hit?: boolean;
+  isQuacking?: boolean;
 }
 
 interface DucklingTarget {
@@ -51,6 +53,7 @@ const Ducks: React.FC = () => {
     angle: 0,
     direction: 'down',
     offset: { x: 20, y: 14 },
+    isQuacking: false,
   });
 
   const cursorRef = useRef<Position>({ x: 0, y: 0 });
@@ -60,6 +63,7 @@ const Ducks: React.FC = () => {
   const duckDirectionRef = useRef('down');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const wanderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const quackTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isWanderingRef = useRef(false);
   const lastMouseMoveRef = useRef<number>(Date.now());
 
@@ -140,6 +144,19 @@ const Ducks: React.FC = () => {
     }
   };
 
+  // Quack function for mother duck
+  const quack = () => {
+    setMotherDuck(prev => ({ ...prev, isQuacking: true }));
+    
+    setTimeout(() => {
+      setMotherDuck(prev => ({ ...prev, isQuacking: false }));
+      
+      // Schedule next quack randomly
+      const nextQuackDelay = Math.random() * 6000 + 3000; // 3-9 seconds
+      quackTimerRef.current = setTimeout(quack, nextQuackDelay);
+    }, 1000); // Quack displays for 1 second
+  };
+
   const createDuckling = () => {
     const index = ducklings.length;
     setDucklings((prev) => [
@@ -184,11 +201,16 @@ const Ducks: React.FC = () => {
     }
     setDucklings(initialDucklings);
 
+    // Start quacking after initial delay
+    const initialQuackDelay = Math.random() * 4000 + 2000;
+    quackTimerRef.current = setTimeout(quack, initialQuackDelay);
+
     return () => {
       window.removeEventListener('click', handleClick);
       window.removeEventListener('mousemove', handleMove);
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (wanderTimeoutRef.current) clearTimeout(wanderTimeoutRef.current);
+      if (quackTimerRef.current) clearTimeout(quackTimerRef.current);
     };
   }, []);
 
@@ -573,6 +595,80 @@ const Ducks: React.FC = () => {
           width: calc(10 * var(--m));
           left: calc(5 * var(--m));
         }
+
+        /* Duck speech bubble */
+        .duck-speech-anchor {
+          position: absolute;
+          left: 50%;
+          top: -30px;
+          transform: translateX(-50%);
+          width: 0px;
+          height: 0px;
+          display: flex;
+          justify-content: center;
+          align-items: end;
+          z-index: 999;
+        }
+
+        .duck-speech-bubble {
+          position: absolute;
+          bottom: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #FFF;
+          padding: 4px 10px;
+          border: 1px dashed #000;
+          border-radius: 8px;
+          font-size: 12px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          z-index: 999;
+        }
+
+        .duck-speech-bubble::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 5px dashed transparent;
+          border-right: 5px dashed transparent;
+          border-top: 6px solid #FFF;
+        }
+
+        .duck-speech-bubble::before {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 4px dashed transparent;
+          border-right: 4px dashed transparent;
+          border-top: 4px solid #FFF;
+          z-index: 1;
+        }
+
+        .duck.quack .duck-speech-bubble {
+          opacity: 1;
+          animation: fade-in-duck 0.2s;
+        }
+
+        @keyframes fade-in-duck {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(3px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+
         .duckling {
           --neck-w: 8;
           --m: 1px;
@@ -646,13 +742,16 @@ const Ducks: React.FC = () => {
 
       <div className="duck-wrapper" ref={wrapperRef}>
         <div
-          className={`duck ${motherDuck.direction}`}
+          className={`duck ${motherDuck.direction} ${motherDuck.isQuacking ? 'quack' : ''}`}
           ref={motherDuckRef}
           style={{
             transform: `translate(${px(motherDuck.x)}, ${px(motherDuck.y)})`,
             zIndex: motherDuck.y,
           }}
         >
+          <div className="duck-speech-anchor">
+            <div className={`duck-speech-bubble ${tiny5.className}`}>quack</div>
+          </div>
           <div className="neck-base">
             <div className="neck">
               <div className="head"></div>
