@@ -773,7 +773,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
           .fly.up .wing,
           .fly.down .wing {
             top: calc(var(--m) * 9px);
-            animation: wing-flap 0.2s infinite;
+            animation: wing-flap 0.2s infinite !important;
           }
 
           .fly.up .wing::after,
@@ -997,22 +997,22 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
 
           .up .tail {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAGCAYAAAAL+1RLAAAAAXNSR0IArs4c6QAAACZJREFUGFdjZICCeAue/wtPfGEEccEESAAmCZJgRBaASZAgiM1MAHf4EO3J5G9wAAAAAElFTkSuQmCC);
-            --w: 12px;
+            --w: 10px;
             --h: 6px;
-            left: calc(var(--m) * 9px);
+            left: calc(var(--m) * 6px);
             top: calc(var(--m) * 16px);
             z-index: 1;
           }
 
-          .side .tail {
+          .side .tail,
+          .hop .tail {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAACCAYAAACUn8ZgAAAAAXNSR0IArs4c6QAAABdJREFUGFdjjLfg+c+AAzDiklx44gsjAIuGBaUigwNFAAAAAElFTkSuQmCC);
             --w: 12px;
-            --h: 2px;
+            --h: 3px;
             left: calc(var(--m) * 15px);
             top: calc(var(--m) * 11px);
           }
-
-          .hop .tail,
+          
           .down .tail,
           .d-down .tail {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAGCAYAAAAPDoR2AAAAAXNSR0IArs4c6QAAADRJREFUGFdjZEAD8RY8/0FCC098YWREloNJwMTgkugScJ3YJEC6GZElQKqRrYFLokuAFAEA55wVqU/qlJAAAAAASUVORK5CYII=);
@@ -1021,23 +1021,19 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             rotate: -40deg;
           }
 
-          .hop .tail {
-            top: calc(var(--m) * 7px);
-            left: calc(var(--m) * 7px);
-          }
-
           .down .tail {
             left: calc(var(--m) * 9px);
             top: calc(var(--m) * 7px);
           }
 
           .d-up .tail {
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAAXNSR0IArs4c6QAAACZJREFUGFdjjLfg+c8ABQtPfGEEsRmRJWCCIBqsApskXCuyApCRAD3YC0k2Q+wLAAAAAElFTkSuQmCC);
-            --w: 6px;
-            --h: 4px;
-            left: calc(var(--m) * 14px);
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAGCAYAAAAPDoR2AAAAAXNSR0IArs4c6QAAADRJREFUGFdjZEAD8RY8/0FCC098YWREloNJwMTgkugScJ3YJEC6GZElQKqRrYFLokuAFAEA55wVqU/qlJAAAAAASUVORK5CYII=);
+            --w: 10px;
+            --h: 6px;
+            rotate: 90deg;
+            left: calc(var(--m) * 13px);
             top: calc(var(--m) * 13px);
-            z-index: 1;
+            z-index: 2;
           }
 
           .d-down .tail {
@@ -1068,9 +1064,8 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             left: 50%;
             transform: translateX(-20%);
             background-color: #fff;
-            padding: calc(var(--m) * 4px) calc(var(--m) * 6px);
-            border: calc(var(--m) * 1px) dotted;
-            font-family: 'Press Start 2P', cursive, monospace;
+            padding: calc(var(--m) * 1px) calc(var(--m) * 6px);
+            border: calc(var(--m) * 1px) dashed #000;
             font-size: calc(var(--m) * 6px);
             font-weight: bold;
             white-space: nowrap;
@@ -1089,9 +1084,9 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: calc(var(--m) * 3px) dotted transparent;
-            border-right: calc(var(--m) * 3px) dotted transparent;
-            border-top: calc(var(--m) * 3px) dotted;
+            border-left: calc(var(--m) * 3px) dashed transparent;
+            border-right: calc(var(--m) * 3px) dashed transparent;
+            border-top: calc(var(--m) * 3px) dashed white;
           }
 
           .tweet .speech-bubble {
