@@ -16,6 +16,7 @@ const Cat: React.FC = () => {
     const [isJumping, setIsJumping] = useState(false);
     const [isWalking, setIsWalking] = useState(false);
     const [isMeowing, setIsMeowing] = useState(false);
+    const [isPurring, setIsPurring] = useState(false);
     const [catPosition, setCatPosition] = useState({ left: 100, top: -30 });
     const [isAutoMode, setIsAutoMode] = useState(false);
 
@@ -27,16 +28,32 @@ const Cat: React.FC = () => {
     // Meow function
     const meow = () => {
         if (isMeowing) return;
-
         setIsMeowing(true);
-        
+
         setTimeout(() => {
             setIsMeowing(false);
-            
+
             // Schedule next meow randomly
             const nextMeowDelay = Math.random() * 1000 + 1000; // 1-2 seconds
             meowTimerRef.current = setTimeout(meow, nextMeowDelay);
         }, 1000); // Meow displays for 1 second
+    };
+
+    // Purr function - triggered by clicking
+    const purr = () => {
+        if (isPurring || isMeowing) return; // Don't purr if already purring or meowing
+
+        setIsPurring(true);
+
+        setTimeout(() => {
+            setIsPurring(false);
+        }, 1500); // Purr displays for 1.5 seconds
+    };
+
+    // Handle cat click
+    const handleCatClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent event from bubbling
+        purr();
     };
 
     useEffect(() => {
@@ -154,11 +171,11 @@ const Cat: React.FC = () => {
 
         // Start inactivity timer and initial meow timer
         resetInactivityTimer();
-        
+
         // Start meowing after a longer delay
         const initialMeowDelay = Math.random() * 1000 + 5000; // 5-6 seconds
         meowTimerRef.current = setTimeout(meow, initialMeowDelay);
-        
+
         return () => {
             clearInterval(motionInterval);
             clearInterval(jumpInterval);
@@ -256,6 +273,8 @@ const Cat: React.FC = () => {
           position: absolute;
           height: 30px;
           width: 60px;
+          pointer-events: auto;
+          cursor: pointer;
         }
         
         .face_left .cat-body { 
@@ -283,6 +302,8 @@ const Cat: React.FC = () => {
           right: -10px;
           transition: 0.5s;
           z-index: 50;
+          pointer-events: auto;
+          cursor: pointer;
         }
         
         .first_pose .cat-head,
@@ -542,7 +563,12 @@ const Cat: React.FC = () => {
           z-index: 1;
         }
 
-        .cat_wrapper.meow .cat-speech-bubble {
+        .cat_wrapper.meow .cat-speech-bubble.meow-bubble {
+          opacity: 1;
+          animation: fade-in-cat 0.2s;
+        }
+
+        .cat_wrapper.purr .cat-speech-bubble.purr-bubble {
           opacity: 1;
           animation: fade-in-cat 0.2s;
         }
@@ -576,19 +602,21 @@ const Cat: React.FC = () => {
 
             <div className="cat-outer-wrapper">
                 <div className="cat-wrapper-container" ref={wrapperRef}>
-                    <div className={`cat_wrapper ${isJumping ? 'jump' : ''} ${isMeowing ? 'meow' : ''}`} ref={catWrapperRef}>
+                    <div className={`cat_wrapper ${isJumping ? 'jump' : ''} ${isMeowing ? 'meow' : ''} ${isPurring ? 'purr' : ''}`} ref={catWrapperRef}>
                         <div
                             className={`cat ${isFirstPose ? 'first_pose' : ''} ${isFaceLeft ? 'face_left' : ''} ${isFaceRight ? 'face_right' : ''}`}
                             ref={catRef}
                             style={{ left: `${catPosition.left}px` }}
                         >
                             <div className="cat-speech-anchor">
-                                <div className={`cat-speech-bubble ${tiny5.className}`}>meow</div>
+                                <div className={`cat-speech-bubble meow-bubble ${tiny5.className}`}>meow</div>
+                                <div className={`cat-speech-bubble purr-bubble ${tiny5.className}`}>purr</div>
                             </div>
                             <div
                                 className="cat-head"
                                 ref={headRef}
                                 style={{ top: `${catPosition.top}px` }}
+                                onClick={handleCatClick}
                             >
                                 <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 76.4 61.2">
                                     <polygon className="cat-eyes" points="63.8,54.1 50.7,54.1 50.7,59.6 27.1,59.6 27.1,54.1 12.4,54.1 12.4,31.8 63.8,31.8 " />
@@ -597,7 +625,7 @@ const Cat: React.FC = () => {
                     h5.1v10.2h5.1v10.2h5.1l0,25.5h-5.1v5.1h-5.1v5.1H10.2z"/>
                                 </svg>
                             </div>
-                            <div className="cat-body">
+                            <div className="cat-body" onClick={handleCatClick}>
                                 <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 91.7 40.8">
                                     <path d="M91.7,40.8H0V10.2h5.1V5.1h5.1V0h66.2v5.1h10.2v5.1h5.1L91.7,40.8z" />
                                 </svg>
