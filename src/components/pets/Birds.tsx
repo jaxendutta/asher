@@ -773,7 +773,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
           .fly.up .wing,
           .fly.down .wing {
             top: calc(var(--m) * 9px);
-            animation: infinite wing-flap 0.2s;
+            animation: wing-flap 0.2s infinite;
           }
 
           .fly.up .wing::after,
@@ -847,7 +847,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
           .fly.d-up .left-wing::after,
           .fly.side .left-wing::after,
           .fly.d-down .left-wing::after {
-            animation: infinite wing-flap-side 0.2s steps(1);
+            animation: wing-flap-side 0.2s steps(1) infinite;
             --w: 9px;
             z-index: 1;
           }
@@ -966,7 +966,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
           .fly.d-up .right-wing::after,
           .fly.side .right-wing::after,
           .fly.d-down .right-wing::after {
-            animation: infinite wing-flap-side 0.2s steps(1);
+            animation: wing-flap-side 0.2s steps(1) infinite;
             --w: 9px;
             z-index: 1;
           }
