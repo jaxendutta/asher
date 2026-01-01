@@ -1,5 +1,6 @@
 "use client";
 
+import { tiny5 } from '@/lib/fonts';
 import React, { useEffect, useRef, useState, createContext, useContext } from 'react';
 
 interface BirdBranchContextType {
@@ -459,7 +460,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
                     >
                         <div className="bird">
                             <div className="anchor">
-                                <div className="speech-bubble">tweet</div>
+                                <div className={`speech-bubble ${tiny5.className}`}>tweet</div>
                             </div>
                             <div className="head"></div>
                             <div className="body"></div>
@@ -1068,16 +1069,14 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             left: 50%;
             transform: translateX(-20%);
             background-color: #fff;
-            padding: calc(var(--m) * 1px) calc(var(--m) * 6px);
-            border: calc(var(--m) * 1px) dashed #000;
-            font-size: calc(var(--m) * 6px);
-            font-weight: bold;
+            padding: 2px 8px;
+            border: 1px dashed #000;
+            font-size: 12px;
             white-space: nowrap;
-            image-rendering: pixelated;
             opacity: 0;
             pointer-events: none;
             z-index: 999;
-            border-radius: calc(var(--m) * 4px);
+            border-radius: 8px;
           }
 
           .speech-bubble::after {
