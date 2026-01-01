@@ -1,6 +1,7 @@
 import { Section } from '@/components/ui/Section';
 import { PublicationCard } from '@/components/sections/PublicationCard';
 import { publications } from '@/data/publications';
+import Cat from '@/components/pets/Cat';
 
 export default function PublicationsPage() {
   return (
@@ -25,6 +26,8 @@ export default function PublicationsPage() {
           </div>
         )}
       </Section>
+
+      <Cat />
     </div>
   );
 }

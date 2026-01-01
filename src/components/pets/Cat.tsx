@@ -15,8 +15,11 @@ const Cat: React.FC = () => {
     const [isJumping, setIsJumping] = useState(false);
     const [isWalking, setIsWalking] = useState(false);
     const [catPosition, setCatPosition] = useState({ left: 100, top: -30 });
+    const [isAutoMode, setIsAutoMode] = useState(false);
 
     const posRef = useRef({ x: null as number | null, y: null as number | null });
+    const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const autoWalkTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         legsRef.current = document.querySelectorAll('.leg');
@@ -26,10 +29,34 @@ const Cat: React.FC = () => {
             setIsWalking(true);
         };
 
+        const resetInactivityTimer = () => {
+            // Clear existing timer
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+            // Stop auto mode when user interacts
+            setIsAutoMode(false);
+            // Set new inactivity timer
+            inactivityTimerRef.current = setTimeout(() => {
+                setIsAutoMode(true);
+            }, 2000);
+        };
+
+        const generateRandomPosition = () => {
+            if (!wrapperRef.current) return null;
+            const maxX = window.innerWidth - 100;
+            const minX = 50;
+            const randomX = Math.random() * (maxX - minX) + minX;
+            const wrapperRect = wrapperRef.current.getBoundingClientRect();
+            const randomY = wrapperRect.top + Math.random() * wrapperRect.height;
+            return { x: randomX, y: randomY };
+        };
+
         const handleMouseMotion = (e: MouseEvent) => {
             posRef.current.x = e.clientX;
             posRef.current.y = e.clientY;
             walk();
+            resetInactivityTimer();
         };
 
         const handleTouchMotion = (e: TouchEvent) => {
@@ -38,29 +65,39 @@ const Cat: React.FC = () => {
             posRef.current.x = touch.clientX;
             posRef.current.y = touch.clientY;
             walk();
+            resetInactivityTimer();
         };
 
         const decideTurnDirection = () => {
             if (!catRef.current || posRef.current.x === null) return;
-
             const catX = catRef.current.getBoundingClientRect().x;
-            if (catX < posRef.current.x) {
-                setCatPosition(prev => ({ ...prev, left: posRef.current.x! - 90 }));
+            const targetX = posRef.current.x;
+            const currentLeft = catRef.current.offsetLeft;
+            if (catX < targetX) {
+                const newLeft = targetX - 90;
+                setCatPosition(prev => ({ ...prev, left: newLeft }));
                 setIsFaceLeft(false);
                 setIsFaceRight(true);
-            } else {
-                setCatPosition(prev => ({ ...prev, left: posRef.current.x! + 10 }));
+                // Only walk if we're not at the target yet
+                if (Math.abs(currentLeft - newLeft) > 5) {
+                    setIsWalking(true);
+                }
+            } else if (catX > targetX) {
+                const newLeft = targetX + 10;
+                setCatPosition(prev => ({ ...prev, left: newLeft }));
                 setIsFaceRight(false);
                 setIsFaceLeft(true);
+                // Only walk if we're not at the target yet
+                if (Math.abs(currentLeft - newLeft) > 5) {
+                    setIsWalking(true);
+                }
             }
         };
 
         const headMotion = () => {
             if (!wrapperRef.current || !headRef.current || posRef.current.y === null) return;
-
             const wrapperRect = wrapperRef.current.getBoundingClientRect();
             const relativeY = posRef.current.y - wrapperRect.top;
-
             if (relativeY > 250) {
                 setCatPosition(prev => ({ ...prev, top: -15 }));
             } else {
@@ -70,9 +107,10 @@ const Cat: React.FC = () => {
 
         const decideStop = () => {
             if (!catRef.current || posRef.current.x === null) return;
-
-            if ((isFaceRight && posRef.current.x - 90 === catRef.current.offsetLeft) ||
-                (isFaceLeft && posRef.current.x + 10 === catRef.current.offsetLeft)) {
+            const currentLeft = catRef.current.offsetLeft;
+            const targetLeft = isFaceRight ? posRef.current.x - 90 : posRef.current.x + 10;
+            // Stop walking when within 5 pixels of target
+            if (Math.abs(currentLeft - targetLeft) < 5) {
                 setIsWalking(false);
             }
         };
@@ -106,13 +144,56 @@ const Cat: React.FC = () => {
         document.addEventListener('mousemove', handleMouseMotion);
         document.addEventListener('touchmove', handleTouchMotion);
 
+        // Start inactivity timer on mount
+        resetInactivityTimer();
         return () => {
             clearInterval(motionInterval);
             clearInterval(jumpInterval);
+
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+
+            if (autoWalkTimerRef.current) {
+                clearTimeout(autoWalkTimerRef.current);
+            }
+
             document.removeEventListener('mousemove', handleMouseMotion);
             document.removeEventListener('touchmove', handleTouchMotion);
         };
     }, [isFaceLeft, isFaceRight]);
+
+    // Trigger auto-walk when entering auto mode
+    useEffect(() => {
+        if (isAutoMode) {
+            // Start continuous auto-walking
+            const autoWalk = () => {
+                if (!isAutoMode || !wrapperRef.current || !catRef.current) return;
+                const maxX = window.innerWidth - 150;
+                const minX = 100;
+                const randomX = Math.random() * (maxX - minX) + minX;
+                const wrapperRect = wrapperRef.current.getBoundingClientRect();
+                const randomY = wrapperRect.top + Math.random() * wrapperRect.height;
+                // Set new target position
+                posRef.current.x = randomX;
+                posRef.current.y = randomY;
+                const nextDelay = Math.random() * 3000 + 2000; // 2-5 seconds between walks
+                autoWalkTimerRef.current = setTimeout(autoWalk, nextDelay);
+            };
+
+            // Start first auto-walk immediately
+            autoWalk();
+        } else {
+            if (autoWalkTimerRef.current) {
+                clearTimeout(autoWalkTimerRef.current);
+            }
+        }
+        return () => {
+            if (autoWalkTimerRef.current) {
+                clearTimeout(autoWalkTimerRef.current);
+            }
+        };
+    }, [isAutoMode]);
 
     return (
         <>
@@ -120,6 +201,7 @@ const Cat: React.FC = () => {
         * {
           box-sizing: border-box;
         }
+        
         .cat-outer-wrapper {
           position: fixed;
           width: 100%;
@@ -128,18 +210,21 @@ const Cat: React.FC = () => {
           left: 0;
           overflow: hidden;
           pointer-events: none;
-          z-index: 1000;
+          z-index: 50;
         }
+
         .cat-wrapper-container {
           position: absolute;
           height: 100%;
           width: 100%;
           top: 0;
-          pointer-events: all;
+          pointer-events: none;
         }
+        
         .cat-ground {
           display: none;
         }
+        
         .cat {
           position: absolute;
           bottom: 20px;
@@ -149,25 +234,31 @@ const Cat: React.FC = () => {
           transform-origin: center;
           background-color: transparent;
         }
+        
         .cat-body {
           position: absolute;
           height: 30px;
           width: 60px;
         }
+        
         .face_left .cat-body { 
           animation: turn_body_left forwards 0.5s;
         }
+        
         @keyframes turn_body_left {
           0%,100% { transform: scale(1); }
           50% { transform: scale(0.5, 1); }
         }
+        
         .face_right .cat-body {
           animation: turn_body_right forwards 0.5s;
         }
+        
         @keyframes turn_body_right {
           0%,100% { transform: scale(1); }
           50% { transform: scale(0.5, 1); }
         }
+        
         .cat-head {
           position: absolute;
           height: 40px;
@@ -176,10 +267,12 @@ const Cat: React.FC = () => {
           transition: 0.5s;
           z-index: 50;
         }
+        
         .first_pose .cat-head,
         .face_left .cat-head{ 
           right: 22px;
         }
+        
         .cat-tail {
           position: absolute;
           top: -25px;
@@ -188,6 +281,7 @@ const Cat: React.FC = () => {
           animation: tail_motion forwards 2s;
           transform-origin: bottom right;
         }
+        
         @keyframes tail_motion {
           0%,100% { 
             left: -5px;
@@ -198,11 +292,13 @@ const Cat: React.FC = () => {
             transform: rotate(-50deg) scale(-1,1); 
           }
         }
+        
         .first_pose .cat-tail,
         .face_left .cat-tail {
           left: 45px;
           animation: tail_motion_alt forwards 2s;
         }
+        
         @keyframes tail_motion_alt {
           0%,100% { 
             left: 45px;
@@ -213,133 +309,185 @@ const Cat: React.FC = () => {
             transform: rotate(50deg) scale(-1,1); 
           }
         }
+        
         .leg {
           position: absolute;
           height: 20px;
           width: 10px;
           transform-origin: top center;
         }
+        
         .front-legs,
         .back-legs {
           position: absolute;
           height: 30px;
           transition: 0.7s;
         }
+        
         .front-legs {
           width: 30px;
           right: 0;
         }
+        
         .back-legs {
           width: 25px;
           left: 0; 
         }
+        
         .face_left .leg svg {
           transform: scale(-1,1);
         }
-        .face_right .front-legs{ right: 0; }
+        
+        .face_right .front-legs {
+          right: 0;
+        }
+
         .first_pose .front-legs,
-        .face_left .front-legs{ right: 30px; }
-        .face_right .back-legs{ left: 0; }
+        .face_left .front-legs { 
+          right: 30px; 
+        }
+
+        .face_right .back-legs {
+          left: 0;
+        }
+        
         .first_pose .back-legs,
-        .face_left .back-legs{ left: 35px; }
+        .face_left .back-legs {
+          left: 35px; 
+        }
+        
         .leg.one,
         .leg.three  {
           bottom: -15px;
           right: 0;
         }
+        
         .leg.two, 
         .leg.four {
           bottom: -15px;
           left: 0px;
         }
+        
         .leg.one.walk, 
         .leg.three.walk {
           animation: infinite 0.3s walk;
         }
+        
         .leg.two.walk, 
         .leg.four.walk {
           animation: infinite 0.3s walk_alt;
         }
+        
         @keyframes walk {
           0%,100% {transform: rotate(-10deg);}
           50% {transform: rotate(10deg);}
         }
+        
         @keyframes walk_alt {
           0%,100% {transform: rotate(10deg);}
           50% {transform: rotate(-10deg);}
         }
+        
         .cat_wrapper {
           position: absolute;
           bottom: 0;
         }
+        
         .cat_wrapper.jump .leg.one { 
           animation: infinite 0.3s walk;
         }
+        
         .cat_wrapper.jump .leg.two { 
           animation: infinite 0.3s walk_alt;
         }
+        
         .cat_wrapper.jump .leg.three,
         .cat_wrapper.jump .leg.four {
           animation: none;
         }
+        
         .cat_wrapper.jump .cat.face_right .back-legs {
           transform-origin: center;
           transform: rotate(50deg);
         }
+        
         .cat_wrapper.jump .cat.face_left .back-legs {
           transform-origin: center;
           transform: rotate(-50deg);
         }
+        
         .cat_wrapper.jump .cat.face_right .front-legs {
           transform-origin: center;
           transform: rotate(-60deg);
         }
+        
         .cat_wrapper.jump .cat.face_left .front-legs {
           transform-origin: center;
           transform: rotate(60deg);
         }
+        
         .cat_wrapper.jump{
           animation: jump forwards 1s;
         }
+        
         @keyframes jump {
           0%, 100%  {bottom: 0px;}
           50% {bottom: 200px;}
         }
+        
         .jump .face_left{ 
           animation: forwards 0.5s body_stand_left;
           transform-origin: right bottom;
         }
+        
         .jump .face_right{ 
           animation: forwards 0.5s body_stand_right;
           transform-origin: left bottom;
         }
+        
         @keyframes body_stand_right {
           0% {transform: rotate(0deg);}
           100% {transform: rotate(-45deg);}
         }
+        
         @keyframes body_stand_left {
           0% {transform: rotate(0deg);}
           100% {transform: rotate(45deg);}
         }
+        
         .cat-svg {
           height: 100%;
           width: 100%;
         }
+        
         .cat-svg polygon,
         .cat-svg path {
           fill: #e89b5c;
         }
+        
         .cat-svg polygon.cat-eyes {
           fill: #2d2d2d;
+        }
+        
+        .yarn-ball {
+          position: fixed;
+          bottom: 15px;
+          right: 20px;
+          width: 40px;
+          height: 40px;
+          z-index: 50;
+          pointer-events: none;
+        }
+        
+        .yarn-ball svg {
+          width: 100%;
+          height: 100%;
         }
       `}</style>
 
             <div className="cat-outer-wrapper">
                 <div className="cat-wrapper-container" ref={wrapperRef}>
-                    <div
-                        className={`cat_wrapper ${isJumping ? 'jump' : ''}`}
-                        ref={catWrapperRef}
-                    >
+                    <div className={`cat_wrapper ${isJumping ? 'jump' : ''}`} ref={catWrapperRef}>
                         <div
                             className={`cat ${isFirstPose ? 'first_pose' : ''} ${isFaceLeft ? 'face_left' : ''} ${isFaceRight ? 'face_right' : ''}`}
                             ref={catRef}
@@ -357,7 +505,6 @@ const Cat: React.FC = () => {
                     h5.1v10.2h5.1v10.2h5.1l0,25.5h-5.1v5.1h-5.1v5.1H10.2z"/>
                                 </svg>
                             </div>
-
                             <div className="cat-body">
                                 <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 91.7 40.8">
                                     <path d="M91.7,40.8H0V10.2h5.1V5.1h5.1V0h66.2v5.1h10.2v5.1h5.1L91.7,40.8z" />
@@ -370,7 +517,6 @@ const Cat: React.FC = () => {
                                     </svg>
                                 </div>
                             </div>
-
                             <div className="front-legs">
                                 <div className={`leg one ${isWalking ? 'walk' : ''}`}>
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 14 30.5">
@@ -383,7 +529,6 @@ const Cat: React.FC = () => {
                                     </svg>
                                 </div>
                             </div>
-
                             <div className="back-legs">
                                 <div className={`leg three ${isWalking ? 'walk' : ''}`}>
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 14 30.5">
@@ -399,8 +544,30 @@ const Cat: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
                 <div className="cat-ground"></div>
+            </div>
+            <div className="yarn-ball">
+                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    {/* Main ball body */}
+                    <rect x="6" y="4" width="8" height="2" fill="#d64545" />
+                    <rect x="4" y="6" width="12" height="2" fill="#d64545" />
+                    <rect x="3" y="8" width="14" height="2" fill="#c93636" />
+                    <rect x="2" y="10" width="16" height="2" fill="#d64545" />
+                    <rect x="3" y="12" width="14" height="2" fill="#c93636" />
+                    <rect x="4" y="14" width="12" height="2" fill="#d64545" />
+                    <rect x="6" y="16" width="8" height="2" fill="#c93636" />
+                    {/* Yarn strand wrapping */}
+                    <rect x="8" y="4" width="2" height="2" fill="#e85555" />
+                    <rect x="10" y="6" width="2" height="2" fill="#e85555" />
+                    <rect x="12" y="8" width="2" height="2" fill="#e85555" />
+                    <rect x="5" y="10" width="2" height="2" fill="#e85555" />
+                    <rect x="7" y="12" width="2" height="2" fill="#e85555" />
+                    <rect x="9" y="14" width="2" height="2" fill="#e85555" />
+                    {/* Loose yarn strand */}
+                    <rect x="15" y="18" width="2" height="2" fill="#d64545" />
+                    <rect x="17" y="16" width="2" height="2" fill="#d64545" />
+                    <rect x="16" y="14" width="2" height="2" fill="#d64545" />
+                </svg>
             </div>
         </>
     );
