@@ -236,9 +236,9 @@ const Cat: React.FC = () => {
             <Image
                 src="/images/objects/cat_tree.png"
                 alt="Cat Tree"
-                className="fixed -bottom-4 -right-12 z-40 pointer-events-none brightness-105"
-                width={200}
-                height={200}
+                className="fixed bottom-2 right-0 z-40 pointer-events-none brightness-105"
+                width={105}
+                height={105}
             />
 
             <style>{`
@@ -513,6 +513,32 @@ const Cat: React.FC = () => {
           fill: #ffa962ff;
         }
         
+        .cat-svg .cat-head-fill {
+          fill: #ffa962ff;
+          stroke: #d17020ff;
+          stroke-width: 0.25;
+        }
+        
+        .cat-svg .cat-body-fill {
+          fill: #ffa962ff;
+          stroke: #d17020ff;
+          stroke-width: 0.25;
+        }
+        
+        .cat-svg .cat-stripe {
+          fill: #d68742;
+        }
+        
+        .cat-svg .cat-inner-ear {
+          fill: #ffb3ba;
+        }
+        
+        .cat-svg .cat-mouth {
+          stroke:#000;
+          stroke-width: 3;
+          fill: none;
+        }
+        
         .cat-svg polygon.cat-eyes {
           fill: #2d2d2d;
         }
@@ -629,45 +655,72 @@ const Cat: React.FC = () => {
                                 onClick={handleCatClick}
                             >
                                 <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 76.4 61.2">
-                                    <polygon className="cat-eyes" points="63.8,54.1 50.7,54.1 50.7,59.6 27.1,59.6 27.1,54.1 12.4,54.1 12.4,31.8 63.8,31.8 " />
+                                    <rect className="cat-eyes" x="0" y="30" width="75" height="20" />
                                     <path d="M15.3,45.9h5.1V35.7h-5.1C15.3,35.7,15.3,45.9,15.3,45.9z M45.8,56.1V51H30.6v5.1H45.8z M61.1,35.7H56v10.2h5.1
                     V35.7z M10.2,61.2v-5.1H5.1V51H0V25.5h5.1V15.3h5.1V5.1h5.1V0h5.1v5.1h5.1v5.1h5.1v5.1c0,0,15.2,0,15.2,0v-5.1h5.1V5.1H56V0h5.1v5.1
                     h5.1v10.2h5.1v10.2h5.1l0,25.5h-5.1v5.1h-5.1v5.1H10.2z"/>
+
+
+                                    {/* Stripes on head */}
+                                    <rect className="cat-stripe" x="29.6" y="15" width="4" height="10.4" />
+                                    <rect className="cat-stripe" x="37.3" y="15" width="4" height="10.4" />
+                                    <rect className="cat-stripe" x="45.9" y="15" width="4" height="10.4" />
+
+                                    {/* Inner ears (pink) */}
+                                    <rect className="cat-inner-ear" x="15.3" y="10.2" width="5.1" height="5.1" />
+                                    <rect className="cat-inner-ear" x="56" y="10.2" width="5.1" height="5.1" />
+
+                                    {/* W-shaped mouth */}
+                                    <path
+                                        className="cat-mouth"
+                                        d="M38,48 v6 l-3,2 m3,-2 l3,2"
+                                        fill="none"
+                                        stroke="#000"
+                                        strokeWidth="1"
+                                        strokeLinecap="square"
+                                    />
                                 </svg>
                             </div>
                             <div className="cat-body" onClick={handleCatClick}>
                                 <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 91.7 40.8">
-                                    <path d="M91.7,40.8H0V10.2h5.1V5.1h5.1V0h66.2v5.1h10.2v5.1h5.1L91.7,40.8z" />
+                                    {/* Body with border */}
+                                    <path className="cat-body-fill" d="M91.7,40.8H0V10.2h5.1V5.1h5.1V0h66.2v5.1h10.2v5.1h5.1L91.7,40.8z" />
+
+                                    {/* Stripes on the back */}
+                                    <rect className="cat-stripe" x="20.4" y="5.1" width="5.1" height="30.6" />
+                                    <rect className="cat-stripe" x="35.7" y="5.1" width="5.1" height="30.6" />
+                                    <rect className="cat-stripe" x="51" y="5.1" width="5.1" height="30.6" />
+                                    <rect className="cat-stripe" x="66.3" y="5.1" width="5.1" height="30.6" />
                                 </svg>
                                 <div className="cat-tail">
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 25.5 61.1">
                                         <polygon points="10.2,56 10.2,50.9 5.1,50.9 5.1,40.7 0,40.7 0,20.4 5.1,20.4 5.1,10.2 10.2,10.2 10.2,5.1 15.3,5.1 
                       15.3,0 25.5,0 25.5,10.2 20.4,10.2 20.4,15.3 15.3,15.3 15.3,20.4 10.2,20.4 10.2,40.7 15.3,40.7 15.3,45.8 20.4,45.8 20.4,50.9 
-                      25.5,50.9 25.5,61.1 15.3,61.1 15.3,56 "/>
+                      25.5,50.9 25.5,61.1 15.3,61.1 15.3,56 " stroke="#d17020ff" strokeWidth="0.25" />
                                     </svg>
                                 </div>
                             </div>
                             <div className="front-legs">
                                 <div className={`leg one ${isWalking ? 'walk' : ''}`}>
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 14 30.5">
-                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0 " />
+                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0" stroke="#d17020ff" strokeWidth="0.25" />
                                     </svg>
                                 </div>
                                 <div className={`leg two ${isWalking ? 'walk' : ''}`}>
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 14 30.5">
-                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0 " />
+                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0" stroke="#d17020ff" strokeWidth="0.25" />
                                     </svg>
                                 </div>
                             </div>
                             <div className="back-legs">
                                 <div className={`leg three ${isWalking ? 'walk' : ''}`}>
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 14 30.5">
-                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0 " />
+                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0" stroke="#d17020ff" strokeWidth="0.25" />
                                     </svg>
                                 </div>
                                 <div className={`leg four ${isWalking ? 'walk' : ''}`}>
                                     <svg className="cat-svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 14 30.5">
-                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0 " />
+                                        <polygon points="15.3,30.5 5.1,30.5 5.1,25.4 0,25.4 0,0 15.3,0" stroke="#d17020ff" strokeWidth="0.25" />
                                     </svg>
                                 </div>
                             </div>
