@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { tiny5 } from '@/lib/fonts';
 
 const Cat: React.FC = () => {
@@ -231,6 +232,15 @@ const Cat: React.FC = () => {
 
     return (
         <>
+            {/* Cat tree in bottom right corner */}
+            <Image
+                src="/images/objects/cat_tree.png"
+                alt="Cat Tree"
+                className="fixed -bottom-4 -right-12 z-40 pointer-events-none brightness-105"
+                width={200}
+                height={200}
+            />
+
             <style>{`
         * {
           box-sizing: border-box;
@@ -500,7 +510,7 @@ const Cat: React.FC = () => {
         
         .cat-svg polygon,
         .cat-svg path {
-          fill: #e89b5c;
+          fill: #ffa962ff;
         }
         
         .cat-svg polygon.cat-eyes {
@@ -586,8 +596,8 @@ const Cat: React.FC = () => {
         
         .yarn-ball {
           position: fixed;
-          bottom: 15px;
-          right: 20px;
+          bottom: 10px;
+          left: 12px;
           width: 40px;
           height: 40px;
           z-index: 50;
@@ -599,7 +609,7 @@ const Cat: React.FC = () => {
           height: 100%;
         }
       `}</style>
-
+            {/* Cat Component */}
             <div className="cat-outer-wrapper">
                 <div className="cat-wrapper-container" ref={wrapperRef}>
                     <div className={`cat_wrapper ${isJumping ? 'jump' : ''} ${isMeowing ? 'meow' : ''} ${isPurring ? 'purr' : ''}`} ref={catWrapperRef}>
@@ -666,6 +676,8 @@ const Cat: React.FC = () => {
                 </div>
                 <div className="cat-ground"></div>
             </div>
+
+            {/* Yarn ball in bottom left corner */}
             <div className="yarn-ball">
                 <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     {/* Main ball body */}
