@@ -1,7 +1,6 @@
 import { Section } from '@/components/ui/Section';
 import { ResearchCard } from '@/components/sections/ResearchCard';
 import { researchExperience } from '@/data/research';
-import Cat from '@/components/pets/Cat';
 
 export default function ResearchPage() {
   return (
