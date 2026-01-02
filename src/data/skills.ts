@@ -3,10 +3,8 @@
 // ============================================================================
 
 import type { Skill } from '@/types';
-import { BsJournalCode } from 'react-icons/bs';
-import { GiLabCoat, GiMaterialsScience } from 'react-icons/gi';
+import { GiMaterialsScience } from 'react-icons/gi';
 import { LiaLaptopCodeSolid } from 'react-icons/lia';
-import { SiScilab } from 'react-icons/si';
 import { TbDatabaseSmile } from 'react-icons/tb';
 
 export const skills: Skill[] = [
@@ -34,7 +32,7 @@ export const skills: Skill[] = [
     ],
   },
   {
-    category: 'Databases & Bioinformatics',
+    category: 'Databases + Bioinformatics',
     icon: TbDatabaseSmile,
     items: [
       'PDB',

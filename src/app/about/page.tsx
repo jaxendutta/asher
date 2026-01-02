@@ -9,7 +9,7 @@ import { PiMicroscope } from 'react-icons/pi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter flex flex-col gap-6">
+    <div className="page-enter flex flex-col gap-6 max-w-7xl mx-auto">
       {/* Hero Section */}
       <Card className="my-12 px-6 py-10 opacity-95 bg-gradient-to-br from-[#D9EAD3] to-[#F4EBD0]/70">
         <div className="max-w-4xl mx-auto text-center">
@@ -29,8 +29,9 @@ export default function AboutPage() {
                 </Badge>
               </Link>
               <Link href={SITECONFIG.supervisor.url} target="_blank" rel="noopener noreferrer">
-                <Badge className="flex flex-row gap-1 whitespace-nowrap">
-                  Supervisor: {SITECONFIG.supervisor.name}
+                <Badge className="flex flex-row gap-1 whitespace-nowrap pl-1">
+                  <span className="bg-white/40 rounded-full px-2">Supervisor</span>
+                  {SITECONFIG.supervisor.name}
                   <FiLink className="inline rounded-full p-0.25" />
                 </Badge>
               </Link>
@@ -59,23 +60,23 @@ export default function AboutPage() {
 
       {/* Skills */}
       {skills.map((skillCategory, index) => (
-      <Card hoverable variant="bordered" key={index}>
-        <CardHeader>
-          <span className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
-            {skillCategory.icon && <skillCategory.icon />}
-            {skillCategory.category}
-          </span>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {skillCategory.items.sort().map((skill) => (
-              <Badge key={skill} variant="default">
-                {skill}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <Card hoverable variant="bordered" key={index}>
+          <CardHeader>
+            <span className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
+              {skillCategory.icon && <skillCategory.icon />}
+              {skillCategory.category}
+            </span>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {skillCategory.items.sort().map((skill) => (
+                <Badge key={skill} variant="default">
+                  {skill}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );
