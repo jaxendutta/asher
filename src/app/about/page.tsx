@@ -52,7 +52,7 @@ export default function AboutPage() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {researchInterests.map((interest) => (
-                <Badge key={interest.id} variant="default">
+                <Badge key={interest.id} variant="default" className="text-xs">
                   {interest.title}
                 </Badge>
               ))}
