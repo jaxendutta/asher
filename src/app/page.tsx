@@ -1,3 +1,4 @@
+import CatChat from '@/components/pets/CatChat';
 import Ducks from '@/components/pets/Ducks';
 import { Hero } from '@/components/sections/Hero';
 
@@ -6,6 +7,7 @@ export default function Home() {
     <>
       <Hero />
       <Ducks />
+      <CatChat />
     </>
   );
 }
