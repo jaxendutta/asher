@@ -562,7 +562,7 @@ const Cat: React.FC = () => {
           left: 50%;
           transform: translateX(-50%);
           background-color: #FFF;
-          padding: 4px 12px;
+          padding: 3px 10px 1px 10px;
           border: 1px dashed #000;
           border-radius: 8px;
           font-size: 14px;
@@ -582,20 +582,20 @@ const Cat: React.FC = () => {
           height: 0;
           border-left: 6px dashed transparent;
           border-right: 6px dashed transparent;
-          border-top: 6px dashed #FFF;
+          border-top: 6px dashed #000;
         }
 
         .cat-speech-bubble::before {
           content: '';
           position: absolute;
-          bottom: -4px;
+          bottom: -4.5px;
           left: 50%;
           transform: translateX(-50%);
           width: 0;
           height: 0;
-          border-left: 4px dashed transparent;
-          border-right: 4px dashed transparent;
-          border-top: 4px dashed #FFF;
+          border-left: 5px dashed transparent;
+          border-right: 5px dashed transparent;
+          border-top: 5px dashed #FFF;
           z-index: 1;
         }
 

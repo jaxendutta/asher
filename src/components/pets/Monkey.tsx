@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState, createContext, useContext } from 'react';
+import { Tiny5 } from 'next/font/google';
+
+const tiny5 = Tiny5({ weight: '400', subsets: ['latin'] });
 
 interface MonkeyBarContextType {
     registerBar: (id: string, element: HTMLDivElement) => void;
@@ -63,7 +66,9 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
         isReverse: false,
         isAlternate: false,
         isJumping: false,
-        jumpHeight: '-50px'
+        jumpHeight: '-50px',
+        isChittering: false,
+        chitterMessage: 'chitter' as 'chitter' | 'chatter'
     });
 
     const updateBarPositions = () => {
@@ -170,6 +175,7 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
                     : '-50px';
 
                 return {
+                    ...prev,
                     x: targetPos.x,
                     y: targetPos.y,
                     isReverse: newIsReverse,
@@ -187,18 +193,56 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
         return () => clearInterval(interval);
     }, []);
 
+    // Random chittering effect
+    useEffect(() => {
+        const chitterInterval = setInterval(() => {
+            // Random chance to chitter (similar rate to ducks)
+            if (Math.random() < 0.3) {
+                setMonkeyState(prev => ({
+                    ...prev,
+                    isChittering: true,
+                    chitterMessage: prev.chitterMessage === 'chitter' ? 'chatter' : 'chitter'
+                }));
+
+                setTimeout(() => {
+                    setMonkeyState(prev => ({ ...prev, isChittering: false }));
+                }, 1500);
+            }
+        }, 3000);
+
+        return () => clearInterval(chitterInterval);
+    }, []);
+
+    // Handle click to chitter
+    const handleMonkeyClick = () => {
+        setMonkeyState(prev => ({
+            ...prev,
+            isChittering: true,
+            chitterMessage: prev.chitterMessage === 'chitter' ? 'chatter' : 'chitter'
+        }));
+
+        setTimeout(() => {
+            setMonkeyState(prev => ({ ...prev, isChittering: false }));
+        }, 1500);
+    };
+
     return (
         <MonkeyBarContext.Provider value={{ registerBar, unregisterBar }}>
             <div ref={wrapperRef} className="monkey-wrapper relative min-h-screen">
                 <div
                     className={`monkey ${monkeyState.isReverse ? 'reverse' : ''} ${monkeyState.isAlternate ? 'alternate' : ''
-                        } ${monkeyState.isJumping ? 'jump' : ''}`}
+                        } ${monkeyState.isJumping ? 'jump' : ''} ${monkeyState.isChittering ? 'chitter' : ''}`}
                     style={{
                         transform: `translate(${monkeyState.x}px, ${monkeyState.y}px)`,
                     }}
                 >
                     <div className="swing-wrapper">
-                        <div className="body">
+                        <div className="body" onClick={handleMonkeyClick} style={{ cursor: 'pointer', pointerEvents: 'auto' }}>
+                            <div className="anchor">
+                                <div className={`speech-bubble ${tiny5.className}`}>
+                                    {monkeyState.chitterMessage}
+                                </div>
+                            </div>
                             <div className="head">
                                 <div
                                     className="face"
@@ -354,6 +398,16 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
             image-rendering: pixelated;
           }
 
+          .monkey .speech-bubble,
+          .monkey .anchor {
+            transition: none;
+            background-size: 100%;
+            width: auto;
+            height: auto;
+            background-repeat: repeat;
+            image-rendering: none;
+          }
+
           .left {
             rotate: var(--left-shoulder-angle);
             translate: var(--left-shoulder-pos) 0;
@@ -401,6 +455,77 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAIZJREFUSEtjZEADG1rN/qOLUYMfUH2KEdkcOIdWFqI7GuYAsMX0shTmCJDlA2cxvX0L8zXjqMXUyDrEmDEa1MSEElXUjAY1VYKRGENGg5qYUKKKmtGgpkowEmPICAzqkdfmGlAf09NylHb1gFpMD8uRuzEo/RlaWo6z74Rc2lC7rY1uKcguAOOsW5NYqXbPAAAAAElFTkSuQmCC);
           }
 
+          .anchor {
+            position: absolute;
+            left: 50%;
+            top: -30px;
+            transform: translateX(-50%);
+            width: 0px;
+            height: 0px;
+            display: flex;
+            align-items: end;
+            z-index: 999;
+          }
+
+          .speech-bubble {
+            position: absolute;
+            bottom: calc(var(--m) * 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #FFF;
+            padding: 3px 12px 1px 12px;
+            border: 1.5px dashed #000;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+          }
+
+          .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px dashed transparent;
+            border-right: 6px dashed transparent;
+            border-top: 6px dashed #000;
+          }
+
+          .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -4.5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px dashed transparent;
+            border-right: 5px dashed transparent;
+            border-top: 5px dashed #FFF;
+            z-index: 1;
+          }
+
+          .monkey.chitter .speech-bubble {
+            opacity: 1;
+            animation: fade-in-monkey 0.1s;
+          }
+
+          @keyframes fade-in-monkey {
+            from {
+              opacity: 0;
+              transform: translateX(-50%) translateY(3px);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(-50%) translateY(0);
+            }
+          }
+
           .head {
             top: calc(var(--m) * -12px);
             left: calc(var(--m) * 6px);
@@ -422,8 +547,8 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
             background-position: center;
             background-repeat: no-repeat;
             image-rendering: pixelated;
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAGtJREFUSEtjZMACNrSa/ccmjkssoPoUI7ocigCpBqIbhmwB3GBKDYVZAjMcbDC1DEU2nJHahsIMHzUYnlBGg2I0KDCLpyGYKmhWCNHUYGoajlIew+KU0iIUaw2CnGBItYBgnUeO4dgMBZkDAArwRQ8BLYjYAAAAAElFTkSuQmCC);
-            }
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAGtJREFUSEtjZMACNrSa/ccmjkssoPoUI7ocigCpBqIbhmwB3GBKDQVZAjMcbDC1DEU2nJHahsIMHzUYnlBGg2I0KDCLpyGYKmhWCNHUYGoajlIew+KU0iIUaw2CnGBItYBgnUeO4dgMBZkDAArwRQ8BLYjYAAAAAElFTkSuQmCC);
+          }
 
           .reverse .face {
             left: 0px;

@@ -147,10 +147,10 @@ const Ducks: React.FC = () => {
   // Quack function for mother duck
   const quack = () => {
     setMotherDuck(prev => ({ ...prev, isQuacking: true }));
-    
+
     setTimeout(() => {
       setMotherDuck(prev => ({ ...prev, isQuacking: false }));
-      
+
       // Schedule next quack randomly
       const nextQuackDelay = Math.random() * 6000 + 3000; // 3-9 seconds
       quackTimerRef.current = setTimeout(quack, nextQuackDelay);
@@ -634,22 +634,22 @@ const Ducks: React.FC = () => {
           transform: translateX(-50%);
           width: 0;
           height: 0;
-          border-left: 5px dashed transparent;
-          border-right: 5px dashed transparent;
-          border-top: 6px solid #FFF;
+          border-left: 6px dashed transparent;
+          border-right: 6px dashed transparent;
+          border-top: 6px dashed #000;
         }
 
         .duck-speech-bubble::before {
           content: '';
           position: absolute;
-          bottom: -4px;
+          bottom: -4.5px;
           left: 50%;
           transform: translateX(-50%);
           width: 0;
           height: 0;
-          border-left: 4px dashed transparent;
-          border-right: 4px dashed transparent;
-          border-top: 4px solid #FFF;
+          border-left: 5px dashed transparent;
+          border-right: 5px dashed transparent;
+          border-top: 5px dashed #FFF;
           z-index: 1;
         }
 

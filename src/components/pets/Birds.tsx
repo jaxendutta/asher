@@ -4,480 +4,480 @@ import { tiny5 } from '@/lib/fonts';
 import React, { useEffect, useRef, useState, createContext, useContext } from 'react';
 
 interface BirdBranchContextType {
-    registerBranch: (id: string, element: HTMLElement) => void;
-    unregisterBranch: (id: string) => void;
+  registerBranch: (id: string, element: HTMLElement) => void;
+  unregisterBranch: (id: string) => void;
 }
 
 const BirdBranchContext = createContext<BirdBranchContextType | null>(null);
 
 interface BirdBranchProps {
-    id: string;
-    className?: string;
-    size?: 's' | 'm';
+  id: string;
+  className?: string;
+  size?: 's' | 'm';
 }
 
 export function BirdBranch({ id, className = '', size = 'm' }: BirdBranchProps) {
-    const ref = useRef<HTMLDivElement>(null);
-    const context = useContext(BirdBranchContext);
+  const ref = useRef<HTMLDivElement>(null);
+  const context = useContext(BirdBranchContext);
 
-    useEffect(() => {
-        if (ref.current && context) {
-            context.registerBranch(id, ref.current);
-            return () => context.unregisterBranch(id);
-        }
-    }, [id, context]);
+  useEffect(() => {
+    if (ref.current && context) {
+      context.registerBranch(id, ref.current);
+      return () => context.unregisterBranch(id);
+    }
+  }, [id, context]);
 
-    return (
-        <div
-            ref={ref}
-            className={`bird-perch box ${size} ${className}`}
-        />
-    );
+  return (
+    <div
+      ref={ref}
+      className={`bird-perch box ${size} ${className}`}
+    />
+  );
 }
 
 interface BirdsProps {
-    birdCount?: number;
-    children: React.ReactNode;
+  birdCount?: number;
+  children: React.ReactNode;
 }
 
 interface BirdState {
-    id: number;
-    pos: { x: number; y: number };
-    dirClasses: string[];
-    isFlying: boolean;
-    isHopping: boolean;
-    isTweeting: boolean;
-    hopCount: number;
-    zone: number;
-    twitchPos: number;
-    hopInterval: NodeJS.Timeout | null;
-    twitchInterval: NodeJS.Timeout | null;
-    animationTimer: NodeJS.Timeout | null;
+  id: number;
+  pos: { x: number; y: number };
+  dirClasses: string[];
+  isFlying: boolean;
+  isHopping: boolean;
+  isTweeting: boolean;
+  hopCount: number;
+  zone: number;
+  twitchPos: number;
+  hopInterval: NodeJS.Timeout | null;
+  twitchInterval: NodeJS.Timeout | null;
+  animationTimer: NodeJS.Timeout | null;
 }
 
 const dirConfig: Record<number, string[]> = {
-    0: ['up'],
-    360: ['up'],
-    45: ['d-up', 'right'],
-    90: ['side', 'right'],
-    135: ['d-down', 'right'],
-    180: ['down'],
-    225: ['d-down', 'left'],
-    270: ['side', 'left'],
-    315: ['d-up', 'left'],
+  0: ['up'],
+  360: ['up'],
+  45: ['d-up', 'right'],
+  90: ['side', 'right'],
+  135: ['d-down', 'right'],
+  180: ['down'],
+  225: ['d-down', 'left'],
+  270: ['side', 'left'],
+  315: ['d-up', 'left'],
 };
 
 export default function Birds({ birdCount = 6, children }: BirdsProps) {
-    const [birds, setBirds] = useState<BirdState[]>([]);
-    const branchesRef = useRef<Map<string, HTMLElement>>(new Map());
-    const birdsRef = useRef<BirdState[]>([]);
-    const branchAssignments = useRef<Map<number, number>>(new Map());
-    const settingsRef = useRef({ isResizing: false, resizeTimer: null as NodeJS.Timeout | null });
+  const [birds, setBirds] = useState<BirdState[]>([]);
+  const branchesRef = useRef<Map<string, HTMLElement>>(new Map());
+  const birdsRef = useRef<BirdState[]>([]);
+  const branchAssignments = useRef<Map<number, number>>(new Map());
+  const settingsRef = useRef({ isResizing: false, resizeTimer: null as NodeJS.Timeout | null });
 
-    const registerBranch = (id: string, element: HTMLElement) => {
-        branchesRef.current.set(id, element);
-    };
+  const registerBranch = (id: string, element: HTMLElement) => {
+    branchesRef.current.set(id, element);
+  };
 
-    const unregisterBranch = (id: string) => {
-        branchesRef.current.delete(id);
-    };
+  const unregisterBranch = (id: string) => {
+    branchesRef.current.delete(id);
+  };
 
-    const radToDeg = (rad: number) => Math.round(rad * (180 / Math.PI));
-    const nearestN = (x: number, n: number) => (x === 0 ? 0 : x - 1 + Math.abs(((x - 1) % n) - n));
-    const randomN = (max: number) => Math.ceil(Math.random() * max);
+  const radToDeg = (rad: number) => Math.round(rad * (180 / Math.PI));
+  const nearestN = (x: number, n: number) => (x === 0 ? 0 : x - 1 + Math.abs(((x - 1) % n) - n));
+  const randomN = (max: number) => Math.ceil(Math.random() * max);
 
-    const elAngle = (bird: BirdState, newPos: { x: number; y: number }) => {
-        const angle = radToDeg(Math.atan2(bird.pos.y - newPos.y, bird.pos.x - newPos.x)) - 90;
-        const adjustedAngle = angle < 0 ? angle + 360 : angle;
-        return Math.round(adjustedAngle);
-    };
+  const elAngle = (bird: BirdState, newPos: { x: number; y: number }) => {
+    const angle = radToDeg(Math.atan2(bird.pos.y - newPos.y, bird.pos.x - newPos.x)) - 90;
+    const adjustedAngle = angle < 0 ? angle + 360 : angle;
+    return Math.round(adjustedAngle);
+  };
 
-    const faceDirection = (bird: BirdState, newPos: { x: number; y: number }) => {
-        const angle = nearestN(elAngle(bird, newPos), 45);
-        return dirConfig[angle] || ['down'];
-    };
+  const faceDirection = (bird: BirdState, newPos: { x: number; y: number }) => {
+    const angle = nearestN(elAngle(bird, newPos), 45);
+    return dirConfig[angle] || ['down'];
+  };
 
-    const isFacingRight = (dirClasses: string[]) => dirClasses.includes('right');
+  const isFacingRight = (dirClasses: string[]) => dirClasses.includes('right');
 
-    const isNearEdge = (bird: BirdState, box: HTMLElement) => {
-        const buffer = 30;
-        const rect = box.getBoundingClientRect();
-        const isFacing = isFacingRight(bird.dirClasses);
-        return isFacing
-            ? Math.abs(bird.pos.x - rect.right) < buffer
-            : Math.abs(bird.pos.x - rect.left) < buffer;
-    };
+  const isNearEdge = (bird: BirdState, box: HTMLElement) => {
+    const buffer = 30;
+    const rect = box.getBoundingClientRect();
+    const isFacing = isFacingRight(bird.dirClasses);
+    return isFacing
+      ? Math.abs(bird.pos.x - rect.right) < buffer
+      : Math.abs(bird.pos.x - rect.left) < buffer;
+  };
 
-    const turn = (dirClasses: string[]) => {
-        return dirClasses.map(d => {
-            if (d === 'right') return 'left';
-            if (d === 'left') return 'right';
-            return d;
-        });
-    };
+  const turn = (dirClasses: string[]) => {
+    return dirClasses.map(d => {
+      if (d === 'right') return 'left';
+      if (d === 'left') return 'right';
+      return d;
+    });
+  };
 
-    const hop = (bird: BirdState, box: HTMLElement) => {
-        if (bird.isHopping || bird.isFlying) return;
+  const hop = (bird: BirdState, box: HTMLElement) => {
+    if (bird.isHopping || bird.isFlying) return;
 
-        bird.isHopping = true;
-        bird.hopCount = 0;
+    bird.isHopping = true;
+    bird.hopCount = 0;
 
-        if (isNearEdge(bird, box)) {
-            bird.dirClasses = turn(bird.dirClasses);
-        }
+    if (isNearEdge(bird, box)) {
+      bird.dirClasses = turn(bird.dirClasses);
+    }
 
-        bird.dirClasses = ['side', isFacingRight(bird.dirClasses) ? 'right' : 'left'];
+    bird.dirClasses = ['side', isFacingRight(bird.dirClasses) ? 'right' : 'left'];
+    setBirds([...birdsRef.current]);
+
+    const interval = setInterval(() => {
+      const currentBird = birdsRef.current[bird.id];
+      if (!currentBird) return;
+
+      if (currentBird.hopCount % 2 === 0) {
+        currentBird.pos.x += isFacingRight(currentBird.dirClasses) ? 10 : -10;
         setBirds([...birdsRef.current]);
+      }
 
-        const interval = setInterval(() => {
-            const currentBird = birdsRef.current[bird.id];
-            if (!currentBird) return;
+      currentBird.hopCount++;
 
-            if (currentBird.hopCount % 2 === 0) {
-                currentBird.pos.x += isFacingRight(currentBird.dirClasses) ? 10 : -10;
-                setBirds([...birdsRef.current]);
+      if (currentBird.hopCount === 5) {
+        clearInterval(interval);
+        currentBird.hopInterval = null;
+
+        currentBird.animationTimer = setTimeout(() => {
+          currentBird.dirClasses = currentBird.dirClasses.map(d => {
+            return d === 'side'
+              ? ['d-up', 'd-down', 'side'][Math.floor(Math.random() * 3)]
+              : d;
+          });
+          currentBird.isHopping = false;
+          setBirds([...birdsRef.current]);
+
+          setTimeout(() => {
+            if (!currentBird.isFlying && !currentBird.isHopping) {
+              const rand = Math.random();
+              if (rand < 0.5) {
+                twitch(currentBird);
+              } else {
+                tweet(currentBird);
+              }
             }
-
-            currentBird.hopCount++;
-
-            if (currentBird.hopCount === 5) {
-                clearInterval(interval);
-                currentBird.hopInterval = null;
-
-                currentBird.animationTimer = setTimeout(() => {
-                    currentBird.dirClasses = currentBird.dirClasses.map(d => {
-                        return d === 'side'
-                            ? ['d-up', 'd-down', 'side'][Math.floor(Math.random() * 3)]
-                            : d;
-                    });
-                    currentBird.isHopping = false;
-                    setBirds([...birdsRef.current]);
-
-                    setTimeout(() => {
-                        if (!currentBird.isFlying && !currentBird.isHopping) {
-                            const rand = Math.random();
-                            if (rand < 0.5) {
-                                twitch(currentBird);
-                            } else {
-                                tweet(currentBird);
-                            }
-                        }
-                    }, Math.random() * 2000 + 500);
-                }, 200);
-            }
-        }, 100);
-
-        bird.hopInterval = interval;
-    };
-
-    const tweet = (bird: BirdState) => {
-        if (bird.isTweeting) return;
-
-        bird.isTweeting = true;
-        setBirds([...birdsRef.current]);
-
-        setTimeout(() => {
-            const currentBird = birdsRef.current[bird.id];
-            if (currentBird) {
-                currentBird.isTweeting = false;
-                setBirds([...birdsRef.current]);
-
-                setTimeout(() => {
-                    if (!currentBird.isFlying && !currentBird.isHopping) {
-                        const rand = Math.random();
-                        const branches = Array.from(branchesRef.current.values());
-                        const box = branches[currentBird.zone];
-
-                        if (rand < 0.5) {
-                            twitch(currentBird);
-                        } else if (rand < 0.8 && box) {
-                            hop(currentBird, box);
-                        } else {
-                            tweet(currentBird);
-                        }
-                    }
-                }, Math.random() * 1500 + 500);
-            }
-        }, 1000);
-    };
-
-    const twitch = (bird: BirdState) => {
-        if (bird.twitchInterval) clearInterval(bird.twitchInterval);
-
-        let twitchCount = 0;
-        const maxTwitches = Math.floor(Math.random() * 5) + 3;
-
-        const interval = setInterval(() => {
-            const currentBird = birdsRef.current[bird.id];
-            if (currentBird) {
-                currentBird.twitchPos = randomN(3);
-                setBirds([...birdsRef.current]);
-                twitchCount++;
-
-                if (twitchCount >= maxTwitches) {
-                    clearInterval(interval);
-                    currentBird.twitchInterval = null;
-
-                    setTimeout(() => {
-                        if (!currentBird.isFlying && !currentBird.isHopping) {
-                            const rand = Math.random();
-                            const branches = Array.from(branchesRef.current.values());
-                            const box = branches[currentBird.zone];
-
-                            if (rand < 0.4 && box) {
-                                hop(currentBird, box);
-                            } else if (rand < 0.7) {
-                                tweet(currentBird);
-                            } else {
-                                twitch(currentBird);
-                            }
-                        }
-                    }, Math.random() * 2000 + 500);
-                }
-            }
-        }, 800);
-
-        bird.twitchInterval = interval;
-    };
-
-    const flyToPos = (bird: BirdState, branchIndex: number, alwaysFly = false) => {
-        const branches = Array.from(branchesRef.current.values());
-        if (bird.isFlying || bird.isHopping || !branches[branchIndex]) return;
-
-        const occupyingBirdId = branchAssignments.current.get(branchIndex);
-        if (occupyingBirdId !== undefined && occupyingBirdId !== bird.id) {
-            return;
-        }
-
-        const box = branches[branchIndex];
-
-        let top = box.offsetTop;
-        let left = box.offsetLeft;
-        let element = box.offsetParent as HTMLElement;
-
-        while (element && !element.classList.contains('birds-wrapper')) {
-            top += element.offsetTop;
-            left += element.offsetLeft;
-            element = element.offsetParent as HTMLElement;
-        }
-
-        const newPos = {
-            x: left + box.offsetWidth / 2,
-            y: top - 17,
-        };
-
-        if (!alwaysFly && bird.pos.y === newPos.y) {
-            bird.isHopping = true;
-            bird.animationTimer = setTimeout(() => {
-                const rand = Math.random();
-                const currentBird = birdsRef.current[bird.id];
-                if (!currentBird) return;
-
-                if (rand < 0.7) {
-                    twitch(currentBird);
-                } else {
-                    tweet(currentBird);
-                }
-
-                clearTimeout(currentBird.animationTimer!);
-                currentBird.animationTimer = setTimeout(() => {
-                    currentBird.isHopping = false;
-                }, 1000);
-            }, randomN(200));
-            return;
-        }
-
-        if (bird.twitchInterval) {
-            clearInterval(bird.twitchInterval);
-            bird.twitchInterval = null;
-        }
-
-        if (bird.zone >= 0 && bird.zone !== branchIndex) {
-            const previousOccupant = branchAssignments.current.get(bird.zone);
-            if (previousOccupant === bird.id) {
-                branchAssignments.current.delete(bird.zone);
-            }
-        }
-
-        bird.dirClasses = faceDirection(bird, newPos);
-        bird.pos = newPos;
-        bird.isFlying = true;
-        bird.zone = branchIndex;
-
-        branchAssignments.current.set(branchIndex, bird.id);
-
-        setBirds([...birdsRef.current]);
-
-        if (bird.animationTimer) clearTimeout(bird.animationTimer);
-        bird.animationTimer = setTimeout(() => {
-            const currentBird = birdsRef.current[bird.id];
-            if (currentBird) {
-                currentBird.isFlying = false;
-                currentBird.dirClasses = dirConfig[[135, 180, 225][Math.floor(Math.random() * 3)]];
-                setBirds([...birdsRef.current]);
-
-                const behaviorDelay = Math.random() * 1000 + 500;
-                setTimeout(() => {
-                    const rand = Math.random();
-                    if (rand < 0.3) {
-                        twitch(currentBird);
-                    } else if (rand < 0.6) {
-                        hop(currentBird, box);
-                    } else {
-                        tweet(currentBird);
-                    }
-                }, behaviorDelay);
-            }
-        }, 2000);
-    };
-
-    useEffect(() => {
-        const initialBirds: BirdState[] = Array.from({ length: birdCount }, (_, i) => ({
-            id: i,
-            pos: { x: -100, y: 100 },
-            dirClasses: ['down'],
-            isFlying: false,
-            isHopping: false,
-            isTweeting: false,
-            hopCount: 0,
-            zone: -1,
-            twitchPos: 0,
-            hopInterval: null,
-            twitchInterval: null,
-            animationTimer: null,
-        }));
-
-        birdsRef.current = initialBirds;
-        setBirds(initialBirds);
-
-        setTimeout(() => {
-            const branches = Array.from(branchesRef.current.values());
-            if (branches.length > 0) {
-                branchAssignments.current.clear();
-
-                initialBirds.forEach((bird, i) => {
-                    if (i < branches.length) {
-                        flyToPos(bird, i);
-                    }
-                });
-            }
+          }, Math.random() * 2000 + 500);
         }, 200);
+      }
+    }, 100);
 
-        const scrollInterval = setInterval(() => {
-            if (settingsRef.current.isResizing) return;
+    bird.hopInterval = interval;
+  };
 
+  const tweet = (bird: BirdState) => {
+    if (bird.isTweeting) return;
+
+    bird.isTweeting = true;
+    setBirds([...birdsRef.current]);
+
+    setTimeout(() => {
+      const currentBird = birdsRef.current[bird.id];
+      if (currentBird) {
+        currentBird.isTweeting = false;
+        setBirds([...birdsRef.current]);
+
+        setTimeout(() => {
+          if (!currentBird.isFlying && !currentBird.isHopping) {
+            const rand = Math.random();
             const branches = Array.from(branchesRef.current.values());
-            if (branches.length === 0) return;
+            const box = branches[currentBird.zone];
 
-            const scrollY = window.scrollY;
-            const viewportTop = scrollY;
-            const viewportBottom = scrollY + window.innerHeight;
+            if (rand < 0.5) {
+              twitch(currentBird);
+            } else if (rand < 0.8 && box) {
+              hop(currentBird, box);
+            } else {
+              tweet(currentBird);
+            }
+          }
+        }, Math.random() * 1500 + 500);
+      }
+    }, 1000);
+  };
 
-            const visibleBranches: number[] = [];
-            branches.forEach((branch, i) => {
-                const rect = branch.getBoundingClientRect();
-                const branchY = rect.top + scrollY;
+  const twitch = (bird: BirdState) => {
+    if (bird.twitchInterval) clearInterval(bird.twitchInterval);
 
-                if (branchY >= viewportTop && branchY <= viewportBottom) {
-                    visibleBranches.push(i);
-                }
-            });
+    let twitchCount = 0;
+    const maxTwitches = Math.floor(Math.random() * 5) + 3;
 
-            birdsRef.current.forEach((bird) => {
-                const isOnVisibleBranch = bird.zone >= 0 && visibleBranches.includes(bird.zone);
+    const interval = setInterval(() => {
+      const currentBird = birdsRef.current[bird.id];
+      if (currentBird) {
+        currentBird.twitchPos = randomN(3);
+        setBirds([...birdsRef.current]);
+        twitchCount++;
 
-                if (isOnVisibleBranch && !bird.isFlying) {
-                    return;
-                }
+        if (twitchCount >= maxTwitches) {
+          clearInterval(interval);
+          currentBird.twitchInterval = null;
 
-                if (!bird.isFlying) {
-                    const shouldMoveNow = Math.random() < 0.6;
+          setTimeout(() => {
+            if (!currentBird.isFlying && !currentBird.isHopping) {
+              const rand = Math.random();
+              const branches = Array.from(branchesRef.current.values());
+              const box = branches[currentBird.zone];
 
-                    if (shouldMoveNow) {
-                        let targetBranch = -1;
-                        for (const branchIndex of visibleBranches) {
-                            const occupyingBird = branchAssignments.current.get(branchIndex);
-                            if (occupyingBird === undefined || occupyingBird === bird.id) {
-                                targetBranch = branchIndex;
-                                break;
-                            }
-                        }
+              if (rand < 0.4 && box) {
+                hop(currentBird, box);
+              } else if (rand < 0.7) {
+                tweet(currentBird);
+              } else {
+                twitch(currentBird);
+              }
+            }
+          }, Math.random() * 2000 + 500);
+        }
+      }
+    }, 800);
 
-                        if (targetBranch !== -1 && targetBranch !== bird.zone) {
-                            flyToPos(bird, targetBranch);
-                        }
-                    }
-                }
-            });
+    bird.twitchInterval = interval;
+  };
+
+  const flyToPos = (bird: BirdState, branchIndex: number, alwaysFly = false) => {
+    const branches = Array.from(branchesRef.current.values());
+    if (bird.isFlying || bird.isHopping || !branches[branchIndex]) return;
+
+    const occupyingBirdId = branchAssignments.current.get(branchIndex);
+    if (occupyingBirdId !== undefined && occupyingBirdId !== bird.id) {
+      return;
+    }
+
+    const box = branches[branchIndex];
+
+    let top = box.offsetTop;
+    let left = box.offsetLeft;
+    let element = box.offsetParent as HTMLElement;
+
+    while (element && !element.classList.contains('birds-wrapper')) {
+      top += element.offsetTop;
+      left += element.offsetLeft;
+      element = element.offsetParent as HTMLElement;
+    }
+
+    const newPos = {
+      x: left + box.offsetWidth / 2,
+      y: top - 17,
+    };
+
+    if (!alwaysFly && bird.pos.y === newPos.y) {
+      bird.isHopping = true;
+      bird.animationTimer = setTimeout(() => {
+        const rand = Math.random();
+        const currentBird = birdsRef.current[bird.id];
+        if (!currentBird) return;
+
+        if (rand < 0.7) {
+          twitch(currentBird);
+        } else {
+          tweet(currentBird);
+        }
+
+        clearTimeout(currentBird.animationTimer!);
+        currentBird.animationTimer = setTimeout(() => {
+          currentBird.isHopping = false;
         }, 1000);
+      }, randomN(200));
+      return;
+    }
 
-        const handleResize = () => {
-            settingsRef.current.isResizing = true;
-            if (settingsRef.current.resizeTimer) {
-                clearTimeout(settingsRef.current.resizeTimer);
+    if (bird.twitchInterval) {
+      clearInterval(bird.twitchInterval);
+      bird.twitchInterval = null;
+    }
+
+    if (bird.zone >= 0 && bird.zone !== branchIndex) {
+      const previousOccupant = branchAssignments.current.get(bird.zone);
+      if (previousOccupant === bird.id) {
+        branchAssignments.current.delete(bird.zone);
+      }
+    }
+
+    bird.dirClasses = faceDirection(bird, newPos);
+    bird.pos = newPos;
+    bird.isFlying = true;
+    bird.zone = branchIndex;
+
+    branchAssignments.current.set(branchIndex, bird.id);
+
+    setBirds([...birdsRef.current]);
+
+    if (bird.animationTimer) clearTimeout(bird.animationTimer);
+    bird.animationTimer = setTimeout(() => {
+      const currentBird = birdsRef.current[bird.id];
+      if (currentBird) {
+        currentBird.isFlying = false;
+        currentBird.dirClasses = dirConfig[[135, 180, 225][Math.floor(Math.random() * 3)]];
+        setBirds([...birdsRef.current]);
+
+        const behaviorDelay = Math.random() * 1000 + 500;
+        setTimeout(() => {
+          const rand = Math.random();
+          if (rand < 0.3) {
+            twitch(currentBird);
+          } else if (rand < 0.6) {
+            hop(currentBird, box);
+          } else {
+            tweet(currentBird);
+          }
+        }, behaviorDelay);
+      }
+    }, 2000);
+  };
+
+  useEffect(() => {
+    const initialBirds: BirdState[] = Array.from({ length: birdCount }, (_, i) => ({
+      id: i,
+      pos: { x: -100, y: 100 },
+      dirClasses: ['down'],
+      isFlying: false,
+      isHopping: false,
+      isTweeting: false,
+      hopCount: 0,
+      zone: -1,
+      twitchPos: 0,
+      hopInterval: null,
+      twitchInterval: null,
+      animationTimer: null,
+    }));
+
+    birdsRef.current = initialBirds;
+    setBirds(initialBirds);
+
+    setTimeout(() => {
+      const branches = Array.from(branchesRef.current.values());
+      if (branches.length > 0) {
+        branchAssignments.current.clear();
+
+        initialBirds.forEach((bird, i) => {
+          if (i < branches.length) {
+            flyToPos(bird, i);
+          }
+        });
+      }
+    }, 200);
+
+    const scrollInterval = setInterval(() => {
+      if (settingsRef.current.isResizing) return;
+
+      const branches = Array.from(branchesRef.current.values());
+      if (branches.length === 0) return;
+
+      const scrollY = window.scrollY;
+      const viewportTop = scrollY;
+      const viewportBottom = scrollY + window.innerHeight;
+
+      const visibleBranches: number[] = [];
+      branches.forEach((branch, i) => {
+        const rect = branch.getBoundingClientRect();
+        const branchY = rect.top + scrollY;
+
+        if (branchY >= viewportTop && branchY <= viewportBottom) {
+          visibleBranches.push(i);
+        }
+      });
+
+      birdsRef.current.forEach((bird) => {
+        const isOnVisibleBranch = bird.zone >= 0 && visibleBranches.includes(bird.zone);
+
+        if (isOnVisibleBranch && !bird.isFlying) {
+          return;
+        }
+
+        if (!bird.isFlying) {
+          const shouldMoveNow = Math.random() < 0.6;
+
+          if (shouldMoveNow) {
+            let targetBranch = -1;
+            for (const branchIndex of visibleBranches) {
+              const occupyingBird = branchAssignments.current.get(branchIndex);
+              if (occupyingBird === undefined || occupyingBird === bird.id) {
+                targetBranch = branchIndex;
+                break;
+              }
             }
 
-            birdsRef.current.forEach((bird) => {
-                bird.isHopping = false;
-                bird.isFlying = false;
-                if (bird.animationTimer) clearTimeout(bird.animationTimer);
+            if (targetBranch !== -1 && targetBranch !== bird.zone) {
+              flyToPos(bird, targetBranch);
+            }
+          }
+        }
+      });
+    }, 1000);
 
-                const branches = Array.from(branchesRef.current.values());
-                if (bird.zone >= 0 && bird.zone < branches.length) {
-                    flyToPos(bird, bird.zone, true);
-                }
-            });
+    const handleResize = () => {
+      settingsRef.current.isResizing = true;
+      if (settingsRef.current.resizeTimer) {
+        clearTimeout(settingsRef.current.resizeTimer);
+      }
 
-            settingsRef.current.resizeTimer = setTimeout(() => {
-                settingsRef.current.isResizing = false;
-            }, 100);
-        };
+      birdsRef.current.forEach((bird) => {
+        bird.isHopping = false;
+        bird.isFlying = false;
+        if (bird.animationTimer) clearTimeout(bird.animationTimer);
 
-        window.addEventListener('resize', handleResize);
+        const branches = Array.from(branchesRef.current.values());
+        if (bird.zone >= 0 && bird.zone < branches.length) {
+          flyToPos(bird, bird.zone, true);
+        }
+      });
 
-        return () => {
-            clearInterval(scrollInterval);
-            window.removeEventListener('resize', handleResize);
-            birdsRef.current.forEach(bird => {
-                if (bird.hopInterval) clearInterval(bird.hopInterval);
-                if (bird.twitchInterval) clearInterval(bird.twitchInterval);
-                if (bird.animationTimer) clearTimeout(bird.animationTimer);
-            });
-        };
-    }, [birdCount]);
+      settingsRef.current.resizeTimer = setTimeout(() => {
+        settingsRef.current.isResizing = false;
+      }, 100);
+    };
 
-    return (
-        <BirdBranchContext.Provider value={{ registerBranch, unregisterBranch }}>
-            <div className="birds-wrapper">
-                {birds.map(bird => (
-                    <div
-                        key={bird.id}
-                        className={`bird-wrapper ${bird.isFlying ? 'fly' : ''} ${bird.isHopping ? 'hop' : ''} ${bird.isTweeting ? 'tweet' : ''
-                            } ${bird.twitchPos ? `pos-${bird.twitchPos}` : ''} ${bird.dirClasses.join(' ')}`}
-                        style={{
-                            transform: `translate(${bird.pos.x}px, ${bird.pos.y}px)`,
-                        }}
-                    >
-                        <div className="bird">
-                            <div className="anchor">
-                                <div className={`speech-bubble ${tiny5.className}`}>tweet</div>
-                            </div>
-                            <div className="head"></div>
-                            <div className="body"></div>
-                            <div className="wing left-wing"></div>
-                            <div className="wing right-wing"></div>
-                            <div className="legs">
-                                <div className="leg left-leg"></div>
-                                <div className="leg right-leg"></div>
-                            </div>
-                            <div className="tail"></div>
-                        </div>
-                    </div>
-                ))}
+    window.addEventListener('resize', handleResize);
 
-                {children}
+    return () => {
+      clearInterval(scrollInterval);
+      window.removeEventListener('resize', handleResize);
+      birdsRef.current.forEach(bird => {
+        if (bird.hopInterval) clearInterval(bird.hopInterval);
+        if (bird.twitchInterval) clearInterval(bird.twitchInterval);
+        if (bird.animationTimer) clearTimeout(bird.animationTimer);
+      });
+    };
+  }, [birdCount]);
 
-                <style jsx global>{`
+  return (
+    <BirdBranchContext.Provider value={{ registerBranch, unregisterBranch }}>
+      <div className="birds-wrapper">
+        {birds.map(bird => (
+          <div
+            key={bird.id}
+            className={`bird-wrapper ${bird.isFlying ? 'fly' : ''} ${bird.isHopping ? 'hop' : ''} ${bird.isTweeting ? 'tweet' : ''
+              } ${bird.twitchPos ? `pos-${bird.twitchPos}` : ''} ${bird.dirClasses.join(' ')}`}
+            style={{
+              transform: `translate(${bird.pos.x}px, ${bird.pos.y}px)`,
+            }}
+          >
+            <div className="bird">
+              <div className="anchor">
+                <div className={`bird-speech-bubble ${tiny5.className}`}>tweet</div>
+              </div>
+              <div className="head"></div>
+              <div className="body"></div>
+              <div className="wing left-wing"></div>
+              <div className="wing right-wing"></div>
+              <div className="legs">
+                <div className="leg left-leg"></div>
+                <div className="leg right-leg"></div>
+              </div>
+              <div className="tail"></div>
+            </div>
+          </div>
+        ))}
+
+        {children}
+
+        <style jsx global>{`
           * {
             box-sizing: border-box;
           }
@@ -1063,7 +1063,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             transform: translateX(-50%);
           }
 
-          .speech-bubble {
+          .bird-speech-bubble {
             position: absolute;
             bottom: calc(var(--m) * 6px);
             left: 50%;
@@ -1079,22 +1079,36 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             border-radius: 8px;
           }
 
-          .speech-bubble::after {
+          .bird-speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: calc(var(--m) * -3px);
+            bottom: -6px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: calc(var(--m) * 3px) dashed transparent;
-            border-right: calc(var(--m) * 3px) dashed transparent;
-            border-top: calc(var(--m) * 3px) dashed white;
+            border-left: 6px dashed transparent;
+            border-right: 6px dashed transparent;
+            border-top: 6px dashed #000;
           }
 
-          .tweet .speech-bubble {
+          .bird-speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -4.5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px dashed transparent;
+            border-right: 5px dashed transparent;
+            border-top: 5px dashed #FFF;
+            z-index: 1;
+          }
+
+          .tweet .bird-speech-bubble {
             opacity: 1;
-            animation: fade-in 0.2s;
+            animation: fade-in 0.1s;
           }
 
           @keyframes fade-in {
@@ -1176,7 +1190,7 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             }
           }
         `}</style>
-            </div>
-        </BirdBranchContext.Provider>
-    );
+      </div>
+    </BirdBranchContext.Provider>
+  );
 }
