@@ -6,7 +6,7 @@
 
 import Link from 'next/link';
 import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 import type { Presentation } from '@/types';
@@ -37,8 +37,8 @@ export function PresentationCard({ talk, className }: PresentationCardProps) {
 
   return (
     <Card hoverable variant="bordered" className={cn('group', className)}>
-      <CardContent className="space-y-4">
-        <div className="flex-1 space-y-1">
+      <CardContent className="pb-2">
+        <div className="flex flex-col flex-1">
           <div className="flex flex-row">
             <span className="text-lg md:text-xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors mb-2">
               {talk.event.label}
@@ -56,30 +56,42 @@ export function PresentationCard({ talk, className }: PresentationCardProps) {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C6B5C]">
-            <Badge variant="outline" className={getTypeColor()} size="sm">
-              {talk.type}
-            </Badge>
-            <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
-              <HiCalendar />
-              <span>{(talk.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</span>
-            </Badge>
-            {talk.host && (<Link href={talk.host.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
-              <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
-                <HiLocationMarker />
-                <span>{talk.host.label}</span>
-              </Badge>
-            </Link>)}
+          {/* Divider */}
+          <hr className="border-t border-[#5C6B5C]/20 mb-2.5" />
+
+          {/* Talk Title and Description */}
+          <div className="flex flex-col gap-2">
+            <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors italic ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
+            {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
+              {talk.description}
+            </p>)}
           </div>
         </div>
-
-        <div className="flex flex-col gap-2">
-          <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors italic ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
-          {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
-            {talk.description}
-          </p>)}
-        </div>
       </CardContent>
+
+      <CardFooter>
+        {/* Metadata Badges */}
+        <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C6B5C]">
+          {/* Type */}
+          <Badge variant="outline" className={getTypeColor()} size="sm">
+            {talk.type}
+          </Badge>
+
+          {/* Host */}
+          {talk.host && (<Link href={talk.host.url} className="flex items-center gap-1" target="_blank" rel="noopener noreferrer">
+            <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
+              <HiLocationMarker />
+              <span>{talk.host.label}</span>
+            </Badge>
+          </Link>)}
+
+          {/* Date */}
+          <Badge variant="outline" size="sm" className="flex items-center justify-center gap-1.5">
+            <HiCalendar />
+            <span>{(talk.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</span>
+          </Badge>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

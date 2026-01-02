@@ -24,7 +24,7 @@ export const talks: Record<string, Presentation> = {
       label: 'uOGRADflix 2025-2026',
       url: 'https://www.uottawa.ca/study/graduate-studies/uogradflix-competition',
     },
-    host: orgs.uOttawa,
+    host: orgs.uO,
     date: new Date('2025-11-12'),
     type: 'Video',
     video: [{

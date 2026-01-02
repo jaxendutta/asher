@@ -47,7 +47,7 @@ export function CardHeader({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('p-4 pb-1', className)} {...props}>
+    <div className={cn('p-4 pb-0', className)} {...props}>
       {children}
     </div>
   );

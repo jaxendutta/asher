@@ -64,7 +64,7 @@ export default function AboutPage() {
         {skills.map((skillCategory, index) => (
           <Card hoverable variant="bordered" key={index}>
             <CardHeader>
-              <span className="text-xl font-bold text-[#2D5F3F] flex items-center gap-2">
+              <span className="text-lg font-bold text-[#2D5F3F] flex items-center gap-2">
                 {skillCategory.icon && <skillCategory.icon />}
                 {skillCategory.category}
               </span>
@@ -72,7 +72,7 @@ export default function AboutPage() {
             <CardContent>
               <div className="flex flex-wrap gap-2">
                 {skillCategory.items.sort().map((skill) => (
-                  <Badge key={skill} variant="default">
+                  <Badge key={skill} variant="default" className="text-xs">
                     {skill}
                   </Badge>
                 ))}
