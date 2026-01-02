@@ -14,12 +14,42 @@ interface Message {
 
 export default function CatChat() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isClosing, setIsClosing] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isTranslating, setIsTranslating] = useState(false);
     const [showInitialMessage, setShowInitialMessage] = useState(false);
     const messageIdCounter = useRef(0);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsOpen(false);
+            setIsClosing(false);
+        }, 500); // Match the slideDown animation duration
+    };
+
+    // Close chat when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (chatContainerRef.current && !chatContainerRef.current.contains(event.target as Node)) {
+                handleClose();
+            }
+        };
+
+        if (isOpen && !isClosing) {
+            // Small delay to prevent immediate closing when opening
+            setTimeout(() => {
+                document.addEventListener('mousedown', handleClickOutside);
+            }, 100);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen, isClosing]);
 
     useEffect(() => {
         if (isOpen && messages.length === 0 && !showInitialMessage) {
@@ -179,12 +209,44 @@ export default function CatChat() {
           right: 20px;
           width: 100%;
           max-width: 400px;
-          max-height: 70vh !important;
+          height: 70vh;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           display: flex;
           flex-direction: column;
           z-index: 9999;
+          transform-origin: bottom right;
+          border-radius: 12px;
+        }
+
+        .cat-chat-container.opening {
+          animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .cat-chat-container.closing {
+          animation: slideDown 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+        }
+
+        @keyframes slideUp {
+          0% {
+            transform: translateY(100%) scale(0.9);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideDown {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100%) scale(0.9);
+            opacity: 0;
+          }
         }
 
         .cat-chat-header {
@@ -350,6 +412,7 @@ export default function CatChat() {
           align-items: center;
           gap: 12px;
           border-top: 2px solid #57280f;
+          border-radius: 0 0 12px 12px;
         }
 
         .cat-input-wrapper {
@@ -414,9 +477,52 @@ export default function CatChat() {
           .cat-chat-container {
             bottom: 0;
             right: 0;
+            left: 0;
             max-width: 100%;
-            height: 100%;
-            border-radius: 0;
+            height: calc(100dvh - 80px);
+            margin: 0;
+            border-radius: 12px 12px 0 0;
+            transform-origin: bottom center;
+          }
+
+          .cat-chat-widget {
+            bottom: 10px;
+            right: 10px;
+          }
+
+          @keyframes slideUp {
+            0% {
+              transform: translateY(100%);
+              opacity: 0;
+            }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+
+          @keyframes slideDown {
+            0% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100%);
+              opacity: 0;
+            }
+          }
+        }
+
+        /* Ensure chat doesn't go behind mobile browser UI */
+        @supports (-webkit-touch-callout: none) {
+          .cat-chat-container {
+            height: min(70vh, calc(100vh - 100px));
+          }
+          
+          @media (max-width: 480px) {
+            .cat-chat-container {
+              height: calc(100vh - 100px);
+            }
           }
         }
       `}</style>
@@ -431,15 +537,18 @@ export default function CatChat() {
                 )}
 
                 {isOpen && (
-                    <div className="cat-chat-container">
+                    <div
+                        ref={chatContainerRef}
+                        className={`cat-chat-container ${isClosing ? 'closing' : 'opening'}`}
+                    >
                         <div className="cat-chat-header">
                             <span className={`${press_start_2p.className}`}>Secret Chat Group</span>
                             <button
                                 className="cat-chat-close"
-                                onClick={() => setIsOpen(false)}
+                                onClick={handleClose}
                                 aria-label="Close chat"
                             >
-                                <Image src={"images/icons/cross.svg"} alt="Close" width={40} height={40} style={{ filter: 'brightness(0) invert(1)' }}/>
+                                <Image src={"/images/icons/cross.svg"} alt="Close" width={40} height={40} style={{ filter: 'brightness(0) invert(1)' }} />
                             </button>
                         </div>
 
