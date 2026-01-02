@@ -1,5 +1,5 @@
 import { Section } from '@/components/ui/Section';
-import { TalkCard } from '@/components/sections/TalkCard';
+import { PresentationCard } from '@/components/sections/PresentationCard';
 import { talks } from '@/data/talks';
 
 export default function TalksPage() {
@@ -13,7 +13,7 @@ export default function TalksPage() {
         {Object.values(talks).length > 0 ? (
           <div className="space-y-6">
             {Object.entries(talks).map(([id, talk]) => (
-              <TalkCard key={id} talk={talk} />
+              <PresentationCard key={id} talk={talk} />
             ))}
           </div>
         ) : (

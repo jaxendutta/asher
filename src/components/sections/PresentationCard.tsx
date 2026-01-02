@@ -1,7 +1,7 @@
 'use client';
 
 // ============================================================================
-// Talk Card Component
+// Presentation Card Component
 // ============================================================================
 
 import Link from 'next/link';
@@ -14,12 +14,12 @@ import { VscGlobe, VscFilePdf } from 'react-icons/vsc';
 import { RxVideo } from 'react-icons/rx';
 import { newsreader } from '@/lib/fonts';
 
-interface TalkCardProps {
+interface PresentationCardProps {
   talk: Presentation;
   className?: string;
 }
 
-export function TalkCard({ talk, className }: TalkCardProps) {
+export function PresentationCard({ talk, className }: PresentationCardProps) {
   const getTypeColor = () => {
     switch (talk.type) {
       case 'Video':
