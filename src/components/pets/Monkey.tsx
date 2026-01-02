@@ -3,269 +3,269 @@
 import React, { useEffect, useRef, useState, createContext, useContext } from 'react';
 
 interface MonkeyBarContextType {
-  registerBar: (id: string, element: HTMLDivElement) => void;
-  unregisterBar: (id: string) => void;
+    registerBar: (id: string, element: HTMLDivElement) => void;
+    unregisterBar: (id: string) => void;
 }
 
 const MonkeyBarContext = createContext<MonkeyBarContextType | null>(null);
 
 interface MonkeyBarProps {
-  id: string;
-  className?: string;
+    id: string;
+    className?: string;
 }
 
 export const MonkeyBar: React.FC<MonkeyBarProps> = ({ id, className = '' }) => {
-  const barRef = useRef<HTMLDivElement>(null);
-  const context = useContext(MonkeyBarContext);
+    const barRef = useRef<HTMLDivElement>(null);
+    const context = useContext(MonkeyBarContext);
 
-  useEffect(() => {
-    if (barRef.current && context) {
-      context.registerBar(id, barRef.current);
-      return () => context.unregisterBar(id);
-    }
-  }, [id, context]);
+    useEffect(() => {
+        if (barRef.current && context) {
+            context.registerBar(id, barRef.current);
+            return () => context.unregisterBar(id);
+        }
+    }, [id, context]);
 
-  return (
-    <div ref={barRef} className={`monkey-bar ${className}`}>
-      <div
-        className="w-5 h-5"
-        style={{
-          backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFNjZEACnPqK/5H53y/eZ4Tx4Qx0RTAFMMVghbgUIStmJKQIbvUAKiTaMzDHEhU8uBQjBzgAXjoda3RhMkUAAAAASUVORK5CYII=)`,
-          backgroundSize: '20px',
-          backgroundRepeat: 'no-repeat',
-          imageRendering: 'pixelated'
-        }}
-      />
-    </div>
-  );
+    return (
+        <div ref={barRef} className={`monkey-bar ${className}`}>
+            <div
+                className="w-5 h-5"
+                style={{
+                    backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFNjZEACnPqK/5H53y/eZ4Tx4Qx0RTAFMMVghbgUIStmJKQIbvUAKiTaMzDHEhU8uBQjBzgAXjoda3RhMkUAAAAASUVORK5CYII=)`,
+                    backgroundSize: '20px',
+                    backgroundRepeat: 'no-repeat',
+                    imageRendering: 'pixelated'
+                }}
+            />
+        </div>
+    );
 };
 
 interface MonkeyProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 interface BarPosition {
-  x: number;
-  y: number;
+    x: number;
+    y: number;
 }
 
 const Monkey: React.FC<MonkeyProps> = ({ children }) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const barsRef = useRef<Map<string, HTMLDivElement>>(new Map());
-  const barPositionsRef = useRef<BarPosition[]>([]);
-  const currentIndexRef = useRef(0);
-  const nearestIndexRef = useRef(0);
-  const updatePendingRef = useRef(false);
-  
-  const [monkeyState, setMonkeyState] = useState({
-    x: 0,
-    y: 0,
-    isReverse: false,
-    isAlternate: false,
-    isJumping: false,
-    jumpHeight: '-50px'
-  });
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const barsRef = useRef<Map<string, HTMLDivElement>>(new Map());
+    const barPositionsRef = useRef<BarPosition[]>([]);
+    const currentIndexRef = useRef(0);
+    const nearestIndexRef = useRef(0);
+    const updatePendingRef = useRef(false);
 
-  const updateBarPositions = () => {
-    if (updatePendingRef.current || !wrapperRef.current) return;
-    updatePendingRef.current = true;
-
-    requestAnimationFrame(() => {
-      const positions: BarPosition[] = [];
-      
-      barsRef.current.forEach((bar) => {
-        // Calculate position relative to wrapper (like Birds.tsx does)
-        let top = bar.offsetTop;
-        let left = bar.offsetLeft;
-        let element = bar.offsetParent as HTMLElement;
-
-        while (element && !element.classList.contains('monkey-wrapper')) {
-          top += element.offsetTop;
-          left += element.offsetLeft;
-          element = element.offsetParent as HTMLElement;
-        }
-
-        positions.push({
-          x: left + bar.offsetWidth / 2,
-          y: top + 5  // Slight offset so hands grab bar
-        });
-      });
-      
-      barPositionsRef.current = positions;
-      
-      // Initialize at first bar
-      if (positions.length > 0 && monkeyState.x === 0 && monkeyState.y === 0) {
-        setMonkeyState(prev => ({
-          ...prev,
-          x: positions[0].x,
-          y: positions[0].y
-        }));
-      }
-      
-      updatePendingRef.current = false;
+    const [monkeyState, setMonkeyState] = useState({
+        x: 0,
+        y: 0,
+        isReverse: false,
+        isAlternate: false,
+        isJumping: false,
+        jumpHeight: '-50px'
     });
-  };
 
-  const registerBar = (id: string, element: HTMLDivElement) => {
-    barsRef.current.set(id, element);
-    setTimeout(updateBarPositions, 50);
-  };
+    const updateBarPositions = () => {
+        if (updatePendingRef.current || !wrapperRef.current) return;
+        updatePendingRef.current = true;
 
-  const unregisterBar = (id: string) => {
-    barsRef.current.delete(id);
-    setTimeout(updateBarPositions, 50);
-  };
+        requestAnimationFrame(() => {
+            const positions: BarPosition[] = [];
 
-  useEffect(() => {
-    const handleResize = () => updateBarPositions();
-    window.addEventListener('resize', handleResize);
-    setTimeout(updateBarPositions, 300);
+            barsRef.current.forEach((bar) => {
+                let top = bar.offsetTop;
+                let left = bar.offsetLeft;
+                let element = bar.offsetParent as HTMLElement;
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
+                while (element && !element.classList.contains('monkey-wrapper')) {
+                    top += element.offsetTop;
+                    left += element.offsetLeft;
+                    element = element.offsetParent as HTMLElement;
+                }
+
+                positions.push({
+                    x: left + bar.offsetWidth / 2,
+                    y: top + 5
+                });
+            });
+
+            barPositionsRef.current = positions;
+
+            if (positions.length > 0 && monkeyState.x === 0 && monkeyState.y === 0) {
+                setMonkeyState(prev => ({
+                    ...prev,
+                    x: positions[0].x,
+                    y: positions[0].y
+                }));
+            }
+
+            updatePendingRef.current = false;
+        });
     };
-  }, []);
 
-  // Find nearest bar based on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const positions = barPositionsRef.current;
-      if (positions.length === 0) return;
-
-      const scrollY = window.scrollY + window.innerHeight / 2;
-      const nearest = positions
-        .map((pos, i) => ({ i, diff: Math.abs(pos.y - scrollY) }))
-        .sort((a, b) => a.diff - b.diff)[0];
-
-      if (nearest && nearest.i !== nearestIndexRef.current) {
-        nearestIndexRef.current = nearest.i;
-      }
+    const registerBar = (id: string, element: HTMLDivElement) => {
+        barsRef.current.set(id, element);
+        setTimeout(updateBarPositions, 50);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    setTimeout(handleScroll, 400);
-    
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const unregisterBar = (id: string) => {
+        barsRef.current.delete(id);
+        setTimeout(updateBarPositions, 50);
+    };
 
-  // Movement interval
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const positions = barPositionsRef.current;
-      const nearest = nearestIndexRef.current;
-      const current = currentIndexRef.current;
-      
-      if (current === nearest || positions.length === 0) return;
+    useEffect(() => {
+        const handleResize = () => updateBarPositions();
+        window.addEventListener('resize', handleResize);
+        setTimeout(updateBarPositions, 300);
 
-      // Move index towards nearest
-      if (current > nearest && current > 0) {
-        currentIndexRef.current--;
-      } else if (current < nearest && current < positions.length - 1) {
-        currentIndexRef.current++;
-      }
-
-      const targetPos = positions[currentIndexRef.current];
-      if (!targetPos) return;
-
-      setMonkeyState(prev => {
-        const newIsReverse = prev.x > targetPos.x;
-        const newIsAlternate = !prev.isAlternate;
-        const jumpHeightCalc = (prev.y - targetPos.y) > 80 
-          ? `${targetPos.y - prev.y - 10}px` 
-          : '-50px';
-
-        return {
-          x: targetPos.x,
-          y: targetPos.y,
-          isReverse: newIsReverse,
-          isAlternate: newIsAlternate,
-          isJumping: true,
-          jumpHeight: jumpHeightCalc
+        return () => {
+            window.removeEventListener('resize', handleResize);
         };
-      });
+    }, []);
 
-      setTimeout(() => {
-        setMonkeyState(prev => ({ ...prev, isJumping: false }));
-      }, 500);
-    }, 700);
+    useEffect(() => {
+        const handleScroll = () => {
+            const positions = barPositionsRef.current;
+            if (positions.length === 0) return;
 
-    return () => clearInterval(interval);
-  }, []);
+            const scrollY = window.scrollY + window.innerHeight / 2;
+            const nearest = positions
+                .map((pos, i) => ({ i, diff: Math.abs(pos.y - scrollY) }))
+                .sort((a, b) => a.diff - b.diff)[0];
 
-  return (
-    <MonkeyBarContext.Provider value={{ registerBar, unregisterBar }}>
-      <div ref={wrapperRef} className="monkey-wrapper relative min-h-screen">
-        {/* Monkey - ABSOLUTE positioned so it moves with page scroll */}
-        <div
-          className={`monkey ${monkeyState.isReverse ? 'reverse' : ''} ${
-            monkeyState.isAlternate ? 'alternate' : ''
-          } ${monkeyState.isJumping ? 'jump' : ''}`}
-          style={{
-            transform: `translate(${monkeyState.x}px, ${monkeyState.y}px)`,
-          }}
-        >
-          <div className="swing-wrapper">
-            <div className="body">
-              <div className="head">
-                <div className="face"></div>
-              </div>
-              <div className="shoulder">
-                <div className="joint left">
-                  <div className="arm">
-                    <div className="joint"></div>
-                    <div className="joint elbow">
-                      <div className="arm"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="joint right">
-                  <div className="arm">
-                    <div className="joint"></div>
-                    <div className="joint elbow">
-                      <div className="arm"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="waist">
-                <div className="joint">
-                  <div className="thigh">
-                    <div className="joint knee">
-                      <div className="leg"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="tail-joint">
-                  <div className="tail">
-                    <div className="joint">
-                      <div className="tail">
-                        <div className="joint">
-                          <div className="tail">
-                            <div className="joint">
-                              <div className="tail"></div>
+            if (nearest && nearest.i !== nearestIndexRef.current) {
+                nearestIndexRef.current = nearest.i;
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        setTimeout(handleScroll, 400);
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const positions = barPositionsRef.current;
+            const nearest = nearestIndexRef.current;
+            const current = currentIndexRef.current;
+
+            if (current === nearest || positions.length === 0) return;
+
+            if (current > nearest && current > 0) {
+                currentIndexRef.current--;
+            } else if (current < nearest && current < positions.length - 1) {
+                currentIndexRef.current++;
+            }
+
+            const targetPos = positions[currentIndexRef.current];
+            if (!targetPos) return;
+
+            setMonkeyState(prev => {
+                const newIsReverse = prev.x > targetPos.x;
+                const newIsAlternate = !prev.isAlternate;
+                const jumpHeightCalc = (prev.y - targetPos.y) > 80
+                    ? `${targetPos.y - prev.y - 10}px`
+                    : '-50px';
+
+                return {
+                    x: targetPos.x,
+                    y: targetPos.y,
+                    isReverse: newIsReverse,
+                    isAlternate: newIsAlternate,
+                    isJumping: true,
+                    jumpHeight: jumpHeightCalc
+                };
+            });
+
+            setTimeout(() => {
+                setMonkeyState(prev => ({ ...prev, isJumping: false }));
+            }, 500);
+        }, 700);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <MonkeyBarContext.Provider value={{ registerBar, unregisterBar }}>
+            <div ref={wrapperRef} className="monkey-wrapper relative min-h-screen">
+                <div
+                    className={`monkey ${monkeyState.isReverse ? 'reverse' : ''} ${monkeyState.isAlternate ? 'alternate' : ''
+                        } ${monkeyState.isJumping ? 'jump' : ''}`}
+                    style={{
+                        transform: `translate(${monkeyState.x}px, ${monkeyState.y}px)`,
+                    }}
+                >
+                    <div className="swing-wrapper">
+                        <div className="body">
+                            <div className="head">
+                                <div
+                                    className="face"
+                                    style={{
+                                        backgroundImage: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAHVJREFUOE+1k9sOwCAIQ9f//2gWiBCCuO7ifMKIB2gKjnRERPKdxQDgORY8BdQCCsRXSHT0C0hHvitTzY3Rkm4U1uXuB6loW0ZjnmHvSx913a06Nh95pc4GWdRh3KkxZ1yC2DhDV2ME6M2qTLtWKzO3Z4D/PQHES1jzyue2wwAAAABJRU5ErkJggg==)',
+                                        backgroundSize: '10px 9px',
+                                        backgroundRepeat: 'no-repeat',
+                                        imageRendering: 'pixelated' as const
+                                    }}
+                                ></div>
                             </div>
-                          </div>
+                            <div className="shoulder">
+                                <div className="joint left">
+                                    <div className="arm">
+                                        <div className="joint"></div>
+                                        <div className="joint elbow">
+                                            <div className="arm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="joint right">
+                                    <div className="arm">
+                                        <div className="joint"></div>
+                                        <div className="joint elbow">
+                                            <div className="arm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="waist">
+                                <div className="joint">
+                                    <div className="thigh">
+                                        <div className="joint knee">
+                                            <div className="leg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="tail-joint">
+                                    <div className="tail">
+                                        <div className="joint">
+                                            <div className="tail">
+                                                <div className="joint">
+                                                    <div className="tail">
+                                                        <div className="joint">
+                                                            <div className="tail"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="joint right-leg">
+                                    <div className="thigh">
+                                        <div className="joint knee">
+                                            <div className="leg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
-                <div className="joint right-leg">
-                  <div className="thigh">
-                    <div className="joint knee">
-                      <div className="leg"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Content */}
-        {children}
+                {children}
 
-        <style jsx global>{`
+                <style jsx global>{`
           * {
             box-sizing: border-box;
           }
@@ -402,24 +402,31 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
           }
 
           .head {
-            top: calc(var(--m) * -10px);
-            left: calc(var(--m) * 4px);
+            top: calc(var(--m) * -12px);
+            left: calc(var(--m) * 6px);
             --w: 22px;
             --h: 22px;
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAGtJREFUSEtjZMACNrSa/ccmjkssoPoUI7ocigCpBqIbhmwB3GBKDYVZAjMcbDC1DEU2nJHahsIMHzUYnlBGg2I0KDCLpyGYKmhWCNHUYGoajlIew+KU0iIUaw2CnGBItYBgnUeO4dgMBZkDAArwRQ8BLYjYAAAAAElFTkSuQmCC);
-            z-index: 1;
           }
 
           .face {
-            top: calc(var(--m) * 5px);
-            left: calc(var(--m) * 4px);
+            top: calc(var(--m) * 4px);
+            left: calc(var(--m) * 5px);
             --w: 18px;
             --h: 14px;
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAHVJREFUOE+1k9sOwCAIQ9f//2gWiBCCuO7ifMKIB2gKjnRERPKdxQDgORY8BdQCCsRXSHT0C0hHvitTzY3Rkm4U1uXuB6loW0ZjnmHvSx913a06Nh95pc4GWdRh3KkxZ1yC2DhDV2ME6M2qTLtWKzO3Z4D/PQHES1jzyue2wwAAAABJRU5ErkJggg==);
-          }
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAGtJREFUSEtjZMACNrSa/ccmjkssoPoUI7ocigCpBqIbhmwB3GBKDYVZAjMcbDC1DEU2nJHahsIMHzUYnlBGg2I0KDCLpyGYKmhWCNHUYGoajlIew+KU0iIUaw2CnGBItYBgnUeO4dgMBZkDAArwRQ8BLYjYAAAAAElFTkSuQmCC);
+            }
 
           .reverse .face {
-            left: 0;
+            left: 0px;
           }
 
           .shoulder {
@@ -515,9 +522,9 @@ const Monkey: React.FC<MonkeyProps> = ({ children }) => {
             background-color: #b08536;
           }
         `}</style>
-      </div>
-    </MonkeyBarContext.Provider>
-  );
+            </div>
+        </MonkeyBarContext.Provider>
+    );
 };
 
 export default Monkey;
