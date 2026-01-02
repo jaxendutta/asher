@@ -209,7 +209,7 @@ export default function CatChat() {
           right: 20px;
           width: 100%;
           max-width: 400px;
-          height: 60dvh;
+          height: 70dvh;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           display: flex;
@@ -479,7 +479,7 @@ export default function CatChat() {
             right: 0;
             left: 0;
             max-width: 100%;
-            height: calc(100dvh - 80px);
+            height: calc(100dvh - 100px);
             margin: 0;
             border-radius: 12px 12px 0 0;
             transform-origin: bottom center;
@@ -521,7 +521,7 @@ export default function CatChat() {
           
           @media (max-width: 480px) {
             .cat-chat-container {
-              height: calc(100vh - 100px);
+              height: calc(100dvh - 120px);
             }
           }
         }
