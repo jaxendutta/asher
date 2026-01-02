@@ -78,13 +78,13 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
         <div className="flex w-full items-center gap-3 mt-3">
           <Badge className="flex items-center gap-2 text-xs flex-1">
             <HiCalendar />
-            <span>
+            <span className="whitespace-nowrap">
               {formatDate(research.startDate)} - {formatDate(research.endDate || 'present')}
             </span>
           </Badge>
           <Badge className="flex items-center gap-1 text-xs flex-shrink-0">
             <HiLocationMarker />
-            <span>{research.org.city}, {research.org.province || research.org.country}</span>
+            <span className="whitespace-nowrap">{research.org.city}, {research.org.province || research.org.country}</span>
           </Badge>
         </div>
       </CardHeader>
