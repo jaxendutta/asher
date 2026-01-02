@@ -209,7 +209,7 @@ export default function CatChat() {
           right: 20px;
           width: 100%;
           max-width: 400px;
-          height: 70vh;
+          height: 65dvh;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           display: flex;
