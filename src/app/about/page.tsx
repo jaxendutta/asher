@@ -10,7 +10,7 @@ import Dog from '@/components/pets/Dog';
 
 export default function AboutPage() {
   return (
-    <>
+    <div>
       <div className="page-enter flex flex-col gap-6 max-w-7xl mx-auto">
         {/* Hero Section */}
         <Card className="my-12 px-6 py-10 opacity-95 bg-gradient-to-br from-[#D9EAD3] to-[#F4EBD0]/70">
@@ -82,7 +82,9 @@ export default function AboutPage() {
         ))}
       </div>
 
-      <Dog />
-    </>
+      <div className="relative bottom-0 left-0 right-0 z-20">
+        <Dog />
+      </div>
+    </div>
   );
 }
