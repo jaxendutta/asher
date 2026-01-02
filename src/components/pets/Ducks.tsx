@@ -675,47 +675,59 @@ const Ducks: React.FC = () => {
           --color: #fff04d;
           transition: 0.5s;
         }
+        
         .duckling .head {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAAAXNSR0IArs4c6QAAAGFJREFUOE9jZKAyYKSyeQw4Dfz/wfc/PssYBTZj1YshSMggdEvQDUYxkFTDYIYjGwo3kFzD0A0dNZD8VAmLGNqFIcht5MY01mQD8yyphuJN2MghSMhgorMe+dEC0Un10gYAfowwEW4KJvUAAAAASUVORK5CYII=);
           margin-left: calc((var(--w) - var(--neck-w)) * -0.5px);
           margin-top: calc(var(--h) * -1px + 2px);
         }
+        
         .duckling.down.left .head,
         .duckling.down.right .head {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAAAXNSR0IArs4c6QAAAIVJREFUOE9jZKAyYKSyeQw4Dfz/wfc/PssYBTZj1YshSMggdEvQDUYxkFTDYIYjGwo3kFzD0A2lrYFZLqfAFk7bY4Y1PvDJw7yN4sLBbyAliRzDy39ORGFNyMwanwnag5FscBkGMwmfoRgJm5BhuAzFm/UIGcpisYzoQgSuEJehpBgG8g0Az0pNESONMLcAAAAASUVORK5CYII=);
         }
+        
         .duckling.up.left .head,
         .duckling.up.right .head {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAAAXNSR0IArs4c6QAAAIFJREFUOE9jZICCPyei/sPYyDSLxTJGbOK4xMCKcRkG00SKoYzYDGPW+EzQUYwCm7G6HMOFxBiGbBu6wXBbQC4l1TCYwciGwg38/8EXa6QQ9DtUAczQUQOJDTFMdbQPQ5Cd5MY01mQD8wSphuJM2OihQshgvFmP/KjAEjnUNAxkFgDi4TsRTK7K8AAAAABJRU5ErkJggg==);
         }
+        
         .duckling.down .head {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAAAXNSR0IArs4c6QAAAJdJREFUOE9jZKAyYKSyeQw4Dfz/wfc/PssYBTZj1YshSMggdEvQDUYxkFTDYIYjGwo3kFzD0A2lj4FZLqfAFk/bY4Y1XrDJw7yN1YWD30ByEjuGl0GGoMf03xu8WM1m1viMIo412cBUwAzFZRhMHcxQvAkbpvjPiSi82Q6mjsViGUZOw5mXCRmKzTCQRXhLG1yG4jIMZCAAfBdQEXRmcAUAAAAASUVORK5CYII=);
         }
+        
         .duckling.up .head {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAAAXNSR0IArs4c6QAAAIRJREFUOE9jZMAD/pyI+o9NmsViGSMubTglcBkGMwiXoVgNBBnGrPEZn+MZ/t7gZcBmKIaB/z/4YvUmTi8KbEYxA4VDqmEwSxiRDIUbSK5h6IaOGog3peCVhEUM7cIQZD25MY012cD8Q6qhyIaBzMCZlwkZjG4QPD2SHw3YdeJ0IbkWAQBsyTsRjEgDjwAAAABJRU5ErkJggg==);
         }
+        
         .duckling.left .head,
         .duckling.right .head {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAAAXNSR0IArs4c6QAAAH9JREFUOE9jZKAyYKSyeQw4Dfz/wfc/PssYBTZj1YshSMggdEvQDUYxkFTDYIYjGwo3kFzD0A0l2sAsl1NgvdP2mGENWpgrh5CBf05EYU0mzBqfiUqqKF7GZRjMJGIMhRtIyDBiDMVINoQMxedCnAmb1DAkOusRFQN4FFG9tAEAKQA+EfjQv5MAAAAASUVORK5CYII=);
         }
+        
         .duckling .body {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAAAXNSR0IArs4c6QAAAFRJREFUOE9jZMAC/n/w/Y9NHF2MUWAzI4YYsgCxBuEzGG4DuYbBDIe5FmwgpYYhG0p9A6nlOrgrR6CBgz+WYbFDaeSgJGxKDUXO0xiZm5QwxVY4AADr4DT71oa+KgAAAABJRU5ErkJggg==);
         }
+        
         .duckling .tail {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAHCAYAAAArkDztAAAAAXNSR0IArs4c6QAAAC1JREFUGFdjZICC/x98/4OYjAKbGcE0iIAJwhSBJHFLoKuG68IpgdcOZEmYqwCKgxp+Dp/FvAAAAABJRU5ErkJggg==);
         }
+        
         .duckling.waddle .leg {
           animation: waddle 0.2s infinite;
         }
+        
         .duckling .leg:after {
           height: 3px;
           width: 2px;
           left: 0;
           bottom: 0px;
         }
+        
         .duckling.hit .waddle {
           animation: waddle 0.1s infinite;
         }
+        
         button.create-duckling {
           position: fixed;
           bottom: 15px;
@@ -724,10 +736,9 @@ const Ducks: React.FC = () => {
           background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAbpJREFUaEPtmMGNwjAQRYmgAMqgASQK4LoVbAdbEB1QAVcKQNpmVnteiVWQgqLgeP54bGdkPteMx//Nn4xjutWb/bo3410RuHXH6TAdbqwCbOnGDH3BocN0uLEKsKUbM5RDiy2NtvT95+Mei+22F5fFVIuSQKdF8AauAtbCDvCeoGHgVFhv0NmAv47fD7bTdR98tb24TOC5ySu1dC2HBx2pHQM7/Hf7DB5D690vdJKlCpwmrwI8BzuIQaDHwBbRlrW9XtFhCRaBDsGmTu/iwL0wCRpx+FHd7aWbzgJtq1cBjkGjsLk+Q6sBzw0PaGIJQRqXFwGWjihNEUKw1vyxAopDKyTeKkgaWNb8WYGtYqy3qeotTWDNCxuI1QysfjkdVhbc5dCKMVR3eNxWyuK+hGvbeZGWHlRbh1cK7KLAFqdTYa0dBd2WkE1Qt5cEfX7sIEBSTH+b2hzO0QGIxEj75HieNKWnGyMwSEwOICkHgaUKjZ+P/xiYa2kkRrOnNdbkMAKDxFghNOtNwJqNvMQS2IsTpXTQ4VKV9ZKXDntxopQOOlyqsl7y0mEvTpTSQYdLVdZLXjrsxYlSOv4BWdLiPeCnzDQAAAAASUVORK5CYII=);
           width: var(--size);
           height: var(--size);
-          border-width: 2px;
-          border-color: yellow;
+          border: 3px yellow solid;
           background-color: rgb(2, 117, 115);
-          background-size: var(--size) !important;
+          background-size: calc(var(--size) * 0.95) !important;
           background-repeat: no-repeat !important;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           border-radius: 50%;
@@ -735,10 +746,9 @@ const Ducks: React.FC = () => {
           cursor: pointer;
           z-index: 100;
         }
+        
         button.create-duckling:hover {
-          border: 2px solid white;
-          width: calc(var(--size) + 2px);
-          height: calc(var(--size) + 2px);
+          transform: scale(1.05);
         }
       `}</style>
 
