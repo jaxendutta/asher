@@ -512,6 +512,14 @@ const Dog: React.FC = () => {
         };
         setMousePos(clickPos);
 
+        // Update interaction time and stop auto-movement
+        lastMouseMoveRef.current = Date.now();
+        isAutoMovingRef.current = false;
+    };
+
+    const handleDogClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+
         // Trigger bark on click
         setIsBarkingClick(true);
         setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
@@ -520,10 +528,6 @@ const Dog: React.FC = () => {
         setTimeout(() => {
             setIsBarkingClick(false);
         }, 1000);
-
-        // Update interaction time and stop auto-movement
-        lastMouseMoveRef.current = Date.now();
-        isAutoMovingRef.current = false;
     };
 
     useEffect(() => {
@@ -818,7 +822,11 @@ const Dog: React.FC = () => {
                 onMouseMove={handleMouseMove}
                 onClick={handleClick}
             >
-                <div ref={dogRef} className={`dog ${isBarkingSpontaneous || isBarkingClick ? 'bark' : ''}`}>
+                <div
+                    ref={dogRef}
+                    className={`dog ${isBarkingSpontaneous || isBarkingClick ? 'bark' : ''}`}
+                    onClick={handleDogClick}
+                >
                     <div className="dog-speech-anchor">
                         <div className={`dog-speech-bubble ${tiny5.className}`}>{barkMessage}</div>
                     </div>
