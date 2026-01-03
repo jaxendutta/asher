@@ -8,8 +8,8 @@ import { PiMicroscope } from 'react-icons/pi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter max-w-5xl mx-auto">
-      <div className="absolute h-full w-full left-0 top-0 z-20">
+    <div className="page-enter">
+      <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-40">
         <Dog />
       </div>
 
@@ -17,7 +17,7 @@ export default function AboutPage() {
         title="Specializations"
         subtitle="Dive into my research frontiers and technical arsenal"
         centered
-        className="py-0"
+        className="max-w-5xl py-0"
       >
         {/* Research Interests and Skills */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">

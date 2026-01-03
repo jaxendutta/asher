@@ -17,10 +17,10 @@ const Dog: React.FC = () => {
     const [isBarkingClick, setIsBarkingClick] = useState<boolean>(false);
     const [barkMessage, setBarkMessage] = useState<'woof' | 'bark'>('woof');
     const dogDataRef = useRef<any>(null);
-    const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
-    const lastInteractionRef = useRef<number>(Date.now());
     const isAutoMovingRef = useRef<boolean>(false);
     const barkTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const lastMouseMoveRef = useRef<number>(Date.now());
+    const movementIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const animationFrames = {
         rotate: [[0], [1], [2], [3], [5], [3, 'f'], [2, 'f'], [1, 'f']]
@@ -109,6 +109,10 @@ const Dog: React.FC = () => {
         return Math.abs(a - b) < buffer;
     };
 
+    const distanceBetween = (a: Position, b: Position) => {
+        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    };
+
     const rotateCoord = ({ angle, origin, x, y }: { angle: number; origin: Position; x: number; y: number }) => {
         const a = degToRad(angle);
         const aX = x - origin.x;
@@ -130,6 +134,51 @@ const Dog: React.FC = () => {
     const reachedTheGoalYeah = (x: number, y: number) => {
         const targetPos = isAutoMovingRef.current && dogDataRef.current ? dogDataRef.current.autoTarget : mousePos;
         return overlap(targetPos.x, x) && overlap(targetPos.y, y);
+    };
+
+    // Check if dog is in viewport and get visible bounds
+    const getVisibleBounds = () => {
+        if (!containerRef.current) return null;
+
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Calculate visible portion of container
+        const visibleTop = Math.max(0, -containerRect.top);
+        const visibleBottom = Math.min(containerRect.height, viewportHeight - containerRect.top);
+
+        return {
+            top: visibleTop,
+            bottom: visibleBottom,
+            left: 0,
+            right: containerRect.width,
+            height: visibleBottom - visibleTop
+        };
+    };
+
+    const isDogInViewport = () => {
+        if (!dogRef.current || !containerRef.current) return true;
+
+        const dogRect = dogRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Check if dog is visible in viewport
+        return dogRect.top < viewportHeight && dogRect.bottom > 0;
+    };
+
+    const getRandomTarget = () => {
+        if (!containerRef.current) return { x: 0, y: 0 };
+
+        const visibleBounds = getVisibleBounds();
+        if (!visibleBounds) return { x: 0, y: 0 };
+
+        const margin = 100;
+
+        // Generate random position within visible viewport area
+        return {
+            x: Math.random() * (visibleBounds.right - margin * 2) + margin,
+            y: Math.random() * (visibleBounds.height - margin * 2) + visibleBounds.top + margin
+        };
     };
 
     const positionLegs = (dog: HTMLDivElement, frame: number) => {
@@ -296,56 +345,22 @@ const Dog: React.FC = () => {
         const upperLimit = 40;
 
         if (containerRef.current) {
-            if (x > lowerLimit && x < (containerRef.current.clientWidth - upperLimit)) {
-                dogData.pos.x = x + 48;
-                dogData.actualPos.x = x;
-            }
-            if (y > lowerLimit && y < (containerRef.current.clientHeight - upperLimit)) {
-                dogData.pos.y = y + 48;
-                dogData.actualPos.y = y;
+            const visibleBounds = getVisibleBounds();
+            if (visibleBounds) {
+                // Keep dog within visible viewport bounds
+                if (x > lowerLimit && x < (visibleBounds.right - upperLimit)) {
+                    dogData.pos.x = x + 48;
+                    dogData.actualPos.x = x;
+                }
+                if (y > visibleBounds.top + lowerLimit && y < (visibleBounds.bottom - upperLimit)) {
+                    dogData.pos.y = y + 48;
+                    dogData.actualPos.y = y;
+                }
             }
         }
 
         dog.style.left = px(x);
         dog.style.top = px(y);
-    };
-
-    const getRandomTarget = () => {
-        if (!containerRef.current) return { x: 0, y: 0 };
-
-        const margin = 100;
-        return {
-            x: Math.random() * (containerRef.current.clientWidth - margin * 2) + margin,
-            y: Math.random() * (containerRef.current.clientHeight - margin * 2) + margin
-        };
-    };
-
-    const startAutoMovement = () => {
-        if (!dogDataRef.current || !containerRef.current) return;
-
-        isAutoMovingRef.current = true;
-        dogDataRef.current.autoTarget = getRandomTarget();
-        moveDog();
-    };
-
-    const stopAutoMovement = () => {
-        isAutoMovingRef.current = false;
-        if (dogDataRef.current?.timer.all) {
-            clearInterval(dogDataRef.current.timer.all);
-        }
-    };
-
-    const resetInactivityTimer = () => {
-        lastInteractionRef.current = Date.now();
-        stopAutoMovement();
-
-        if (inactivityTimerRef.current) {
-            clearTimeout(inactivityTimerRef.current);
-        }
-
-        inactivityTimerRef.current = setTimeout(() => {
-            startAutoMovement();
-        }, 2000);
     };
 
     // Random barking function (like duck quacking)
@@ -362,49 +377,59 @@ const Dog: React.FC = () => {
         }, 1000); // Bark displays for 1 second
     };
 
-    const moveDog = () => {
-        const dogData = dogDataRef.current;
-        if (!dogData || !dogRef.current) return;
-
-        if (dogData.timer.all) {
-            clearInterval(dogData.timer.all);
+    // Main movement loop - runs continuously like ducks
+    const startMovementLoop = () => {
+        if (movementIntervalRef.current) {
+            clearInterval(movementIntervalRef.current);
         }
 
-        dogData.timer.all = setInterval(() => {
-            if (!dogRef.current || !dogData || !containerRef.current) return;
+        movementIntervalRef.current = setInterval(() => {
+            if (!dogRef.current || !dogDataRef.current || !containerRef.current) return;
 
+            const dogData = dogDataRef.current;
             const { left, top } = dogRef.current.getBoundingClientRect();
             const containerRect = containerRef.current.getBoundingClientRect();
+            const dogPos = {
+                x: left - containerRect.left + 48,
+                y: top - containerRect.top + 48
+            };
 
-            const start = angles.indexOf(dogData.angle);
-            const end = angles.indexOf(targetAngle(dogData) || 0);
-
-            if (reachedTheGoalYeah(left - containerRect.left + 48, top - containerRect.top + 48)) {
-                if (dogData.timer.all) clearInterval(dogData.timer.all);
-                const { x, y } = dogData.actualPos;
-                dogRef.current.style.left = px(x);
-                dogRef.current.style.top = px(y);
-                stopLegs(dogRef.current);
-                turnDog({
-                    dog: dogData,
-                    start,
-                    end: defaultEnd,
-                    direction: 'clockwise'
-                });
-
-                // If auto-moving, set a new target after a short delay
-                if (isAutoMovingRef.current) {
-                    setTimeout(() => {
-                        if (isAutoMovingRef.current) {
-                            dogData.autoTarget = getRandomTarget();
-                            moveDog();
-                        }
-                    }, 1000);
-                }
-                return;
+            // Check if dog is in viewport
+            if (!isDogInViewport() && !isAutoMovingRef.current) {
+                // Dog is out of viewport, bring it back into view
+                isAutoMovingRef.current = true;
+                dogData.autoTarget = getRandomTarget();
             }
 
+            // Check if we should start wandering (like ducks)
+            const timeSinceLastMove = Date.now() - lastMouseMoveRef.current;
+            const distanceToMouse = distanceBetween(dogPos, mousePos);
+
+            // If close to mouse and mouse hasn't moved in 2 seconds, start wandering
+            if (distanceToMouse < 80 && timeSinceLastMove > 2000 && !isAutoMovingRef.current) {
+                isAutoMovingRef.current = true;
+                dogData.autoTarget = getRandomTarget();
+            }
+
+            const targetPos = isAutoMovingRef.current ? dogData.autoTarget : mousePos;
+            const fullDistance = distanceBetween(dogPos, targetPos);
+
+            // If reached target
+            if (fullDistance < 80) {
+                // When we reach the target while wandering, pick a new random target in viewport
+                if (isAutoMovingRef.current && containerRef.current) {
+                    dogData.autoTarget = getRandomTarget();
+                    // Fall through to continue moving to new target
+                } else {
+                    stopLegs(dogRef.current);
+                    return;
+                }
+            }
+
+            // Calculate movement
             let { x, y } = dogData.actualPos;
+            const start = angles.indexOf(dogData.angle);
+            const end = angles.indexOf(targetAngle(dogData) || 0);
             const targetAngleValue = targetAngle(dogData) || 0;
             const dir = directionConversions[targetAngleValue] || 'down';
             const distance = 30;
@@ -428,7 +453,6 @@ const Dog: React.FC = () => {
             if (!dogData.turning && dogData.walk) {
                 if (start !== end) {
                     dogData.turning = true;
-                    const targetPos = isAutoMovingRef.current ? dogData.autoTarget : mousePos;
                     const direction = getDirection({
                         pos: dogData.pos,
                         facing: dogData.facing,
@@ -457,7 +481,9 @@ const Dog: React.FC = () => {
         };
         setMousePos(newMousePos);
 
-        resetInactivityTimer();
+        // Update last mouse move time and stop wandering
+        lastMouseMoveRef.current = Date.now();
+        isAutoMovingRef.current = false;
 
         dogData.walk = false;
         const direction = getDirection({
@@ -476,6 +502,16 @@ const Dog: React.FC = () => {
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
 
+        if (!containerRef.current) return;
+
+        // Set new target position where user clicked
+        const rect = containerRef.current.getBoundingClientRect();
+        const clickPos = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+        setMousePos(clickPos);
+
         // Trigger bark on click
         setIsBarkingClick(true);
         setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
@@ -485,43 +521,10 @@ const Dog: React.FC = () => {
             setIsBarkingClick(false);
         }, 1000);
 
-        resetInactivityTimer();
-        moveDog();
+        // Update interaction time and stop auto-movement
+        lastMouseMoveRef.current = Date.now();
+        isAutoMovingRef.current = false;
     };
-
-    // Check if dog is in viewport
-    useEffect(() => {
-        if (!dogRef.current || !containerRef.current) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting && isAutoMovingRef.current && containerRef.current) {
-                        // Dog is out of view, move it towards the center of viewport
-                        const rect = containerRef.current.getBoundingClientRect();
-                        const viewportCenter = {
-                            x: rect.width / 2,
-                            y: rect.height / 2
-                        };
-
-                        if (dogDataRef.current) {
-                            dogDataRef.current.autoTarget = viewportCenter;
-                        }
-                    }
-                });
-            },
-            {
-                root: containerRef.current,
-                threshold: 0.1
-            }
-        );
-
-        observer.observe(dogRef.current);
-
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
 
     useEffect(() => {
         if (!dogRef.current || !containerRef.current) return;
@@ -571,8 +574,11 @@ const Dog: React.FC = () => {
         });
         positionTail(dog, 0);
 
-        // Start inactivity timer
-        resetInactivityTimer();
+        // Initialize mouse position to center
+        setMousePos({ x: centerX + 48, y: centerY + 48 });
+
+        // Start continuous movement loop
+        startMovementLoop();
 
         // Start random barking after initial delay (2-6 seconds like ducks)
         const initialBarkDelay = Math.random() * 4000 + 2000;
@@ -581,8 +587,7 @@ const Dog: React.FC = () => {
         return () => {
             if (dogData.timer.head) clearTimeout(dogData.timer.head);
             if (dogData.timer.body) clearTimeout(dogData.timer.body);
-            if (dogData.timer.all) clearInterval(dogData.timer.all);
-            if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+            if (movementIntervalRef.current) clearInterval(movementIntervalRef.current);
             if (barkTimerRef.current) clearTimeout(barkTimerRef.current);
         };
     }, []);
