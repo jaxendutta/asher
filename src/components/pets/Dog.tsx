@@ -633,6 +633,7 @@ const Dog: React.FC = () => {
           height: 96px;
           animation: fade-in forwards 1s;
           transition: 0.5s;
+          cursor: pointer;
         }
         
         @keyframes fade-in {
