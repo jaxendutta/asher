@@ -23,12 +23,12 @@ export function Section({
 }: SectionProps) {
   return (
     <section
-      className={cn('pt-16', className)}
+      className={cn('pt-30 pb-10', className)}
       {...props}
     >
       <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
         {(title || subtitle) && (
-          <div className={cn('mb-12', centered && 'text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]')}>
+          <div className={cn(centered && 'mb-8 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]')}>
             {title && (
               <span className={`${fleur_de_leah.className} text-5xl md:text-6xl font-bold text-[#1A3A2A]`}>
                 {title}
