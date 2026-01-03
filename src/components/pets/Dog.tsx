@@ -10,6 +10,9 @@ const Dog: React.FC = () => {
     const controlRef = useRef({ x: 0, y: 0, angle: null as number | null });
     const dogDataRef = useRef<any>(null);
     const barkTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const lastInteractionRef = useRef<number>(Date.now());
+    const wanderTargetRef = useRef({ x: 0, y: 0 });
+    const isWanderingRef = useRef<boolean>(false);
 
     const [isBarkingSpontaneous, setIsBarkingSpontaneous] = useState(false);
     const [isBarkingClick, setIsBarkingClick] = useState(false);
@@ -38,6 +41,21 @@ const Dog: React.FC = () => {
     const degToRad = (deg: number) => deg / (180 / Math.PI);
     const overlap = (a: number, b: number) => Math.abs(a - b) < 20;
 
+    const getVisibleBounds = () => {
+        if (!containerRef.current) return null;
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const visibleTop = Math.max(0, -containerRect.top);
+        const visibleBottom = Math.min(containerRect.height, viewportHeight - containerRect.top);
+        return {
+            top: visibleTop,
+            bottom: visibleBottom,
+            left: 0,
+            right: containerRect.width,
+            height: visibleBottom - visibleTop
+        };
+    };
+
     const rotateCoord = ({ angle, origin, x, y }: any) => {
         const a = degToRad(angle);
         const aX = x - origin.x;
@@ -48,15 +66,28 @@ const Dog: React.FC = () => {
         };
     };
 
-    const targetAngle = (dog: any) => {
-        if (!dog) return;
-        const angle = radToDeg(Math.atan2(dog.pos.y - controlRef.current.y, dog.pos.x - controlRef.current.x)) - 90;
-        const adjustedAngle = angle < 0 ? angle + 360 : angle;
-        return nearestN(adjustedAngle, 45);
+    const reachedTheGoalYeah = (x: number, y: number) => {
+        const target = isWanderingRef.current ? wanderTargetRef.current : controlRef.current;
+        return overlap(target.x, x) && overlap(target.y, y);
     };
 
-    const reachedTheGoalYeah = (x: number, y: number) => {
-        return overlap(controlRef.current.x, x) && overlap(controlRef.current.y, y);
+    const getRandomTarget = () => {
+        const visibleBounds = getVisibleBounds();
+        if (!visibleBounds) return { x: 0, y: 0 };
+        const margin = 100;
+        return {
+            x: Math.random() * (visibleBounds.right - margin * 2) + margin,
+            y: Math.random() * (visibleBounds.height - margin * 2) + visibleBounds.top + margin
+        };
+    };
+
+    const targetAngle = (dog: any) => {
+        if (!dog) return;
+        // Use wander target if wandering, otherwise use mouse position
+        const target = isWanderingRef.current ? wanderTargetRef.current : controlRef.current;
+        const angle = radToDeg(Math.atan2(dog.pos.y - target.y, dog.pos.x - target.x)) - 90;
+        const adjustedAngle = angle < 0 ? angle + 360 : angle;
+        return nearestN(adjustedAngle, 45);
     };
 
     const positionLegs = (dog: HTMLDivElement, frame: number) => {
@@ -193,17 +224,46 @@ const Dog: React.FC = () => {
             if (!dog.dog) return;
 
             const { left, top } = dog.dog.getBoundingClientRect();
+            const containerRect = containerRef.current?.getBoundingClientRect();
+            if (!containerRect) return;
+
+            const dogPos = {
+                x: left - containerRect.left + 48,
+                y: top - containerRect.top + 48
+            };
+
+            // Check if mouse has been inactive for 2 seconds
+            const timeSinceInteraction = Date.now() - lastInteractionRef.current;
+            const mouseIsActive = timeSinceInteraction < 2000;
+
+            // Switch to wandering if mouse is inactive
+            if (!mouseIsActive && !isWanderingRef.current) {
+                isWanderingRef.current = true;
+                wanderTargetRef.current = getRandomTarget();
+            }
+
+            // Switch back to following mouse if it becomes active
+            if (mouseIsActive && isWanderingRef.current) {
+                isWanderingRef.current = false;
+            }
+
             const start = angles.indexOf(dog.angle);
             const end = angles.indexOf(targetAngle(dog) || 0);
 
-            if (reachedTheGoalYeah(left + 48, top + 48)) {
-                clearInterval(dog.timer.all);
-                const { x, y } = dog.actualPos;
-                dog.dog.style.left = px(x);
-                dog.dog.style.top = px(y);
-                stopLegs(dog.dog);
-                turnDog({ dog, start, end: defaultEnd, direction: 'clockwise' });
-                return;
+            if (reachedTheGoalYeah(dogPos.x, dogPos.y)) {
+                if (isWanderingRef.current) {
+                    // Reached wander target - pick a new one
+                    wanderTargetRef.current = getRandomTarget();
+                } else {
+                    // Reached mouse - stop
+                    clearInterval(dog.timer.all);
+                    const { x, y } = dog.actualPos;
+                    dog.dog.style.left = px(x);
+                    dog.dog.style.top = px(y);
+                    stopLegs(dog.dog);
+                    turnDog({ dog, start, end: defaultEnd, direction: 'clockwise' });
+                    return;
+                }
             }
 
             let { x, y } = dog.actualPos;
@@ -227,10 +287,11 @@ const Dog: React.FC = () => {
             if (!dog.turning && dog.walk) {
                 if (start !== end) {
                     dog.turning = true;
+                    const target = isWanderingRef.current ? wanderTargetRef.current : controlRef.current;
                     const direction = getDirection({
                         pos: dog.pos,
                         facing: dog.facing,
-                        target: controlRef.current,
+                        target: target,
                     });
                     turnDog({ dog, start, end, direction });
                 } else {
@@ -262,6 +323,10 @@ const Dog: React.FC = () => {
         controlRef.current.x = e.clientX - rect.left;
         controlRef.current.y = e.clientY - rect.top;
 
+        // Update last interaction time
+        lastInteractionRef.current = Date.now();
+        isWanderingRef.current = false;
+
         const dog = dogDataRef.current;
         dog.walk = false;
         controlRef.current.angle = null;
@@ -277,6 +342,8 @@ const Dog: React.FC = () => {
     };
 
     const handleClick = () => {
+        lastInteractionRef.current = Date.now();
+        isWanderingRef.current = false;
         moveDog();
     };
 
@@ -308,8 +375,17 @@ const Dog: React.FC = () => {
         };
 
         dogDataRef.current = dogData;
+
+        // Initialize with a random wander target
+        wanderTargetRef.current = getRandomTarget();
+
         turnDog({ dog: dogData, start: 0, end: defaultEnd, direction: 'clockwise' });
         positionTail(dog, 0);
+
+        // Start wandering after initialization
+        setTimeout(() => {
+            moveDog();
+        }, 1000);
 
         const initialBarkDelay = Math.random() * 4000 + 2000;
         barkTimerRef.current = setTimeout(barkSpontaneously, initialBarkDelay);
