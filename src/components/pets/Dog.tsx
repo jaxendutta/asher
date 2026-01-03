@@ -455,9 +455,10 @@ const Dog: React.FC = () => {
         <>
             <style>{`
         .dog-container {
-          height: 70dvh;
+          height: 100%;
           overflow: hidden;
           pointer-events: auto;
+          z-index:20;
         }
         
         .dog-container .leg {

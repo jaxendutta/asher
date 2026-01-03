@@ -37,7 +37,8 @@ export const skills: Skill[] = [
     items: [
       'PDB',
       'AlphaFold',
-      'NCBI (BLAST, PubMed)',
+      'NCBI BLAST',
+      'NCBI PubMed',
       'PSIPRED',
       'DeepTMHMM',
       'Phobius',

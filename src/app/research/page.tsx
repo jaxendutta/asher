@@ -10,7 +10,7 @@ export default function ResearchPage() {
     <div className="page-enter">
       <Birds birdCount={6}>
         <Section
-          title="Research"
+          title="Research Experience"
           subtitle="Exploring plant biology through hands-on research and fieldwork"
           centered
         >
