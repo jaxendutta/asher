@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
+import { tiny5 } from '@/lib/fonts';
 
 interface Position {
     x: number;
@@ -12,7 +13,14 @@ const Dog: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const dogRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState<Position>({ x: 0, y: 0 });
+    const [isBarkingSpontaneous, setIsBarkingSpontaneous] = useState<boolean>(false);
+    const [isBarkingClick, setIsBarkingClick] = useState<boolean>(false);
+    const [barkMessage, setBarkMessage] = useState<'woof' | 'bark'>('woof');
     const dogDataRef = useRef<any>(null);
+    const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const lastInteractionRef = useRef<number>(Date.now());
+    const isAutoMovingRef = useRef<boolean>(false);
+    const barkTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const animationFrames = {
         rotate: [[0], [1], [2], [3], [5], [3, 'f'], [2, 'f'], [1, 'f']]
@@ -113,13 +121,15 @@ const Dog: React.FC = () => {
 
     const targetAngle = (dog: any) => {
         if (!dog) return;
-        const angle = radToDeg(Math.atan2(dog.pos.y - mousePos.y, dog.pos.x - mousePos.x)) - 90;
+        const targetPos = isAutoMovingRef.current ? dog.autoTarget : mousePos;
+        const angle = radToDeg(Math.atan2(dog.pos.y - targetPos.y, dog.pos.x - targetPos.x)) - 90;
         const adjustedAngle = angle < 0 ? angle + 360 : angle;
         return nearestN(adjustedAngle, 45);
     };
 
     const reachedTheGoalYeah = (x: number, y: number) => {
-        return overlap(mousePos.x, x) && overlap(mousePos.y, y);
+        const targetPos = isAutoMovingRef.current && dogDataRef.current ? dogDataRef.current.autoTarget : mousePos;
+        return overlap(targetPos.x, x) && overlap(targetPos.y, y);
     };
 
     const positionLegs = (dog: HTMLDivElement, frame: number) => {
@@ -300,6 +310,58 @@ const Dog: React.FC = () => {
         dog.style.top = px(y);
     };
 
+    const getRandomTarget = () => {
+        if (!containerRef.current) return { x: 0, y: 0 };
+
+        const margin = 100;
+        return {
+            x: Math.random() * (containerRef.current.clientWidth - margin * 2) + margin,
+            y: Math.random() * (containerRef.current.clientHeight - margin * 2) + margin
+        };
+    };
+
+    const startAutoMovement = () => {
+        if (!dogDataRef.current || !containerRef.current) return;
+
+        isAutoMovingRef.current = true;
+        dogDataRef.current.autoTarget = getRandomTarget();
+        moveDog();
+    };
+
+    const stopAutoMovement = () => {
+        isAutoMovingRef.current = false;
+        if (dogDataRef.current?.timer.all) {
+            clearInterval(dogDataRef.current.timer.all);
+        }
+    };
+
+    const resetInactivityTimer = () => {
+        lastInteractionRef.current = Date.now();
+        stopAutoMovement();
+
+        if (inactivityTimerRef.current) {
+            clearTimeout(inactivityTimerRef.current);
+        }
+
+        inactivityTimerRef.current = setTimeout(() => {
+            startAutoMovement();
+        }, 2000);
+    };
+
+    // Random barking function (like duck quacking)
+    const barkSpontaneously = () => {
+        setIsBarkingSpontaneous(true);
+        setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
+
+        setTimeout(() => {
+            setIsBarkingSpontaneous(false);
+
+            // Schedule next bark randomly (3-9 seconds like ducks)
+            const nextBarkDelay = Math.random() * 6000 + 3000;
+            barkTimerRef.current = setTimeout(barkSpontaneously, nextBarkDelay);
+        }, 1000); // Bark displays for 1 second
+    };
+
     const moveDog = () => {
         const dogData = dogDataRef.current;
         if (!dogData || !dogRef.current) return;
@@ -329,6 +391,16 @@ const Dog: React.FC = () => {
                     end: defaultEnd,
                     direction: 'clockwise'
                 });
+
+                // If auto-moving, set a new target after a short delay
+                if (isAutoMovingRef.current) {
+                    setTimeout(() => {
+                        if (isAutoMovingRef.current) {
+                            dogData.autoTarget = getRandomTarget();
+                            moveDog();
+                        }
+                    }, 1000);
+                }
                 return;
             }
 
@@ -356,10 +428,11 @@ const Dog: React.FC = () => {
             if (!dogData.turning && dogData.walk) {
                 if (start !== end) {
                     dogData.turning = true;
+                    const targetPos = isAutoMovingRef.current ? dogData.autoTarget : mousePos;
                     const direction = getDirection({
                         pos: dogData.pos,
                         facing: dogData.facing,
-                        target: mousePos,
+                        target: targetPos,
                     });
                     turnDog({
                         dog: dogData,
@@ -384,6 +457,8 @@ const Dog: React.FC = () => {
         };
         setMousePos(newMousePos);
 
+        resetInactivityTimer();
+
         dogData.walk = false;
         const direction = getDirection({
             pos: dogData.pos,
@@ -397,6 +472,56 @@ const Dog: React.FC = () => {
             start, end, direction
         });
     };
+
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+
+        // Trigger bark on click
+        setIsBarkingClick(true);
+        setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
+
+        // Hide speech after 1 second
+        setTimeout(() => {
+            setIsBarkingClick(false);
+        }, 1000);
+
+        resetInactivityTimer();
+        moveDog();
+    };
+
+    // Check if dog is in viewport
+    useEffect(() => {
+        if (!dogRef.current || !containerRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting && isAutoMovingRef.current && containerRef.current) {
+                        // Dog is out of view, move it towards the center of viewport
+                        const rect = containerRef.current.getBoundingClientRect();
+                        const viewportCenter = {
+                            x: rect.width / 2,
+                            y: rect.height / 2
+                        };
+
+                        if (dogDataRef.current) {
+                            dogDataRef.current.autoTarget = viewportCenter;
+                        }
+                    }
+                });
+            },
+            {
+                root: containerRef.current,
+                threshold: 0.1
+            }
+        );
+
+        observer.observe(dogRef.current);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     useEffect(() => {
         if (!dogRef.current || !containerRef.current) return;
@@ -434,6 +559,7 @@ const Dog: React.FC = () => {
             animation: animationFrames.rotate,
             angle: 360,
             index,
+            autoTarget: { x: 0, y: 0 }
         };
 
         dogDataRef.current = dogData;
@@ -445,10 +571,19 @@ const Dog: React.FC = () => {
         });
         positionTail(dog, 0);
 
+        // Start inactivity timer
+        resetInactivityTimer();
+
+        // Start random barking after initial delay (2-6 seconds like ducks)
+        const initialBarkDelay = Math.random() * 4000 + 2000;
+        barkTimerRef.current = setTimeout(barkSpontaneously, initialBarkDelay);
+
         return () => {
             if (dogData.timer.head) clearTimeout(dogData.timer.head);
             if (dogData.timer.body) clearTimeout(dogData.timer.body);
             if (dogData.timer.all) clearInterval(dogData.timer.all);
+            if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+            if (barkTimerRef.current) clearTimeout(barkTimerRef.current);
         };
     }, []);
 
@@ -599,14 +734,89 @@ const Dog: React.FC = () => {
           height: 24px;
           transition: 0.15s;
         }
+        
+        .dog-speech-anchor {
+          position: absolute;
+          left: 50%;
+          top: -4px;
+          transform: translateX(-50%);
+          width: 0px;
+          height: 0px;
+          display: flex;
+          justify-content: center;
+          align-items: end;
+          z-index: 999;
+        }
+
+        .dog-speech-bubble {
+          position: absolute;
+          bottom: 4px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #FFF;
+          padding: 2px 10px;
+          border: 1px dashed #000;
+          border-radius: 8px;
+          font-size: 16px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          z-index: 999;
+        }
+
+        .dog-speech-bubble::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 6px dashed transparent;
+          border-right: 6px dashed transparent;
+          border-top: 6px dashed #000;
+        }
+
+        .dog-speech-bubble::before {
+          content: '';
+          position: absolute;
+          bottom: -4.5px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 5px dashed transparent;
+          border-right: 5px dashed transparent;
+          border-top: 5px dashed #FFF;
+          z-index: 1;
+        }
+
+        .dog.bark .dog-speech-bubble {
+          opacity: 1;
+          animation: fade-in-dog 0.2s;
+        }
+
+        @keyframes fade-in-dog {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(3px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
       `}</style>
             <div
                 ref={containerRef}
                 className="dog-container"
                 onMouseMove={handleMouseMove}
-                onClick={moveDog}
+                onClick={handleClick}
             >
-                <div ref={dogRef} className="dog">
+                <div ref={dogRef} className={`dog ${isBarkingSpontaneous || isBarkingClick ? 'bark' : ''}`}>
+                    <div className="dog-speech-anchor">
+                        <div className={`dog-speech-bubble ${tiny5.className}`}>{barkMessage}</div>
+                    </div>
                     <div className="body-wrapper">
                         <div className="body"></div>
                     </div>
