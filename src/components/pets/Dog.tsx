@@ -4,116 +4,41 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { tiny5 } from '@/lib/fonts';
 
-interface Position {
-    x: number;
-    y: number;
-}
-
 const Dog: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const dogRef = useRef<HTMLDivElement>(null);
-    const [mousePos, setMousePos] = useState<Position>({ x: 0, y: 0 });
-    const [isBarkingSpontaneous, setIsBarkingSpontaneous] = useState<boolean>(false);
-    const [isBarkingClick, setIsBarkingClick] = useState<boolean>(false);
-    const [barkMessage, setBarkMessage] = useState<'woof' | 'bark'>('woof');
+    const controlRef = useRef({ x: 0, y: 0, angle: null as number | null });
     const dogDataRef = useRef<any>(null);
-    const isAutoMovingRef = useRef<boolean>(false);
     const barkTimerRef = useRef<NodeJS.Timeout | null>(null);
-    const lastMouseMoveRef = useRef<number>(Date.now());
-    const movementIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    const animationFrames = {
-        rotate: [[0], [1], [2], [3], [5], [3, 'f'], [2, 'f'], [1, 'f']]
-    };
+    const [isBarkingSpontaneous, setIsBarkingSpontaneous] = useState(false);
+    const [isBarkingClick, setIsBarkingClick] = useState(false);
+    const [barkMessage, setBarkMessage] = useState<'woof' | 'bark'>('woof');
 
-    const directionConversions: Record<number, string> = {
-        360: 'up',
-        45: 'upright',
-        90: 'right',
-        135: 'downright',
-        180: 'down',
-        225: 'downleft',
-        270: 'left',
-        315: 'upleft',
-    };
-
+    const animationFrames = { rotate: [[0], [1], [2], [3], [5], [3, 'f'], [2, 'f'], [1, 'f']] };
+    const directionConversions: any = { 360: 'up', 45: 'upright', 90: 'right', 135: 'downright', 180: 'down', 225: 'downleft', 270: 'left', 315: 'upleft' };
     const angles = [360, 45, 90, 135, 180, 225, 270, 315];
     const defaultEnd = 4;
+    const distance = 30;
 
     const partPositions = [
-        {
-            leg1: { x: 26, y: 43 },
-            leg2: { x: 54, y: 43 },
-            leg3: { x: 26, y: 75 },
-            leg4: { x: 54, y: 75 },
-            tail: { x: 40, y: 70, z: 1 },
-        },
-        {
-            leg1: { x: 33, y: 56 },
-            leg2: { x: 55, y: 56 },
-            leg3: { x: 12, y: 72 },
-            leg4: { x: 32, y: 74 },
-            tail: { x: 20, y: 64, z: 1 },
-        },
-        {
-            leg1: { x: 59, y: 62 },
-            leg2: { x: 44, y: 60 },
-            leg3: { x: 25, y: 64 },
-            leg4: { x: 11, y: 61 },
-            tail: { x: 4, y: 44, z: 1 },
-        },
-        {
-            leg1: { x: 39, y: 63 },
-            leg2: { x: 60, y: 56 },
-            leg3: { x: 12, y: 52 },
-            leg4: { x: 28, y: 50 },
-            tail: { x: 7, y: 21, z: 0 },
-        },
-        {
-            leg1: { x: 23, y: 54 },
-            leg2: { x: 56, y: 54 },
-            leg3: { x: 24, y: 25 },
-            leg4: { x: 54, y: 25 },
-            tail: { x: 38, y: 2, z: 0 },
-        },
-        {
-            leg1: { x: 21, y: 58 },
-            leg2: { x: 41, y: 64 },
-            leg3: { x: 53, y: 50 },
-            leg4: { x: 69, y: 53 },
-            tail: { x: 72, y: 22, z: 0 },
-        },
-        {
-            leg1: { x: 22, y: 59 },
-            leg2: { x: 30, y: 64 },
-            leg3: { x: 56, y: 60 },
-            leg4: { x: 68, y: 62 },
-            tail: { x: 78, y: 40, z: 0 },
-        },
-        {
-            leg1: { x: 47, y: 45 },
-            leg2: { x: 24, y: 53 },
-            leg3: { x: 68, y: 68 },
-            leg4: { x: 47, y: 73 },
-            tail: { x: 65, y: 65, z: 1 },
-        },
+        { leg1: { x: 26, y: 43 }, leg2: { x: 54, y: 43 }, leg3: { x: 26, y: 75 }, leg4: { x: 54, y: 75 }, tail: { x: 40, y: 70, z: 1 } },
+        { leg1: { x: 33, y: 56 }, leg2: { x: 55, y: 56 }, leg3: { x: 12, y: 72 }, leg4: { x: 32, y: 74 }, tail: { x: 20, y: 64, z: 1 } },
+        { leg1: { x: 59, y: 62 }, leg2: { x: 44, y: 60 }, leg3: { x: 25, y: 64 }, leg4: { x: 11, y: 61 }, tail: { x: 4, y: 44, z: 1 } },
+        { leg1: { x: 39, y: 63 }, leg2: { x: 60, y: 56 }, leg3: { x: 12, y: 52 }, leg4: { x: 28, y: 50 }, tail: { x: 7, y: 21, z: 0 } },
+        { leg1: { x: 23, y: 54 }, leg2: { x: 56, y: 54 }, leg3: { x: 24, y: 25 }, leg4: { x: 54, y: 25 }, tail: { x: 38, y: 2, z: 0 } },
+        { leg1: { x: 21, y: 58 }, leg2: { x: 41, y: 64 }, leg3: { x: 53, y: 50 }, leg4: { x: 69, y: 53 }, tail: { x: 72, y: 22, z: 0 } },
+        { leg1: { x: 22, y: 59 }, leg2: { x: 30, y: 64 }, leg3: { x: 56, y: 60 }, leg4: { x: 68, y: 62 }, tail: { x: 78, y: 40, z: 0 } },
+        { leg1: { x: 47, y: 45 }, leg2: { x: 24, y: 53 }, leg3: { x: 68, y: 68 }, leg4: { x: 47, y: 73 }, tail: { x: 65, y: 65, z: 1 } },
     ];
 
     const nearestN = (x: number, n: number) => x === 0 ? 0 : (x - 1) + Math.abs(((x - 1) % n) - n);
     const px = (num: number) => `${num}px`;
     const radToDeg = (rad: number) => Math.round(rad * (180 / Math.PI));
     const degToRad = (deg: number) => deg / (180 / Math.PI);
+    const overlap = (a: number, b: number) => Math.abs(a - b) < 20;
 
-    const overlap = (a: number, b: number) => {
-        const buffer = 20;
-        return Math.abs(a - b) < buffer;
-    };
-
-    const distanceBetween = (a: Position, b: Position) => {
-        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    };
-
-    const rotateCoord = ({ angle, origin, x, y }: { angle: number; origin: Position; x: number; y: number }) => {
+    const rotateCoord = ({ angle, origin, x, y }: any) => {
         const a = degToRad(angle);
         const aX = x - origin.x;
         const aY = y - origin.y;
@@ -125,60 +50,13 @@ const Dog: React.FC = () => {
 
     const targetAngle = (dog: any) => {
         if (!dog) return;
-        const targetPos = isAutoMovingRef.current ? dog.autoTarget : mousePos;
-        const angle = radToDeg(Math.atan2(dog.pos.y - targetPos.y, dog.pos.x - targetPos.x)) - 90;
+        const angle = radToDeg(Math.atan2(dog.pos.y - controlRef.current.y, dog.pos.x - controlRef.current.x)) - 90;
         const adjustedAngle = angle < 0 ? angle + 360 : angle;
         return nearestN(adjustedAngle, 45);
     };
 
     const reachedTheGoalYeah = (x: number, y: number) => {
-        const targetPos = isAutoMovingRef.current && dogDataRef.current ? dogDataRef.current.autoTarget : mousePos;
-        return overlap(targetPos.x, x) && overlap(targetPos.y, y);
-    };
-
-    // Check if dog is in viewport and get visible bounds
-    const getVisibleBounds = () => {
-        if (!containerRef.current) return null;
-
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-
-        // Calculate visible portion of container
-        const visibleTop = Math.max(0, -containerRect.top);
-        const visibleBottom = Math.min(containerRect.height, viewportHeight - containerRect.top);
-
-        return {
-            top: visibleTop,
-            bottom: visibleBottom,
-            left: 0,
-            right: containerRect.width,
-            height: visibleBottom - visibleTop
-        };
-    };
-
-    const isDogInViewport = () => {
-        if (!dogRef.current || !containerRef.current) return true;
-
-        const dogRect = dogRef.current.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-
-        // Check if dog is visible in viewport
-        return dogRect.top < viewportHeight && dogRect.bottom > 0;
-    };
-
-    const getRandomTarget = () => {
-        if (!containerRef.current) return { x: 0, y: 0 };
-
-        const visibleBounds = getVisibleBounds();
-        if (!visibleBounds) return { x: 0, y: 0 };
-
-        const margin = 100;
-
-        // Generate random position within visible viewport area
-        return {
-            x: Math.random() * (visibleBounds.right - margin * 2) + margin,
-            y: Math.random() * (visibleBounds.height - margin * 2) + visibleBounds.top + margin
-        };
+        return overlap(controlRef.current.x, x) && overlap(controlRef.current.y, y);
     };
 
     const positionLegs = (dog: HTMLDivElement, frame: number) => {
@@ -193,11 +71,11 @@ const Dog: React.FC = () => {
     const moveLegs = (dog: HTMLDivElement) => {
         const legs = dog.querySelectorAll('.leg-wrapper');
         [0, 3].forEach(i => {
-            const leg = legs[i].querySelector('.leg');
+            const leg = (legs[i] as HTMLElement).querySelector('.leg');
             leg?.classList.add('walk-1');
         });
         [1, 2].forEach(i => {
-            const leg = legs[i].querySelector('.leg');
+            const leg = (legs[i] as HTMLElement).querySelector('.leg');
             leg?.classList.add('walk-2');
         });
     };
@@ -205,8 +83,7 @@ const Dog: React.FC = () => {
     const stopLegs = (dog: HTMLDivElement) => {
         const legs = dog.querySelectorAll('.leg');
         legs.forEach(leg => {
-            leg.classList.remove('walk-1');
-            leg.classList.remove('walk-2');
+            leg.classList.remove('walk-1', 'walk-2');
         });
     };
 
@@ -220,24 +97,16 @@ const Dog: React.FC = () => {
         }
     };
 
-    const animateDog = ({
-        target,
-        frameW,
-        currentFrame,
-        end,
-        data,
-        part,
-        speed,
-        direction
-    }: any) => {
-        const offset = direction === 'clockwise' ? 1 : -1;
+    const animateDog = ({ target, frameW, currentFrame, end, data, part, speed, direction }: any) => {
+        if (!target) return;  // ADD THIS CHECK
 
+        const offset = direction === 'clockwise' ? 1 : -1;
         target.style.transform = `translateX(${px(data.animation[currentFrame][0] * -frameW)})`;
 
-        if (part === 'body' && dogRef.current) {
-            positionLegs(dogRef.current, currentFrame);
-            moveLegs(dogRef.current);
-            positionTail(dogRef.current, currentFrame);
+        if (part === 'body' && data.dog) {
+            positionLegs(data.dog, currentFrame);
+            moveLegs(data.dog);
+            positionTail(data.dog, currentFrame);
         } else {
             target.parentElement?.classList.add('happy');
         }
@@ -252,62 +121,25 @@ const Dog: React.FC = () => {
         }
 
         let nextFrame = currentFrame + offset;
-        nextFrame = nextFrame === -1
-            ? data.animation.length - 1
-            : nextFrame === data.animation.length
-                ? 0
-                : nextFrame;
+        nextFrame = nextFrame === -1 ? data.animation.length - 1 : nextFrame === data.animation.length ? 0 : nextFrame;
 
         if (currentFrame !== end) {
             data.timer[part] = setTimeout(() => animateDog({
-                target, data, part, frameW,
-                currentFrame: nextFrame, end, direction,
-                speed,
+                target, data, part, frameW, currentFrame: nextFrame, end, direction, speed,
             }), speed || 150);
         } else if (part === 'body') {
+            controlRef.current.angle = angles[end];
             data.walk = true;
-            setTimeout(() => {
-                if (dogRef.current) stopLegs(dogRef.current);
-            }, 200);
-            setTimeout(() => {
-                document.querySelector('.happy')?.classList.remove('happy');
-            }, 5000);
+            setTimeout(() => { if (data.dog) stopLegs(data.dog); }, 200);
+            setTimeout(() => { document.querySelector('.happy')?.classList.remove('happy'); }, 5000);
         }
-    };
-
-    const triggerDogAnimation = ({
-        target,
-        frameW,
-        start,
-        end,
-        data,
-        speed,
-        part,
-        direction
-    }: any) => {
-        if (data.timer[part]) {
-            clearTimeout(data.timer[part]);
-        }
-        data.timer[part] = setTimeout(() => animateDog({
-            target, data, part, frameW,
-            currentFrame: start, end, direction,
-            speed,
-        }), speed || 150);
-    };
-
-    const getDirection = ({ pos, facing, target }: { pos: Position; facing: Position; target: Position }) => {
-        const dx2 = facing.x - pos.x;
-        const dy1 = pos.y - target.y;
-        const dx1 = target.x - pos.x;
-        const dy2 = pos.y - facing.y;
-        return dx2 * dy1 > dx1 * dy2 ? 'anti-clockwise' : 'clockwise';
     };
 
     const turnDog = ({ dog, start, end, direction }: any) => {
-        if (!dogRef.current) return;
+        if (!dog.dog) return;
 
-        const headWrapper = dogRef.current.querySelector('.head-wrapper');
-        const head = headWrapper?.querySelector('.head') as HTMLElement;
+        const head = dog.dog.querySelector('.head-wrapper .head') as HTMLElement;
+        const body = dog.dog.querySelector('.body-wrapper .body') as HTMLElement;
 
         if (head) {
             triggerDogAnimation({
@@ -322,10 +154,6 @@ const Dog: React.FC = () => {
         }
 
         setTimeout(() => {
-            if (!dogRef.current) return;
-            const bodyWrapper = dogRef.current.querySelector('.body-wrapper');
-            const body = bodyWrapper?.querySelector('.body') as HTMLElement;
-
             if (body) {
                 triggerDogAnimation({
                     target: body,
@@ -340,258 +168,156 @@ const Dog: React.FC = () => {
         }, 200);
     };
 
-    const checkBoundaryAndUpdateDogPos = (x: number, y: number, dog: HTMLDivElement, dogData: any) => {
-        const lowerLimit = -40;
-        const upperLimit = 40;
-
-        if (containerRef.current) {
-            const visibleBounds = getVisibleBounds();
-            if (visibleBounds) {
-                // Keep dog within visible viewport bounds
-                if (x > lowerLimit && x < (visibleBounds.right - upperLimit)) {
-                    dogData.pos.x = x + 48;
-                    dogData.actualPos.x = x;
-                }
-                if (y > visibleBounds.top + lowerLimit && y < (visibleBounds.bottom - upperLimit)) {
-                    dogData.pos.y = y + 48;
-                    dogData.actualPos.y = y;
-                }
-            }
-        }
-
-        dog.style.left = px(x);
-        dog.style.top = px(y);
+    const triggerDogAnimation = ({ target, frameW, start, end, data, speed, part, direction }: any) => {
+        if (data.timer[part]) clearTimeout(data.timer[part]);
+        data.timer[part] = setTimeout(() => animateDog({
+            target, data, part, frameW, currentFrame: start, end, direction, speed,
+        }), speed || 150);
     };
 
-    // Random barking function (like duck quacking)
-    const barkSpontaneously = () => {
-        setIsBarkingSpontaneous(true);
-        setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
-
-        setTimeout(() => {
-            setIsBarkingSpontaneous(false);
-
-            // Schedule next bark randomly (3-9 seconds like ducks)
-            const nextBarkDelay = Math.random() * 6000 + 3000;
-            barkTimerRef.current = setTimeout(barkSpontaneously, nextBarkDelay);
-        }, 1000); // Bark displays for 1 second
+    const getDirection = ({ pos, facing, target }: any) => {
+        const dx2 = facing.x - pos.x;
+        const dy1 = pos.y - target.y;
+        const dx1 = target.x - pos.x;
+        const dy2 = pos.y - facing.y;
+        return dx2 * dy1 > dx1 * dy2 ? 'anti-clockwise' : 'clockwise';
     };
 
-    // Main movement loop - runs continuously like ducks
-    const startMovementLoop = () => {
-        if (movementIntervalRef.current) {
-            clearInterval(movementIntervalRef.current);
-        }
+    const moveDog = () => {
+        const dog = dogDataRef.current;
+        if (!dog || !dog.dog) return;
 
-        movementIntervalRef.current = setInterval(() => {
-            if (!dogRef.current || !dogDataRef.current || !containerRef.current) return;
+        if (dog.timer.all) clearInterval(dog.timer.all);
 
-            const dogData = dogDataRef.current;
-            const { left, top } = dogRef.current.getBoundingClientRect();
-            const containerRect = containerRef.current.getBoundingClientRect();
-            const dogPos = {
-                x: left - containerRect.left + 48,
-                y: top - containerRect.top + 48
-            };
+        dog.timer.all = setInterval(() => {
+            if (!dog.dog) return;
 
-            // Check if dog is in viewport
-            if (!isDogInViewport() && !isAutoMovingRef.current) {
-                // Dog is out of viewport, bring it back into view
-                isAutoMovingRef.current = true;
-                dogData.autoTarget = getRandomTarget();
+            const { left, top } = dog.dog.getBoundingClientRect();
+            const start = angles.indexOf(dog.angle);
+            const end = angles.indexOf(targetAngle(dog) || 0);
+
+            if (reachedTheGoalYeah(left + 48, top + 48)) {
+                clearInterval(dog.timer.all);
+                const { x, y } = dog.actualPos;
+                dog.dog.style.left = px(x);
+                dog.dog.style.top = px(y);
+                stopLegs(dog.dog);
+                turnDog({ dog, start, end: defaultEnd, direction: 'clockwise' });
+                return;
             }
 
-            // Check if we should start wandering (like ducks)
-            const timeSinceLastMove = Date.now() - lastMouseMoveRef.current;
-            const distanceToMouse = distanceBetween(dogPos, mousePos);
-
-            // If close to mouse and mouse hasn't moved in 2 seconds, start wandering
-            if (distanceToMouse < 80 && timeSinceLastMove > 2000 && !isAutoMovingRef.current) {
-                isAutoMovingRef.current = true;
-                dogData.autoTarget = getRandomTarget();
-            }
-
-            const targetPos = isAutoMovingRef.current ? dogData.autoTarget : mousePos;
-            const fullDistance = distanceBetween(dogPos, targetPos);
-
-            // If reached target
-            if (fullDistance < 80) {
-                // When we reach the target while wandering, pick a new random target in viewport
-                if (isAutoMovingRef.current && containerRef.current) {
-                    dogData.autoTarget = getRandomTarget();
-                    // Fall through to continue moving to new target
-                } else {
-                    stopLegs(dogRef.current);
-                    return;
-                }
-            }
-
-            // Calculate movement
-            let { x, y } = dogData.actualPos;
-            const start = angles.indexOf(dogData.angle);
-            const end = angles.indexOf(targetAngle(dogData) || 0);
-            const targetAngleValue = targetAngle(dogData) || 0;
-            const dir = directionConversions[targetAngleValue] || 'down';
-            const distance = 30;
-
+            let { x, y } = dog.actualPos;
+            const dir = directionConversions[targetAngle(dog) || 0] || 'down';
             if (dir !== 'up' && dir !== 'down') x += (dir.includes('left')) ? -distance : distance;
             if (dir !== 'left' && dir !== 'right') y += (dir.includes('up')) ? -distance : distance;
 
             const { x: x2, y: y2 } = rotateCoord({
-                angle: dogData.angle,
-                origin: dogData.pos,
-                x: dogData.pos.x,
-                y: dogData.pos.y - 100,
+                angle: dog.angle,
+                origin: dog.pos,
+                x: dog.pos.x,
+                y: dog.pos.y - 100,
             });
-            dogData.facing.x = x2;
-            dogData.facing.y = y2;
+            dog.facing.x = x2;
+            dog.facing.y = y2;
 
             if (start === end) {
-                dogData.turning = false;
+                dog.turning = false;
             }
 
-            if (!dogData.turning && dogData.walk) {
+            if (!dog.turning && dog.walk) {
                 if (start !== end) {
-                    dogData.turning = true;
+                    dog.turning = true;
                     const direction = getDirection({
-                        pos: dogData.pos,
-                        facing: dogData.facing,
-                        target: targetPos,
+                        pos: dog.pos,
+                        facing: dog.facing,
+                        target: controlRef.current,
                     });
-                    turnDog({
-                        dog: dogData,
-                        start, end, direction,
-                    });
+                    turnDog({ dog, start, end, direction });
                 } else {
-                    checkBoundaryAndUpdateDogPos(x, y, dogRef.current, dogData);
-                    moveLegs(dogRef.current);
+                    dog.pos.x = x + 48;
+                    dog.actualPos.x = x;
+                    dog.pos.y = y + 48;
+                    dog.actualPos.y = y;
+                    dog.dog.style.left = px(x);
+                    dog.dog.style.top = px(y);
+                    moveLegs(dog.dog);
                 }
             }
         }, 200);
     };
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const dogData = dogDataRef.current;
-        if (!dogData || !dogRef.current || !containerRef.current) return;
-
-        const rect = containerRef.current.getBoundingClientRect();
-        const newMousePos = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-        setMousePos(newMousePos);
-
-        // Update last mouse move time and stop wandering
-        lastMouseMoveRef.current = Date.now();
-        isAutoMovingRef.current = false;
-
-        dogData.walk = false;
-        const direction = getDirection({
-            pos: dogData.pos,
-            facing: dogData.facing,
-            target: newMousePos,
-        });
-        const start = angles.indexOf(dogData.angle);
-        const end = angles.indexOf(targetAngle(dogData) || 0);
-        turnDog({
-            dog: dogData,
-            start, end, direction
-        });
+    const barkSpontaneously = () => {
+        setIsBarkingSpontaneous(true);
+        setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
+        setTimeout(() => {
+            setIsBarkingSpontaneous(false);
+            const nextBarkDelay = Math.random() * 6000 + 3000;
+            barkTimerRef.current = setTimeout(barkSpontaneously, nextBarkDelay);
+        }, 1000);
     };
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-
-        if (!containerRef.current) return;
-
-        // Set new target position where user clicked
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!containerRef.current || !dogDataRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
-        const clickPos = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-        setMousePos(clickPos);
+        controlRef.current.x = e.clientX - rect.left;
+        controlRef.current.y = e.clientY - rect.top;
 
-        // Update interaction time and stop auto-movement
-        lastMouseMoveRef.current = Date.now();
-        isAutoMovingRef.current = false;
+        const dog = dogDataRef.current;
+        dog.walk = false;
+        controlRef.current.angle = null;
+
+        const direction = getDirection({
+            pos: dog.pos,
+            facing: dog.facing,
+            target: controlRef.current,
+        });
+        const start = angles.indexOf(dog.angle);
+        const end = angles.indexOf(targetAngle(dog) || 0);
+        turnDog({ dog, start, end, direction });
+    };
+
+    const handleClick = () => {
+        moveDog();
     };
 
     const handleDogClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
-
-        // Trigger bark on click
         setIsBarkingClick(true);
         setBarkMessage(prev => prev === 'woof' ? 'bark' : 'woof');
-
-        // Hide speech after 1 second
-        setTimeout(() => {
-            setIsBarkingClick(false);
-        }, 1000);
+        setTimeout(() => setIsBarkingClick(false), 1000);
     };
 
     useEffect(() => {
         if (!dogRef.current || !containerRef.current) return;
 
         const dog = dogRef.current;
-        const container = containerRef.current;
-
-        // Center the dog initially
-        const centerX = container.clientWidth / 2 - 48;
-        const centerY = container.clientHeight / 2 - 48;
-
-        dog.style.left = px(centerX);
-        dog.style.top = px(centerY);
+        const { width, height, left, top } = dog.getBoundingClientRect();
+        dog.style.left = px(left);
+        dog.style.top = px(top);
         positionLegs(dog, 0);
 
-        const index = 0;
         const dogData = {
-            timer: {
-                head: null,
-                body: null,
-                all: null,
-            },
-            pos: {
-                x: centerX + 48,
-                y: centerY + 48,
-            },
-            actualPos: {
-                x: centerX,
-                y: centerY,
-            },
-            facing: {
-                x: centerX + 48,
-                y: centerY + 48 + 30,
-            },
+            timer: { head: null, body: null, all: null },
+            pos: { x: left + (width / 2), y: top + (height / 2) },
+            actualPos: { x: left, y: top },
+            facing: { x: left + (width / 2), y: top + (height / 2) + 30 },
             animation: animationFrames.rotate,
             angle: 360,
-            index,
-            autoTarget: { x: 0, y: 0 }
+            index: 0,
+            dog,
         };
 
         dogDataRef.current = dogData;
-        turnDog({
-            dog: dogData,
-            start: index,
-            end: defaultEnd,
-            direction: 'clockwise'
-        });
+        turnDog({ dog: dogData, start: 0, end: defaultEnd, direction: 'clockwise' });
         positionTail(dog, 0);
 
-        // Initialize mouse position to center
-        setMousePos({ x: centerX + 48, y: centerY + 48 });
-
-        // Start continuous movement loop
-        startMovementLoop();
-
-        // Start random barking after initial delay (2-6 seconds like ducks)
         const initialBarkDelay = Math.random() * 4000 + 2000;
         barkTimerRef.current = setTimeout(barkSpontaneously, initialBarkDelay);
 
         return () => {
             if (dogData.timer.head) clearTimeout(dogData.timer.head);
             if (dogData.timer.body) clearTimeout(dogData.timer.body);
-            if (movementIntervalRef.current) clearInterval(movementIntervalRef.current);
+            if (dogData.timer.all) clearInterval(dogData.timer.all);
             if (barkTimerRef.current) clearTimeout(barkTimerRef.current);
         };
     }, []);

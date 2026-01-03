@@ -8,11 +8,12 @@ import { PiMicroscope } from 'react-icons/pi';
 
 export default function AboutPage() {
   return (
-    <div className="page-enter">
-      <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-40 p-10">
-        <Dog />
+    <div className="page-enter relative">
+      <div className="absolute inset-0 z-40 p-10 pointer-events-none" style={{ height: '100%' }}>
+        <div className="pointer-events-auto h-full">
+          <Dog />
+        </div>
       </div>
-
       <Section
         title="Specializations"
         subtitle="Dive into my research frontiers and technical arsenal"
@@ -38,7 +39,6 @@ export default function AboutPage() {
               </div>
             </CardContent>
           </Card>
-
           {/* Skills */}
           {skills.map((skillCategory, index) => (
             <Card hoverable variant="bordered" key={index} className="p-1 md:p-2">
@@ -60,9 +60,7 @@ export default function AboutPage() {
             </Card>
           ))}
         </div>
-
       </Section>
-
     </div>
   );
 }
