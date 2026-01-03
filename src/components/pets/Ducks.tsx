@@ -392,14 +392,6 @@ const Ducks: React.FC = () => {
   return (
     <>
       <style>{`
-        * {
-          box-sizing: border-box;
-        }
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: sans-serif;
-        }
         .duck-wrapper {
           position: fixed;
           width: 100%;

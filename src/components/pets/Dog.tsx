@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface Position {
@@ -456,9 +457,9 @@ const Dog: React.FC = () => {
             <style>{`
         .dog-container {
           height: 100%;
+          width: 100%;
           overflow: hidden;
-          pointer-events: auto;
-          z-index:20;
+          z-index: 30;
         }
         
         .dog-container .leg {
@@ -599,10 +600,9 @@ const Dog: React.FC = () => {
           transition: 0.15s;
         }
       `}</style>
-
             <div
                 ref={containerRef}
-                className="dog-container w-full"
+                className="dog-container"
                 onMouseMove={handleMouseMove}
                 onClick={moveDog}
             >
@@ -629,6 +629,14 @@ const Dog: React.FC = () => {
                         <div className="tail"></div>
                     </div>
                 </div>
+                <Image
+                    src="/images/objects/dog_bone.svg"
+                    alt="Dog Bone"
+                    width={50}
+                    height={50}
+                    style={{ imageRendering: 'pixelated' }}
+                    className="absolute bottom-6 right-6 pointer-events-none select-none -z-10"
+                />
             </div>
         </>
     );

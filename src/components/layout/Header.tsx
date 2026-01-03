@@ -14,7 +14,6 @@ import { SITECONFIG } from '@/data/siteConfig';
 import { Button } from '@/components/ui/Button';
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -42,8 +41,8 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-      <nav className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+    <header className="fixed top-0 right-0 left-0 max-w-full z-50 transition-all duration-300">
+      <nav className="max-w-7xl px-2 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo / Name */}
           <Link href="/">

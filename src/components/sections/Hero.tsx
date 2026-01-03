@@ -34,9 +34,9 @@ export function Hero() {
             <HiArrowRight className="w-5 h-5" />
           </Button>
         </Link>
-        <Link href="/about">
+        <Link href="/contact">
           <Button variant="outline" size="sm" className="flex flex-row gap-1.5">
-            About Me
+            Connect
             <HiArrowRight className="w-5 h-5" />
           </Button>
         </Link>

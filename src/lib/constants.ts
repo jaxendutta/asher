@@ -52,14 +52,14 @@ export const BREAKPOINTS = {
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    label: 'About',
-    href: '/about',
-    gardenIcon: '🌱', // seedling
-  },
-  {
     label: 'Education',
     href: '/education',
     gardenIcon: '🌿', // herb
+  },
+  {
+    label: 'Specializations',
+    href: '/specializations',
+    gardenIcon: '🍀', // four leaf clover
   },
   {
     label: 'Research',
