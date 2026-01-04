@@ -1,7 +1,7 @@
 // ============================================================================
-// Talks & Presentations Data
+// Presentations Data
 // ============================================================================
-/* Add presentations and talks here as they occur
+/* Add presentations here as they occur
 Example structure:
 {
   id: 'presentation-id',
@@ -17,7 +17,7 @@ Example structure:
 import type { Presentation } from '@/types';
 import { orgs } from './orgs';
 
-export const talks: Record<string, Presentation> = {
+export const presentations: Record<string, Presentation> = {
   uogradflix_2025_26: {
   title: 'Alleviating Waterlogging Stress in Barley by Applying Plant Growth-Promoting Microbes (PGPMs)',
     event: {

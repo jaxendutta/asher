@@ -11,7 +11,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
 import type { Experience, Presentation } from '@/types';
-import { talks } from '@/data/talks';
+import { presentations } from '@/data/presentations';
 
 
 interface ResearchCardProps {
@@ -21,7 +21,7 @@ interface ResearchCardProps {
 
 export function ResearchCard({ research, className }: ResearchCardProps) {
   const talkData: Record<string, Presentation> = research.talks ? research.talks.reduce((acc, key) => {
-    const talk = talks[key];
+    const talk = presentations[key];
     if (talk) {
       acc[key] = talk;
     }

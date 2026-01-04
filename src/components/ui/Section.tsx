@@ -30,12 +30,12 @@ export function Section({
         {(title || subtitle) && (
           <div className={cn(centered && 'mb-8 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]')}>
             {title && (
-              <span className={`${jersey_10.className} text-5xl md:text-6xl font-bold text-[#1A3A2A] tracking-wide`}>
+              <span className={`${jersey_10.className} text-5xl md:text-6xl text-[#1A3A2A] tracking-wide leading-[0.75]`}>
                 {title}
               </span>
             )}
             {subtitle && (
-              <p className="text-sm md:text-lg text-[#5C6B5C] max-w-2xl mx-auto mt-4">
+              <p className="text-sm md:text-lg text-[#5C6B5C] max-w-2xl mx-auto mt-1">
                 {subtitle}
               </p>
             )}

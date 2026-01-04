@@ -1,18 +1,18 @@
 import { Section } from '@/components/ui/Section';
 import { PresentationCard } from '@/components/sections/PresentationCard';
-import { talks } from '@/data/talks';
+import { presentations } from '@/data/presentations';
 
 export default function TalksPage() {
   return (
     <div className="page-enter">
       <Section
-        title="Presentations & Talks"
+        title="Presentations"
         subtitle="Sharing research findings and scientific insights"
         centered
       >
-        {Object.values(talks).length > 0 ? (
+        {Object.values(presentations).length > 0 ? (
           <div className="space-y-6">
-            {Object.entries(talks).map(([id, talk]) => (
+            {Object.entries(presentations).map(([id, talk]) => (
               <PresentationCard key={id} talk={talk} />
             ))}
           </div>

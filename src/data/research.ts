@@ -4,7 +4,7 @@
 
 import type { Experience } from '@/types';
 import { orgs, subOrgs } from './orgs';
-import { talks } from './talks';
+import { presentations } from './presentations';
 
 export const researchExperience: Record<string, Experience> = {
   uO_thesis: {

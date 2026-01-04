@@ -1,4 +1,4 @@
-import { jersey_25 } from '@/lib/fonts';
+import { jersey_10 } from '@/lib/fonts';
 import { Section } from '@/components/ui/Section';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -6,7 +6,7 @@ import Dog from '@/components/pets/Dog';
 import { skills, researchInterests } from '@/data/skills';
 import { PiMicroscope } from 'react-icons/pi';
 
-export default function AboutPage() {
+export default function SpecializationsPage() {
   return (
     <div className="page-enter relative">
       <div className="absolute inset-0 z-40 p-10 pointer-events-none" style={{ height: '100%' }}>
@@ -25,7 +25,7 @@ export default function AboutPage() {
           {/* Research Interests */}
           <Card hoverable variant="bordered" className="p-1 md:p-2">
             <CardHeader>
-              <span className={`text-xl md:text-2xl font-bold text-[#2D5F3F] flex items-center gap-2 ${jersey_25.className}`}>
+              <span className={`text-2xl md:text-3xl font-bold text-[#2D5F3F] flex items-center gap-2 ${jersey_10.className}`}>
                 <PiMicroscope className="text-xl" /> Research Interests
               </span>
             </CardHeader>
@@ -43,7 +43,7 @@ export default function AboutPage() {
           {skills.map((skillCategory, index) => (
             <Card hoverable variant="bordered" key={index} className="p-1 md:p-2">
               <CardHeader>
-                <span className={`text-xl md:text-2xl font-bold text-[#2D5F3F] flex items-center gap-2 ${jersey_25.className}`}>
+                <span className={`text-2xl md:text-3xl font-bold text-[#2D5F3F] flex items-center gap-2 ${jersey_10.className}`}>
                   {skillCategory.icon && <skillCategory.icon className="text-xl" />}
                   {skillCategory.category}
                 </span>

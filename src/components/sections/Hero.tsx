@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/Button';
 
 export function Hero() {
   return (
-    <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-16 lg:px-24 text-center space-y-4 bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]">
+    <div className="z-10 max-w-5xl mx-auto px-4 sm:px-16 lg:px-24 text-center space-y-4 bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]">
       {/* Main heading with animation */}
       <div className="animate-fadeIn text-[#1A3A2A] flex flex-col gap-2">
         <span className="text-lg sm:text-xl md:text-2xl">WELCOME TO</span>

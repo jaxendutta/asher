@@ -44,7 +44,7 @@ export interface Experience {
   supervisor?: textLink;
   highlights?: string[];
   links?: textLink[];
-  talks?: (keyof typeof import('../data/talks').talks)[];
+  talks?: (keyof typeof import('../data/presentations').presentations)[];
 }
 
 export interface Publication {
