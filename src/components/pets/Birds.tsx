@@ -574,193 +574,13 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
 
           .body {
             position: absolute;
-            --w: 18px;
-            --h: 14px;
-            width: calc(var(--m) * 1px);
-            height: calc(var(--m) * 1px);
-            top: calc(var(--m) * 6px);
+            width: calc(var(--m) * 20px);
+            height: calc(var(--m) * 14px);
+            top: calc(var(--m) * 7px);
             left: calc(var(--m) * 2px);
             z-index: 1;
-            background-color: #fff;
-            box-shadow:
-              /* Row 1 (top) - 6 pixels */
-              calc(var(--m) * 6px) calc(var(--m) * 0px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 0px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 0px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 0px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 0px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 0px) 0 #fff,
-              /* Row 2 - 10 pixels */
-              calc(var(--m) * 4px) calc(var(--m) * 1px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 1px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 1px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 1px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 1px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 1px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 1px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 1px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 1px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 1px) 0 #fff,
-              /* Row 3 - 14 pixels */
-              calc(var(--m) * 2px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 2px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 2px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 2px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 2px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 2px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 2px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 2px) 0 #fff,
-              /* Row 4 - 16 pixels */
-              calc(var(--m) * 1px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 2px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 3px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 3px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 3px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 3px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 3px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 3px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 3px) 0 #fff,
-              calc(var(--m) * 16px) calc(var(--m) * 3px) 0 #fff,
-              /* Row 5 - 18 pixels (widest) */
-              calc(var(--m) * 0px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 1px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 2px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 4px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 16px) calc(var(--m) * 4px) 0 #fff,
-              calc(var(--m) * 17px) calc(var(--m) * 4px) 0 #fff,
-              /* Row 6 - 18 pixels */
-              calc(var(--m) * 0px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 1px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 2px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 5px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 16px) calc(var(--m) * 5px) 0 #fff,
-              calc(var(--m) * 17px) calc(var(--m) * 5px) 0 #fff,
-              /* Row 7 - 18 pixels */
-              calc(var(--m) * 0px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 1px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 2px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 6px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 16px) calc(var(--m) * 6px) 0 #fff,
-              calc(var(--m) * 17px) calc(var(--m) * 6px) 0 #fff,
-              /* Row 8 - 18 pixels */
-              calc(var(--m) * 0px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 1px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 2px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 7px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 16px) calc(var(--m) * 7px) 0 #fff,
-              calc(var(--m) * 17px) calc(var(--m) * 7px) 0 #fff,
-              /* Row 9 - 16 pixels */
-              calc(var(--m) * 1px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 2px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 8px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 8px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 8px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 8px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 8px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 8px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 8px) 0 #fff,
-              calc(var(--m) * 16px) calc(var(--m) * 8px) 0 #fff,
-              /* Row 10 - 14 pixels */
-              calc(var(--m) * 2px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 3px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 4px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 9px) 0  #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 9px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 9px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 9px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 9px) 0 #fff,
-              calc(var(--m) * 14px) calc(var(--m) * 9px) 0 #fff,
-              calc(var(--m) * 15px) calc(var(--m) * 9px) 0 #fff,
-              /* Row 11 - 10 pixels */
-              calc(var(--m) * 4px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 5px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 10px) 0 #fff,
-              calc(var(--m) * 13px) calc(var(--m) * 10px) 0 #fff,
-              /* Row 12 - 8 pixels */
-              calc(var(--m) * 5px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 6px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 7px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 8px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 9px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 10px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 11px) calc(var(--m) * 11px) 0 #fff,
-              calc(var(--m) * 12px) calc(var(--m) * 11px) 0 #fff;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAOCAYAAADABlfOAAAAAXNSR0IArs4c6QAAAFlJREFUOE9jZKABYMRl5v////8Tso+RkRGrfgxBYgxDtwzdcBRDyTEQZgGywXBDKTEQ3WDaGUoNVyK7FuzSEW4otYIAlqxom06RcwkpEYctq+LM+4TyPT55AEJ+MA89Jl+CAAAAAElFTkSuQmCC');
+            background-size: cover;
             image-rendering: pixelated;
           }
 
@@ -1014,8 +834,8 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAACCAYAAACUn8ZgAAAAAXNSR0IArs4c6QAAABdJREFUGFdjjLfg+c+AAzDiklx44gsjAIuGBaUigwNFAAAAAElFTkSuQmCC);
             --w: 12px;
             --h: 3px;
-            left: calc(var(--m) * 15px);
-            top: calc(var(--m) * 11px);
+            left: calc(var(--m) * 18px);
+            top: calc(var(--m) * 12px);
           }
           
           .down .tail,
@@ -1095,14 +915,14 @@ export default function Birds({ birdCount = 6, children }: BirdsProps) {
           .bird-speech-bubble::before {
             content: '';
             position: absolute;
-            bottom: -4.5px;
+            bottom: -5px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 5px dashed transparent;
-            border-right: 5px dashed transparent;
-            border-top: 5px dashed #FFF;
+            border-left: 6px dashed transparent;
+            border-right: 6px dashed transparent;
+            border-top: 6px dashed #FFF;
             z-index: 1;
           }
 
