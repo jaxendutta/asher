@@ -8,6 +8,8 @@ import Bunnies from '@/components/pets/Bunnies';
 export default function ContactPage() {
     return (
         <>
+            <Bunnies />
+
             <div className="page-enter">
                 <Section
                     title="Let's Connect"
@@ -41,9 +43,7 @@ export default function ContactPage() {
                         </Card>
                     </div>
                 </Section>
-            </div>
-
-            <Bunnies />
+            </div> 
         </>
     );
 }
