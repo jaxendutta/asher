@@ -106,6 +106,7 @@ const Hamster = () => {
           padding: 8px;
           margin-bottom: 6px;
           z-index: 99;
+          animation: up-down infinite var(--hamster-speed);
         }
 
         .hamster:before {
@@ -116,7 +117,6 @@ const Hamster = () => {
           height: 4px;
           left: 5px;
           top: 10px;
-          animation: up-down infinite var(--hamster-speed);
         }
 
         .hamster:after {
@@ -127,7 +127,6 @@ const Hamster = () => {
           height: 2px;
           bottom: 8px;
           left: -4px;
-          animation: up-down infinite var(--hamster-speed);
         }
 
         .ear,
