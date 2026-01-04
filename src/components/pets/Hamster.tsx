@@ -5,13 +5,16 @@
 // ============================================================================
 
 import { useState, useEffect, useRef } from 'react';
+import { tiny5 } from '@/lib/fonts';
 
 const Hamster = () => {
     const [speedFactor, setSpeedFactor] = useState(3);
     const [isRunning, setIsRunning] = useState(true);
     const [isSpinning, setIsSpinning] = useState(false);
+    const [isSqueaking, setIsSqueaking] = useState(false);
     const energyRef = useRef(1000);
 
+    // Energy depletion effect
     useEffect(() => {
         const interval = setInterval(() => {
             if (isRunning) {
@@ -33,6 +36,38 @@ const Hamster = () => {
         return () => clearInterval(interval);
     }, [isRunning, speedFactor]);
 
+    // Random squeaking effect (only when not spinning)
+    useEffect(() => {
+        if (isSpinning) return;
+
+        const randomSqueak = () => {
+            const randomDelay = Math.random() * 8000 + 4000; // Random between 4-12 seconds
+
+            const timeout = setTimeout(() => {
+                triggerSqueak();
+                randomSqueak();
+            }, randomDelay);
+
+            return timeout;
+        };
+
+        const timeout = randomSqueak();
+        return () => clearTimeout(timeout);
+    }, [isSpinning]);
+
+    const triggerSqueak = () => {
+        if (isSpinning) return;
+
+        setIsSqueaking(true);
+        setTimeout(() => {
+            setIsSqueaking(false);
+        }, 1000);
+    };
+
+    const handleHamsterClick = () => {
+        triggerSqueak();
+    };
+
     const hamsterSpeed = `${0.75 / speedFactor}s`;
     const wheelSpeed = `${2 / speedFactor}s`;
     const wheelAngle = `${0.4 * speedFactor}deg`;
@@ -47,7 +82,13 @@ const Hamster = () => {
                 <div className="wheel-frame pix">
                     <div className={`wheel ${isSpinning ? 'spinning' : ''}`}>
                         <div className="wheel-support pix"></div>
-                        <div className="hamster puff pix">
+                        <div
+                            className={`hamster puff pix ${isSqueaking ? 'squeak' : ''}`}
+                            onClick={handleHamsterClick}
+                        >
+                            <div className="hamster-speech-anchor">
+                                <div className={`hamster-speech-bubble ${tiny5.className}`}>squeak</div>
+                            </div>
                             <div className="ear pix"></div>
                             <div className="head puff pix"></div>
                             <div className="bum puff pix"></div>
@@ -74,8 +115,19 @@ const Hamster = () => {
           padding: 20px 0;
         }
 
-        .pix,
-        .pix:after {
+        .pix {
+          --m: 2;
+          position: absolute;
+          width: calc(var(--w) * var(--m));
+          height: calc(var(--h) * var(--m));
+          background-size: 100%;
+          background-repeat: no-repeat;
+          image-rendering: pixelated;
+          pointer-events: none;
+        }
+        
+        .head:after,
+        .bum:after {
           --m: 2;
           position: absolute;
           width: calc(var(--w) * var(--m));
@@ -107,26 +159,109 @@ const Hamster = () => {
           margin-bottom: 6px;
           z-index: 99;
           animation: up-down infinite var(--hamster-speed);
+          cursor: pointer;
+          pointer-events: auto;
+        }
+
+        .wheel.spinning .hamster {
+          cursor: default;
+        }
+
+        .hamster-speech-anchor {
+          position: absolute;
+          left: 50%;
+          top: -8px;
+          transform: translateX(-50%);
+          width: 0px;
+          height: 0px;
+          display: flex;
+          justify-content: center;
+          align-items: end;
+          pointer-events: none;
+        }
+
+        .hamster-speech-bubble {
+          position: absolute;
+          bottom: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #FFF;
+          padding: 3px 10px 1px 10px;
+          border: 1px dashed #000;
+          border-radius: 8px;
+          font-size: 14px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          z-index: 999;
+          will-change: opacity;
+        }
+
+        .hamster-speech-bubble::after {
+          content: '';
+          position: absolute;
+          top: 25px;
+          left: 50%;
+          margin-left: -6px;
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid #000;
+        }
+
+        .hamster-speech-bubble::before {
+          content: '';
+          position: absolute;
+          bottom: -4.5px;
+          left: 50%;
+          margin-left: -6px;
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid #FFF;
+          z-index: 1;
+        }
+
+        .hamster.squeak .hamster-speech-bubble {
+          opacity: 1;
+          animation: fade-in-hamster 0.2s;
+        }
+
+        @keyframes fade-in-hamster {
+          from {
+            opacity: 0;
+            bottom: 4px;
+          }
+          to {
+            opacity: 1;
+            bottom: 8px;
+          }
         }
 
         .hamster:before {
           content: '';
           position: absolute;
           background: #693215;
+          background-image: none;
           width: 4px;
           height: 4px;
           left: 5px;
           top: 10px;
+          image-rendering: auto;
         }
 
         .hamster:after {
           content: '';
           position: absolute;
           background: #693215;
+          background-image: none;
           width: 7px;
           height: 2px;
           bottom: 8px;
           left: -4px;
+          image-rendering: auto;
         }
 
         .ear,
@@ -224,6 +359,8 @@ const Hamster = () => {
 
         .wheel.spinning .hamster {
           animation: none;
+          cursor: default;
+          pointer-events: none;
         }
 
         .wheel-support {
