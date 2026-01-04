@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { fleur_de_leah } from '@/lib/fonts';
+import { jersey_10 } from '@/lib/fonts';
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   title?: string;
@@ -30,7 +30,7 @@ export function Section({
         {(title || subtitle) && (
           <div className={cn(centered && 'mb-8 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]')}>
             {title && (
-              <span className={`${fleur_de_leah.className} text-5xl md:text-6xl font-bold text-[#1A3A2A]`}>
+              <span className={`${jersey_10.className} text-5xl md:text-6xl font-bold text-[#1A3A2A] tracking-wide`}>
                 {title}
               </span>
             )}

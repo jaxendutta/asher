@@ -5,7 +5,10 @@ import {
     Micro_5, 
     Tiny5, 
     Press_Start_2P, 
-    Jersey_25
+    Jersey_25,
+    Jersey_20,
+    Jersey_15,
+    Jersey_10
 } from 'next/font/google';
 
 export const inter = Inter({ subsets: ['latin'] });
@@ -42,6 +45,24 @@ export const press_start_2p = Press_Start_2P({
 });
 
 export const jersey_25 = Jersey_25({
+    weight: '400',
+    subsets: ['latin'],
+    display: 'swap',
+});
+
+export const jersey_20 = Jersey_20({
+    weight: '400',
+    subsets: ['latin'],
+    display: 'swap',
+});
+
+export const jersey_15 = Jersey_15({
+    weight: '400',
+    subsets: ['latin'],
+    display: 'swap',
+});
+
+export const jersey_10 = Jersey_10({
     weight: '400',
     subsets: ['latin'],
     display: 'swap',

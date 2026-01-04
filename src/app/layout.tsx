@@ -42,7 +42,7 @@ export default function RootLayout({
         <Header />
 
         {/* Main content */}
-        <main className="z-10 h-full max-w-7xl mx-auto px-3 md:px-6 lg:px-6 flex flex-1 justify-center items-center">
+        <main className="z-10 h-full max-w-7xl mx-auto px-3 md:px-6 lg:px-6 flex flex-1 justify-center items-start">
           {children}
         </main>
       </body>
