@@ -164,13 +164,13 @@ const Hamster = () => {
         .head:after {
           left: 8px;
           --run-x: -2px;
-          --angle: 6deg;
+          --angle: 4deg;
         }
 
         .bum:after {
           right: 6px;
           --run-x: 2px;
-          --angle: -6deg;
+          --angle: -4deg;
         }
 
         @keyframes squidge {
