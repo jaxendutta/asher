@@ -7,7 +7,7 @@ interface BunniesProps {
     bunnyCount?: number;
 }
 
-const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
+const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
     // Refs for DOM elements
     const wrapperRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<HTMLDivElement>(null);
@@ -17,11 +17,11 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
     const radarContainerRef = useRef<HTMLDivElement>(null);
     const radarCircleRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
-    
+
     // Game state
     const gameState = useRef({
         bunnies: [] as any[],
-        elements: [] as any[], 
+        elements: [] as any[],
         player: {
             id: 'bear',
             x: 0, y: 0,
@@ -34,7 +34,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
             move: { x: 0, y: 0 },
             sprite: { x: 0, y: 0 },
             isKeyboardMoving: false,
-            el: null as HTMLDivElement | null // <--- Added this property to fix the error
+            el: null as HTMLDivElement | null
         },
         keys: {
             up: false,
@@ -72,7 +72,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
 
         const state = gameState.current;
         const playerSpriteEl = playerRef.current.querySelector('.bunnies-sprite') as HTMLElement;
-        
+
         // Assign the ref to the state.player.el property
         state.player.el = playerRef.current;
 
@@ -90,7 +90,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
             const { innerWidth: w, innerHeight: h } = window;
             const size = w > h ? h : w;
             state.settings.bunnyRadarSize = size - 20;
-            
+
             if (radarCircleRef.current) {
                 radarCircleRef.current.style.width = px(state.settings.bunnyRadarSize);
                 radarCircleRef.current.style.height = px(state.settings.bunnyRadarSize);
@@ -112,11 +112,11 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 right: h * 2,
                 left: h * 3
             }[dir];
-            
+
             actor.sprite.y = yPos !== undefined ? yPos : 0;
             actor.frameOffset = actor.frameOffset === 1 ? 2 : 1;
             actor.sprite.x = actor.frameOffset * (2 * -20);
-            
+
             setBackgroundPos(actor.sprite, actor === state.player ? playerSpriteEl : actor.sprite.el);
         };
 
@@ -163,8 +163,13 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
         const updateSadBunnyCount = () => {
             const sadBunnyCount = state.bunnies.filter(b => b.sad).length;
             if (indicatorRef.current) {
-                indicatorRef.current.innerHTML = sadBunnyCount ? `x ${sadBunnyCount}` : '';
-                if (!sadBunnyCount) {
+                if (sadBunnyCount > 0) {
+                    indicatorRef.current.innerHTML = `x ${sadBunnyCount}`;
+                    indicatorRef.current.style.opacity = '0.8';
+                } else {
+                    // Hide the count text when won so it doesn't overlap the speech bubble
+                    indicatorRef.current.innerHTML = '';
+                    indicatorRef.current.style.opacity = '1';
                     endMessageRef.current?.classList.remove('bunnies-d-none');
                     indicatorRef.current.classList.add('bunnies-happy');
                 }
@@ -240,7 +245,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
             const newPos = { ...actor };
             newPos.x += actor.move.x;
             newPos.y += actor.move.y;
-            
+
             // Check hugging collision for player
             if (actor === state.player && !state.player.pause) {
                 const bunnyToHug = state.bunnies.find(el => el.sad && el.id !== actor.id && distanceBetween(el, newPos) <= el.buffer);
@@ -250,7 +255,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                     return false;
                 }
             }
-            
+
             // Check collision with other elements
             if ([...state.bunnies.filter(el => el.id !== actor.id), ...state.elements].some(el => {
                 return distanceBetween(el, newPos) <= el.buffer && distanceBetween(el, actor) > el.buffer;
@@ -266,12 +271,12 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
 
         const walk = (actor: any, dir: string) => {
             if (!dir || (actor === state.player && state.player.pause) || !state.settings.isWindowActive) return;
-            
+
             if (noWall(actor)) {
                 animateSprite(actor, dir);
                 actor.x += actor.move.x;
                 actor.y += actor.move.y;
-                
+
                 if (actor === state.player) {
                     positionMap();
                     if (mapRef.current) {
@@ -345,7 +350,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
             const bunnyDiv = document.createElement('div');
             bunnyDiv.className = 'bunnies-sprite-container bunnies-sad';
             bunnyDiv.innerHTML = '<div class="bunnies-bunny bunnies-sprite"></div>';
-            
+
             const bunny = {
                 id: `bunny-${state.bunnies.length + 1}`,
                 x: getRandomPos('w'), y: getRandomPos('h'),
@@ -359,7 +364,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 sad: true,
                 buffer: 30,
             };
-            
+
             state.bunnies.push(bunny);
             mapRef.current?.appendChild(bunny.el);
             bunny.el.style.zIndex = `${bunny.y}`;
@@ -378,11 +383,42 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 el: treeDiv,
                 buffer: 40,
             };
-            
+
             state.elements.push(tree);
             mapRef.current?.appendChild(tree.el);
             tree.el.style.zIndex = `${tree.y}`;
             setPos(tree);
+        };
+
+        const addFences = () => {
+            const { w, h } = state.settings.map;
+            const fenceStep = 40;
+
+            const createFence = (x: number, y: number) => {
+                const fence = document.createElement('div');
+                fence.className = 'bunnies-fence';
+                fence.style.left = px(x);
+                fence.style.top = px(y);
+                fence.style.zIndex = `${y}`;
+
+                state.elements.push({
+                    el: fence,
+                    x, y,
+                    buffer: 20 // Collision buffer
+                });
+                mapRef.current?.appendChild(fence);
+            };
+
+            // Top & Bottom Edges
+            for (let x = 0; x <= w; x += fenceStep) {
+                createFence(x, 0);
+                createFence(x, h - 20);
+            }
+            // Left & Right Edges
+            for (let y = 20; y < h - 20; y += fenceStep) {
+                createFence(0, y);
+                createFence(w, y);
+            }
         };
 
         const elAngle = (pos: any) => {
@@ -400,7 +436,6 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
         };
 
         // --- Start & Loop ---
-        
         const startGame = () => {
             state.bunnies.forEach(b => b.el.remove());
             state.elements.forEach(t => t.el.remove());
@@ -408,7 +443,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
             state.elements = [];
             state.intervals.forEach(clearInterval);
             state.intervals = [];
-            
+
             if (endMessageRef.current) endMessageRef.current.classList.add('bunnies-d-none');
             if (indicatorRef.current) indicatorRef.current.classList.remove('bunnies-happy');
 
@@ -425,6 +460,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
             resizeAndRepositionMap();
             resizeBunnyRadar();
 
+            addFences();
             new Array(bunnyCount).fill('').forEach(() => addBunny());
             new Array(100).fill('').forEach(() => addTree());
             updateSadBunnyCount();
@@ -459,7 +495,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
         const handleGlobalClick = (e: MouseEvent) => {
             if (!mapRef.current) return;
             state.player.isKeyboardMoving = false;
-            
+
             const mapRect = mapRef.current.getBoundingClientRect();
             state.settings.controlPos = {
                 x: e.clientX - mapRect.left,
@@ -468,7 +504,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
         };
 
         const handleKeyDown = (e: KeyboardEvent) => {
-            switch(e.key.toLowerCase()) {
+            switch (e.key.toLowerCase()) {
                 case 'arrowup': case 'w': state.keys.up = true; break;
                 case 'arrowdown': case 's': state.keys.down = true; break;
                 case 'arrowleft': case 'a': state.keys.left = true; break;
@@ -477,7 +513,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
         };
 
         const handleKeyUp = (e: KeyboardEvent) => {
-            switch(e.key.toLowerCase()) {
+            switch (e.key.toLowerCase()) {
                 case 'arrowup': case 'w': state.keys.up = false; break;
                 case 'arrowdown': case 's': state.keys.down = false; break;
                 case 'arrowleft': case 'a': state.keys.left = false; break;
@@ -524,7 +560,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
 
     return (
         <>
-        <style>{`
+            <style>{`
             .bunnies-container * {
                 box-sizing: border-box;
                 padding: 0;
@@ -553,6 +589,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 justify-content: center;
                 align-items: center;
                 pointer-events: none;
+                z-index: 10000; /* Ensure radar is on top */
             }
 
             .bunnies-circle {
@@ -594,44 +631,76 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 font-size: 1rem;
             }
 
+            /* Speech Bubble at end of game */
             .bunnies-end-message {
                 position: fixed;
-                height: 100%;
-                width: 100%;
+                bottom: 64px;
+                left: 10px;
+                background-color: #fff;
+                border: 2px solid #57280f;
+                border-radius: 12px;
+                padding: 15px;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                flex-direction: column;
-                z-index: 99999;
-                animation: fade-in forwards 1s;
+                gap: 8px;
+                z-index: 10001;
                 pointer-events: all;
+                animation: fade-in forwards 0.5s;
+                min-width: 180px;
+            }
+
+            /* Speech Bubble Arrow */
+            .bunnies-end-message::after {
+                content: '';
+                position: absolute;
+                bottom: -8px;
+                left: 4px;
+                width: 0; 
+                height: 0; 
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-top: 8px solid #57280f;
+            }
+            
+            .bunnies-end-message::before {
+                content: '';
+                position: absolute;
+                bottom: -6px;
+                left: 4px;
+                width: 0; 
+                height: 0; 
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-top: 8px solid #fff;
+                z-index: 1;
             }
 
             .bunnies-end-message p {
                 color: #57280f;
-                background-color: #ffffff8b;
-                width: 240px;
-                padding: 30px;
+                margin: 0;
                 text-align: center;
-                transform: translateY(calc(-100% - 10px));
+                font-size: 1.1rem;
             }
 
             .bunnies-button {
                 border: 0;
-                padding: 6px 12px;
-                color: #4d220a;
-                background-color: #ffffffff;
-                border: 5px solid #4d220a;
+                padding: 6px 16px;
+                color: #fff;
+                background-color: #57280f;
+                font-size: 1rem;
                 cursor: pointer;
+                border-radius: 4px;
             }
 
             .bunnies-button:hover {
-                background-color: #fff;
+                background-color: #7a3e1a;
             }
 
             @keyframes fade-in {
-                0% { opacity: 0; }
-                100% { opacity: 1; }
+                0% { opacity: 0; transform: translateY(10px); }
+                100% { opacity: 1; transform: translateY(0); }
             }
 
             .bunnies-d-none {
@@ -825,6 +894,17 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 top: 0;
                 left: 0;
                 transition: 0.4s;
+                /* No background color, transparency for fences to show */
+            }
+
+            .bunnies-fence {
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAeCAYAAAA2Lt7lAAAAAXNSR0IArs4c6QAAAKJJREFUSEvtlssRgCAMRKUwu7AdT7ZjFxamIzM4gIRdg8YLXIF9bD5M3ECubV32+Og4zY65Sh3KxYMwA4EASZyFVAFInIGIAFYcQYqAp+I1yA2gFZcgCaBVvAS5AG+J5xA7QNyVWjelxutJFv+7EC4fIm3M0W96QmwA+Uu0jnoVoZwm+3ZVpE0oa8d9DjBptJpd5BCNLv+OLUz4ugOf/5bZ9ACJXnYB/NLxRwAAAABJRU5ErkJggg==);
+                filter: brightness(0.8);
+                background-size: cover;
+                image-rendering: pixelated;
             }
 
             .bunnies-slow-transition {
@@ -875,23 +955,12 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 filter: brightness(0.6);
             }
 
-            .bunnies-sign {
-                position: fixed;
-                font-family: inherit;
-                color: #57280f;
-                bottom: 10px;
-                right: 10px;
-                font-size: 10px;
-                text-transform: none;
-                z-index: 50;
-            }
-
             .bunnies-indicator {
                 position: fixed;
                 bottom: 12px;
                 left: 32px;
                 transform: translateX(50%);
-                color: #57280f;
+                color: #003644ff;
                 font-size: 20px;
                 opacity: 0.8;
                 z-index: 999;
@@ -927,7 +996,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                             Yippee! There are no more sad bunnies!
                         </p>
                         <button className={`bunnies-button ${tiny5.className}`} ref={buttonRef} onClick={handleRestart}>
-                            play again
+                            PLAY AGAIN -&gt;
                         </button>
                     </div>
 
@@ -950,7 +1019,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                     </div>
                 </div>
 
-                <div className={`bunnies-indicator ${tiny5.className}`} ref={indicatorRef}>x 45</div>
+                <div className={`bunnies-indicator ${tiny5.className}`} ref={indicatorRef}>x {bunnyCount}</div>
             </div>
         </>
     );
