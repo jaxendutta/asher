@@ -7,7 +7,7 @@ interface BunniesProps {
     bunnyCount?: number;
 }
 
-const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
+const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
     // Refs for DOM elements
     const wrapperRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<HTMLDivElement>(null);
@@ -617,11 +617,11 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
             }
 
             .bunnies-button {
-                font-family: inherit;
                 border: 0;
-                padding: 10px 20px;
+                padding: 6px 12px;
                 color: #4d220a;
-                background-color: #c3ac83;
+                background-color: #ffffffff;
+                border: 5px solid #4d220a;
                 cursor: pointer;
             }
 
@@ -923,7 +923,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
                 <div className="bunnies-wrapper" ref={wrapperRef}>
                     <div className="bunnies-end-message bunnies-d-none" ref={endMessageRef}>
                         <p className={tiny5.className}>
-                            Hooray! There&apos;s no more sad bunnies!
+                            Yippee! There are no more sad bunnies!
                         </p>
                         <button className={`bunnies-button ${tiny5.className}`} ref={buttonRef} onClick={handleRestart}>
                             play again
