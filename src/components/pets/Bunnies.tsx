@@ -871,7 +871,8 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 2 }) => {
                 background-repeat: no-repeat;
                 width: var(--width);
                 height: var(--height);
-                background-size: var(--width) var(--height); 
+                background-size: var(--width) var(--height);
+                filter: brightness(0.6);
             }
 
             .bunnies-sign {
