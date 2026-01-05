@@ -7,7 +7,7 @@ interface BunniesProps {
     bunnyCount?: number;
 }
 
-const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
+const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
     // Refs for DOM elements
     const wrapperRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<HTMLDivElement>(null);
@@ -17,6 +17,10 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
     const radarContainerRef = useRef<HTMLDivElement>(null);
     const radarCircleRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+
+    // State for game restart logic
+    const [gameBunnyCount, setGameBunnyCount] = React.useState(bunnyCount);
+    const [inputBunnyCount, setInputBunnyCount] = React.useState(bunnyCount);
 
     // Game state
     const gameState = useRef({
@@ -152,7 +156,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
         // --- Bunny Behavior ---
 
         const triggerBunnyMessage = (bunny: any, classToAdd: string) => {
-            const messages = ['thanks!', 'arigato!', 'yeah!', '^ _ ^', 'thank you!'];
+            const messages = ['thanks!', 'merci!', 'yeah!', '^ w ^', 'thank you!'];
             bunny.el.setAttribute('message', messages[randomN(5) - 1]);
             bunny.el.classList.add(classToAdd);
             setTimeout(() => {
@@ -461,7 +465,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
             resizeBunnyRadar();
 
             addFences();
-            new Array(bunnyCount).fill('').forEach(() => addBunny());
+            new Array(gameBunnyCount).fill('').forEach(() => addBunny());
             new Array(100).fill('').forEach(() => addTree());
             updateSadBunnyCount();
 
@@ -551,11 +555,29 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
             state.intervals.forEach(clearInterval);
             state.bunnies.forEach(b => clearInterval(b.animationTimer));
         };
-    }, [bunnyCount]);
+    }, [gameBunnyCount]);
 
     const handleRestart = (e: React.MouseEvent) => {
         e.stopPropagation();
-        window.location.reload();
+        // Trigger re-render of useEffect with new count
+        setGameBunnyCount(inputBunnyCount);
+    };
+
+    const handleIncrement = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setInputBunnyCount(prev => Math.min(50, prev + 1));
+    };
+
+    const handleDecrement = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setInputBunnyCount(prev => Math.max(5, prev - 1));
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = parseInt(e.target.value);
+        if (!isNaN(val)) {
+            setInputBunnyCount(Math.max(5, Math.min(50, val)));
+        }
     };
 
     return (
@@ -697,7 +719,57 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
             .bunnies-button:hover {
                 background-color: #7a3e1a;
             }
-
+            
+            .bunnies-controls {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-top: 10px;
+            }
+            
+            .bunnies-input-wrapper {
+                display: flex;
+                align-items: center;
+                border: 2px solid #57280f;
+                border-radius: 4px;
+                overflow: hidden;
+                background-color: #fff;
+            }
+            
+            .bunnies-arrow-btn {
+                background-color: #e6dcc8;
+                border: none;
+                color: #57280f;
+                padding: 1px 10px;
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 1.25rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .bunnies-arrow-btn:hover {
+                background-color: #c3ac83;
+                color: #fff;
+            }
+            
+            .bunnies-input {
+                border: none;
+                width: 60px;
+                text-align: center;
+                color: #57280f;
+                font-size: 1.2rem;
+                outline: none;
+                -moz-appearance: textfield;
+            }
+            
+            .bunnies-input::-webkit-outer-spin-button,
+            .bunnies-input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            
             @keyframes fade-in {
                 0% { opacity: 0; transform: translateY(10px); }
                 100% { opacity: 1; transform: translateY(0); }
@@ -989,15 +1061,37 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
             }
         `}</style>
 
-            <div className="bunnies-container">
+            <div className={`bunnies-container ${tiny5.className}`}>
                 <div className="bunnies-wrapper" ref={wrapperRef}>
                     <div className="bunnies-end-message bunnies-d-none" ref={endMessageRef}>
                         <p className={tiny5.className}>
                             Yippee! There are no more sad bunnies!
                         </p>
-                        <button className={`bunnies-button ${tiny5.className}`} ref={buttonRef} onClick={handleRestart}>
-                            PLAY AGAIN -&gt;
-                        </button>
+
+                        <div className="bunnies-controls">
+                            <div className={`bunnies-input-wrapper ${tiny5.className}`}>
+                                <button className={`bunnies-arrow-btn ${tiny5.className}`} onClick={handleDecrement}>
+                                    &lt;
+                                </button>
+                                <input
+                                    className={`bunnies-input ${tiny5.className}`}
+                                    type="number"
+                                    value={inputBunnyCount}
+                                    placeholder={`Default: ${bunnyCount}`}
+                                    onChange={handleInputChange}
+                                    min={5}
+                                    max={50}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                <button className={`bunnies-arrow-btn ${tiny5.className}`} onClick={handleIncrement}>
+                                    &gt;
+                                </button>
+                            </div>
+
+                            <button className={`bunnies-button ${tiny5.className}`} ref={buttonRef} onClick={handleRestart}>
+                                PLAY AGAIN -&gt;
+                            </button>
+                        </div>
                     </div>
 
                     <div className="bunnies-radar" ref={radarContainerRef}>
