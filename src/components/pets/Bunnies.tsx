@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { tiny5 } from '@/lib/fonts';
 
 interface BunniesProps {
@@ -19,8 +19,10 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     // State for game restart logic
-    const [gameBunnyCount, setGameBunnyCount] = React.useState(bunnyCount);
-    const [inputBunnyCount, setInputBunnyCount] = React.useState(bunnyCount);
+    const [gameBunnyCount, setGameBunnyCount] = useState(bunnyCount);
+    const [inputBunnyCount, setInputBunnyCount] = useState(bunnyCount);
+    const [restartKey, setRestartKey] = useState(0);
+    const [confettiActive, setConfettiActive] = useState(false);
 
     // Game state
     const gameState = useRef({
@@ -171,6 +173,9 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
                     indicatorRef.current.innerHTML = `x ${sadBunnyCount}`;
                     indicatorRef.current.style.opacity = '0.8';
                 } else {
+                    // WIN CONDITION - TRIGGER CONFETTI!
+                    setConfettiActive(true);
+
                     // Hide the count text when won so it doesn't overlap the speech bubble
                     indicatorRef.current.innerHTML = '';
                     indicatorRef.current.style.opacity = '1';
@@ -555,12 +560,60 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
             state.intervals.forEach(clearInterval);
             state.bunnies.forEach(b => clearInterval(b.animationTimer));
         };
-    }, [gameBunnyCount]);
+    }, [gameBunnyCount, restartKey]);
+
+    useEffect(() => {
+        if (confettiActive) {
+            const confettiCount = 200; // 4x more confetti!
+            const colors = ['#FFD700', '#FF69B4', '#00CED1', '#FF6347', '#32CD32', '#FF1493', '#FFA500', '#9370DB', '#00FF00', '#FF0080'];
+            const confettiElements: HTMLDivElement[] = [];
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'bunnies-confetti-piece';
+
+                // Random starting position
+                confetti.style.left = `${Math.random() * 100}%`;
+
+                // Random color
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                // Variable sizes for visual interest
+                const size = 10 + Math.random() * 12; // 10-22px
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${Math.random() > 0.5 ? size : size * 1.5}px`; // Some are rectangles
+
+                // Stagger the start times
+                confetti.style.animationDelay = `${Math.random() * 1}s`;
+
+                // Vary fall speed
+                confetti.style.animationDuration = `${2.5 + Math.random() * 2}s`;
+
+                // Add custom properties for horizontal drift
+                confetti.style.setProperty('--drift', `${(Math.random() - 0.5) * 400}px`);
+                confetti.style.setProperty('--rotation', `${Math.random() * 720 - 360}deg`);
+
+                wrapperRef.current?.appendChild(confetti);
+                confettiElements.push(confetti);
+            }
+
+            const timeout = setTimeout(() => {
+                confettiElements.forEach(el => el.remove());
+                setConfettiActive(false);
+            }, 6000); // Longer duration to see all the confetti
+
+            return () => {
+                clearTimeout(timeout);
+                confettiElements.forEach(el => el.remove());
+            };
+        }
+    }, [confettiActive]);
 
     const handleRestart = (e: React.MouseEvent) => {
         e.stopPropagation();
         // Trigger re-render of useEffect with new count
         setGameBunnyCount(inputBunnyCount);
+        setRestartKey(prev => prev + 1);
     };
 
     const handleIncrement = (e: React.MouseEvent) => {
@@ -570,7 +623,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
 
     const handleDecrement = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setInputBunnyCount(prev => Math.max(5, prev - 1));
+        setInputBunnyCount(prev => Math.max(1, prev - 1));
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1058,6 +1111,40 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
                 background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAKNJREFUOE/lVMERgCAMsxPIGDqRjqgT6Rg6Qb1worVg68PzIz9oCGnSgyq1uqZmHI3zSrqG/V39AgZomJZ4v29DRmbVDyIJSkokmVf/K1FMqQ3RsnEPQSYpPTQ9KsX/DVEpWk+NHhHSJOg7DeUdmcZgfyFKAIushMmInrajcS6RVOapzDwqvYYzy7eoKH0NnsGW8fhy3h9IvMjMDJlPFjogOoVseByz1PgRF28AAAAASUVORK5CYII=);
                 height: 36px;
                 top: -4px;
+            }
+            
+            .bunnies-confetti-piece {
+                position: absolute;
+                top: -20px;
+                z-index: 9999;
+                pointer-events: none;
+                animation: confetti-fall ease-in forwards;
+                image-rendering: pixelated;
+                box-shadow: 0 0 4px rgba(255, 255, 255, 0.8); /* Glow effect */
+            }
+
+            @keyframes confetti-fall {
+                0% {
+                    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+                    opacity: 1;
+                }
+                10% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(calc(100vh + 50px)) translateX(var(--drift)) rotate(var(--rotation)) scale(0.8);
+                    opacity: 0.3;
+                }
+            }
+
+            /* Add a celebratory pulse effect to the whole game when won */
+            @keyframes celebrate-pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+
+            .bunnies-wrapper.celebrating {
+                animation: celebrate-pulse 0.5s ease-in-out 3;
             }
         `}</style>
 
