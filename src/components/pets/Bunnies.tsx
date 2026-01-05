@@ -3,37 +3,49 @@
 import React, { useEffect, useRef } from 'react';
 import { tiny5 } from '@/lib/fonts';
 
-const Bunnies: React.FC = () => {
+interface BunniesProps {
+    bunnyCount?: number;
+}
+
+const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 20 }) => {
     // Refs for DOM elements
     const wrapperRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<HTMLDivElement>(null);
     const indicatorRef = useRef<HTMLDivElement>(null);
     const endMessageRef = useRef<HTMLDivElement>(null);
-    const radarRef = useRef<HTMLDivElement>(null);
+    const radarContainerRef = useRef<HTMLDivElement>(null);
+    const radarCircleRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
-
-    // Game state refs to avoid re-renders during game loop
+    
+    // Game state
     const gameState = useRef({
         bunnies: [] as any[],
-        elements: [] as any[], // trees
+        elements: [] as any[], 
         player: {
             id: 'bear',
             x: 0, y: 0,
             frameOffset: 1,
             animationTimer: null as NodeJS.Timeout | null,
-            walkingDirection: '',
+            walkingDirection: 'down',
             walkingInterval: null as NodeJS.Timeout | null,
             pause: false,
             buffer: 20,
             move: { x: 0, y: 0 },
             sprite: { x: 0, y: 0 },
-            el: null as HTMLDivElement | null
+            isKeyboardMoving: false,
+            el: null as HTMLDivElement | null // <--- Added this property to fix the error
+        },
+        keys: {
+            up: false,
+            down: false,
+            left: false,
+            right: false
         },
         settings: {
-            d: 20,
+            d: 20, // speed
             offsetPos: { x: 0, y: 0 },
-            map: { w: 20 * 200, h: 20 * 200, x: 0, y: 0 },
+            map: { w: 20 * 100, h: 20 * 100, x: 0, y: 0 },
             transitionTimer: null as NodeJS.Timeout | null,
             isWindowActive: true,
             controlPos: { x: 0, y: 0 },
@@ -46,7 +58,7 @@ const Bunnies: React.FC = () => {
     useEffect(() => {
         if (!wrapperRef.current || !mapRef.current || !playerRef.current) return;
 
-        // Helper functions
+        // --- Helper Functions ---
         const radToDeg = (rad: number) => Math.round(rad * (180 / Math.PI));
         const distanceBetween = (a: any, b: any) => Math.round(Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2)));
         const randomN = (max: number) => Math.ceil(Math.random() * max);
@@ -57,21 +69,14 @@ const Bunnies: React.FC = () => {
                 item.el.style.top = px(item.y);
             }
         };
-        const setSize = (item: any, w?: number, h?: number, d?: number) => {
-            const m = d || 1;
-            if (item.el) {
-                if (w) item.el.style.width = px(w * m);
-                if (h) item.el.style.height = px(h * m);
-            }
-        };
 
         const state = gameState.current;
         const playerSpriteEl = playerRef.current.querySelector('.bunnies-sprite') as HTMLElement;
-
-        // Initialize Player
+        
+        // Assign the ref to the state.player.el property
         state.player.el = playerRef.current;
 
-        // --- Game Logic Functions ---
+        // --- Viewport & Radar Logic ---
 
         const setBackgroundPos = (item: { el?: HTMLElement, x: number, y: number }, elOverride?: HTMLElement) => {
             const target = elOverride || item.el;
@@ -85,28 +90,33 @@ const Bunnies: React.FC = () => {
             const { innerWidth: w, innerHeight: h } = window;
             const size = w > h ? h : w;
             state.settings.bunnyRadarSize = size - 20;
-            if (radarRef.current) {
-                radarRef.current.style.width = px(state.settings.bunnyRadarSize);
-                radarRef.current.style.height = px(state.settings.bunnyRadarSize);
+            
+            if (radarCircleRef.current) {
+                radarCircleRef.current.style.width = px(state.settings.bunnyRadarSize);
+                radarCircleRef.current.style.height = px(state.settings.bunnyRadarSize);
             }
         };
+
+        // --- Animation & Movement ---
 
         const stopSprite = (actor: any) => {
             actor.sprite.x = 0;
             setBackgroundPos(actor.sprite, actor === state.player ? playerSpriteEl : actor.sprite.el);
-            if (actor.walkingInterval) clearInterval(actor.walkingInterval);
         };
 
         const animateSprite = (actor: any, dir: string) => {
             const h = -32 * 2;
-            actor.sprite.y = {
+            const yPos = {
                 down: 0,
                 up: h,
                 right: h * 2,
                 left: h * 3
-            }[dir] || 0;
+            }[dir];
+            
+            actor.sprite.y = yPos !== undefined ? yPos : 0;
             actor.frameOffset = actor.frameOffset === 1 ? 2 : 1;
             actor.sprite.x = actor.frameOffset * (2 * -20);
+            
             setBackgroundPos(actor.sprite, actor === state.player ? playerSpriteEl : actor.sprite.el);
         };
 
@@ -138,6 +148,8 @@ const Bunnies: React.FC = () => {
                 mapRef.current.style.top = px(state.settings.map.y);
             }
         };
+
+        // --- Bunny Behavior ---
 
         const triggerBunnyMessage = (bunny: any, classToAdd: string) => {
             const messages = ['thanks!', 'arigato!', 'yeah!', '^ _ ^', 'thank you!'];
@@ -180,6 +192,8 @@ const Bunnies: React.FC = () => {
             state.intervals.push(bunny.animationTimer);
         };
 
+        // --- Interaction Logic (Hugging) ---
+
         const hugBunny = (bunny: any) => {
             const classToAdd = bunny.x > state.player.x ? 'bunnies-hug-bear-bunny' : 'bunnies-hug-bunny-bear';
             if (playerRef.current) playerRef.current.classList.add('bunnies-d-none');
@@ -220,11 +234,14 @@ const Bunnies: React.FC = () => {
             }, 1800);
         };
 
+        // --- Collision & Wall Logic ---
+
         const noWall = (actor: any) => {
             const newPos = { ...actor };
             newPos.x += actor.move.x;
             newPos.y += actor.move.y;
-
+            
+            // Check hugging collision for player
             if (actor === state.player && !state.player.pause) {
                 const bunnyToHug = state.bunnies.find(el => el.sad && el.id !== actor.id && distanceBetween(el, newPos) <= el.buffer);
                 if (bunnyToHug) {
@@ -233,11 +250,13 @@ const Bunnies: React.FC = () => {
                     return false;
                 }
             }
-
+            
+            // Check collision with other elements
             if ([...state.bunnies.filter(el => el.id !== actor.id), ...state.elements].some(el => {
                 return distanceBetween(el, newPos) <= el.buffer && distanceBetween(el, actor) > el.buffer;
             })) return false;
 
+            // Map boundaries
             const buffer = 40;
             const noWallX = actor.move.x > 0 ? newPos.x + buffer < state.settings.map.w : newPos.x - buffer > 0;
             const noWallY = actor.move.y > 0 ? newPos.y < state.settings.map.h - buffer : newPos.y - buffer > 0;
@@ -247,10 +266,12 @@ const Bunnies: React.FC = () => {
 
         const walk = (actor: any, dir: string) => {
             if (!dir || (actor === state.player && state.player.pause) || !state.settings.isWindowActive) return;
+            
             if (noWall(actor)) {
                 animateSprite(actor, dir);
                 actor.x += actor.move.x;
                 actor.y += actor.move.y;
+                
                 if (actor === state.player) {
                     positionMap();
                     if (mapRef.current) {
@@ -269,30 +290,54 @@ const Bunnies: React.FC = () => {
             }
         };
 
-        const handleWalk = () => {
-            let dir = 'right';
+        // --- Player Game Loop ---
+
+        const handlePlayerMovement = () => {
             const { d } = state.settings;
+            let moveX = 0;
+            let moveY = 0;
+            let dir = state.player.walkingDirection || 'down';
 
-            if (state.player.walkingInterval) clearInterval(state.player.walkingInterval);
+            // 1. Check Keyboard Input first
+            if (state.keys.up) moveY = -d;
+            if (state.keys.down) moveY = d;
+            if (state.keys.left) moveX = -d;
+            if (state.keys.right) moveX = d;
 
-            state.player.walkingInterval = setInterval(() => {
-                if (Math.abs(state.player.y - state.settings.controlPos.y) > 20) {
-                    state.player.move.y = state.player.y > state.settings.controlPos.y ? -d : d;
-                    dir = state.player.move.y === -d ? 'up' : 'down';
-                } else {
-                    state.player.move.y = 0;
+            if (moveX !== 0 || moveY !== 0) {
+                state.player.isKeyboardMoving = true;
+                state.settings.controlPos.x = state.player.x;
+                state.settings.controlPos.y = state.player.y;
+            } else {
+                // 2. If no keys, check Mouse Click Target
+                if (!state.player.isKeyboardMoving) {
+                    if (Math.abs(state.player.y - state.settings.controlPos.y) > 20) {
+                        moveY = state.player.y > state.settings.controlPos.y ? -d : d;
+                    }
+                    if (Math.abs(state.player.x - state.settings.controlPos.x) > 20) {
+                        moveX = state.player.x > state.settings.controlPos.x ? -d : d;
+                    }
                 }
-                if (Math.abs(state.player.x - state.settings.controlPos.x) > 20) {
-                    state.player.move.x = state.player.x > state.settings.controlPos.x ? -d : d;
-                    dir = state.player.move.x === -d ? 'left' : 'right';
-                } else {
-                    state.player.move.x = 0;
-                }
+            }
 
-                state.player.move.x || state.player.move.y ? walk(state.player, dir) : stopSprite(state.player);
-            }, 150);
-            state.intervals.push(state.player.walkingInterval);
+            if (moveY < 0) dir = 'up';
+            else if (moveY > 0) dir = 'down';
+            else if (moveX < 0) dir = 'left';
+            else if (moveX > 0) dir = 'right';
+
+            state.player.move.x = moveX;
+            state.player.move.y = moveY;
+            state.player.walkingDirection = dir;
+
+            if (moveX !== 0 || moveY !== 0) {
+                walk(state.player, dir);
+            } else {
+                stopSprite(state.player);
+                state.player.isKeyboardMoving = false;
+            }
         };
+
+        // --- Setup Elements ---
 
         const getRandomPos = (key: 'w' | 'h') => 20 * randomN((state.settings.map[key] / 20) - 1);
 
@@ -300,7 +345,7 @@ const Bunnies: React.FC = () => {
             const bunnyDiv = document.createElement('div');
             bunnyDiv.className = 'bunnies-sprite-container bunnies-sad';
             bunnyDiv.innerHTML = '<div class="bunnies-bunny bunnies-sprite"></div>';
-
+            
             const bunny = {
                 id: `bunny-${state.bunnies.length + 1}`,
                 x: getRandomPos('w'), y: getRandomPos('h'),
@@ -314,7 +359,7 @@ const Bunnies: React.FC = () => {
                 sad: true,
                 buffer: 30,
             };
-
+            
             state.bunnies.push(bunny);
             mapRef.current?.appendChild(bunny.el);
             bunny.el.style.zIndex = `${bunny.y}`;
@@ -333,7 +378,7 @@ const Bunnies: React.FC = () => {
                 el: treeDiv,
                 buffer: 40,
             };
-
+            
             state.elements.push(tree);
             mapRef.current?.appendChild(tree.el);
             tree.el.style.zIndex = `${tree.y}`;
@@ -354,23 +399,23 @@ const Bunnies: React.FC = () => {
             if (state.settings.sadBunnies.length > 5) state.settings.sadBunnies.length = 5;
         };
 
-        // --- Start Game ---
-
+        // --- Start & Loop ---
+        
         const startGame = () => {
-            // Clear existing
             state.bunnies.forEach(b => b.el.remove());
             state.elements.forEach(t => t.el.remove());
             state.bunnies = [];
             state.elements = [];
             state.intervals.forEach(clearInterval);
             state.intervals = [];
-
+            
             if (endMessageRef.current) endMessageRef.current.classList.add('bunnies-d-none');
             if (indicatorRef.current) indicatorRef.current.classList.remove('bunnies-happy');
 
-            // Setup
             state.player.x = getRandomPos('w');
             state.player.y = getRandomPos('h');
+            state.settings.controlPos = { x: state.player.x, y: state.player.y };
+
             if (playerRef.current) playerRef.current.style.zIndex = `${state.player.y}`;
             if (mapRef.current) {
                 mapRef.current.style.width = px(state.settings.map.w);
@@ -380,31 +425,64 @@ const Bunnies: React.FC = () => {
             resizeAndRepositionMap();
             resizeBunnyRadar();
 
-            new Array(45).fill('').forEach(() => addBunny());
+            new Array(bunnyCount).fill('').forEach(() => addBunny());
             new Array(100).fill('').forEach(() => addTree());
             updateSadBunnyCount();
+
+            state.player.walkingInterval = setInterval(handlePlayerMovement, 150);
+            state.intervals.push(state.player.walkingInterval);
+
+            const radarInterval = setInterval(() => {
+                if (!radarCircleRef.current) return;
+                findSadBunnies();
+                const posDots = radarCircleRef.current.querySelectorAll('.bunnies-pos');
+                posDots.forEach((indicator: any, i) => {
+                    const bunny = state.settings.sadBunnies[i]?.el;
+                    if (bunny) {
+                        const angle = elAngle(bunny);
+                        const distance = distanceBetween(bunny, state.player);
+                        indicator.innerHTML = `<div class="bunnies-radar-text ${tiny5.className}" style="transform: rotate(${angle * -1}deg)">${distance - 40}px</div>`;
+                        const size = distance > (state.settings.bunnyRadarSize / 2) ? state.settings.bunnyRadarSize : distance;
+                        indicator.style.setProperty('--size', px(size));
+                        indicator.style.transform = `rotate(${angle}deg)`;
+                        indicator.classList.remove('bunnies-d-none');
+                    } else {
+                        indicator.classList.add('bunnies-d-none');
+                    }
+                });
+            }, 500);
+            state.intervals.push(radarInterval);
         };
 
-        // Event Listeners
-        const handleClick = (e: MouseEvent | TouchEvent) => {
-            stopSprite(state.player);
-            if (!mapRef.current) return;
-            const { left, top } = mapRef.current.getBoundingClientRect();
+        // --- Input Handling ---
 
-            if ((e as TouchEvent).targetTouches) {
-                const touch = (e as TouchEvent).targetTouches[0];
-                state.settings.controlPos = {
-                    x: touch.clientX - left,
-                    y: touch.clientY - top
-                };
-            } else {
-                const mouse = e as MouseEvent;
-                state.settings.controlPos = {
-                    x: mouse.clientX - left,
-                    y: mouse.clientY - top
-                };
+        const handleGlobalClick = (e: MouseEvent) => {
+            if (!mapRef.current) return;
+            state.player.isKeyboardMoving = false;
+            
+            const mapRect = mapRef.current.getBoundingClientRect();
+            state.settings.controlPos = {
+                x: e.clientX - mapRect.left,
+                y: e.clientY - mapRect.top
+            };
+        };
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            switch(e.key.toLowerCase()) {
+                case 'arrowup': case 'w': state.keys.up = true; break;
+                case 'arrowdown': case 's': state.keys.down = true; break;
+                case 'arrowleft': case 'a': state.keys.left = true; break;
+                case 'arrowright': case 'd': state.keys.right = true; break;
             }
-            handleWalk();
+        };
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            switch(e.key.toLowerCase()) {
+                case 'arrowup': case 'w': state.keys.up = false; break;
+                case 'arrowdown': case 's': state.keys.down = false; break;
+                case 'arrowleft': case 'a': state.keys.left = false; break;
+                case 'arrowright': case 'd': state.keys.right = false; break;
+            }
         };
 
         const handleResize = () => {
@@ -413,56 +491,40 @@ const Bunnies: React.FC = () => {
         };
 
         const handleFocus = () => state.settings.isWindowActive = true;
-        const handleBlur = () => state.settings.isWindowActive = false;
+        const handleBlur = () => {
+            state.settings.isWindowActive = false;
+            state.keys = { up: false, down: false, left: false, right: false };
+        };
 
-        document.addEventListener('click', handleClick);
+        window.addEventListener('click', handleGlobalClick);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
         window.addEventListener('resize', handleResize);
         window.addEventListener('focus', handleFocus);
         window.addEventListener('blur', handleBlur);
 
-        // Radar Loop
-        const radarInterval = setInterval(() => {
-            if (!radarRef.current) return;
-            findSadBunnies();
-            const posDots = radarRef.current.querySelectorAll('.bunnies-pos');
-            posDots.forEach((indicator: any, i) => {
-                const bunny = state.settings.sadBunnies[i]?.el;
-                if (bunny) {
-                    const angle = elAngle(bunny);
-                    const distance = distanceBetween(bunny, state.player);
-                    indicator.innerHTML = `<div class="bunnies-radar-text ${tiny5.className}" style="transform: rotate(${angle * -1}deg)">${distance - 40}px</div>`;
-                    const size = distance > (state.settings.bunnyRadarSize / 2) ? state.settings.bunnyRadarSize : distance;
-                    indicator.style.setProperty('--size', px(size));
-                    indicator.style.transform = `rotate(${angle}deg)`;
-                    indicator.classList.remove('bunnies-d-none');
-                } else {
-                    indicator.classList.add('bunnies-d-none');
-                }
-            });
-        }, 500);
-        state.intervals.push(radarInterval);
-
-        // Initial Start
         startGame();
 
         return () => {
-            document.removeEventListener('click', handleClick);
+            window.removeEventListener('click', handleGlobalClick);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('focus', handleFocus);
             window.removeEventListener('blur', handleBlur);
             state.intervals.forEach(clearInterval);
             state.bunnies.forEach(b => clearInterval(b.animationTimer));
         };
-    }, []);
+    }, [bunnyCount]);
 
     const handleRestart = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent walking click
-        window.location.reload(); // Simple reload as per original, or call startGame() if fully reset is robust
+        e.stopPropagation();
+        window.location.reload();
     };
 
     return (
         <>
-            <style>{`
+        <style>{`
             .bunnies-container * {
                 box-sizing: border-box;
                 padding: 0;
@@ -515,6 +577,7 @@ const Bunnies: React.FC = () => {
                 position: absolute;
                 content: '';
                 background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADhJREFUKFNjtFlz4j8DEYARpIYYxWCFxCiGKySkGEUhPsUYCnEpxqoQm2KcCtEV41WIrJigQphiAH0JGuGElBe4AAAAAElFTkSuQmCC);
+                filter: brightness(0.6);
                 width: 20px;
                 height: 20px;
                 background-size: 20px;
@@ -527,8 +590,8 @@ const Bunnies: React.FC = () => {
             .bunnies-radar-text {
                 position: absolute;
                 bottom: 0;
-                color: #3cacc8;
-                font-size: 0.8rem;
+                color: #00657eff;
+                font-size: 1rem;
             }
 
             .bunnies-end-message {
@@ -673,7 +736,7 @@ const Bunnies: React.FC = () => {
                 top: -55px;
                 left: calc(-1 * var(--h));
                 content: '';
-                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAGCAYAAACij5zfAAAAAXNSR0IArs4c6QAAADdJREFUOE9jZEAD4Rr8/9HFqMlfeeMjI7J5KByQ5egKqGk5yCx0O0YdMLhCABZH1I53ZPPQ0xgA1HAoB/krc8YAAAAASUVORK5CYII=);
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAGCAYAAACij5zfAAAAAXNSR0IArs4c6QAAADdJREFUOE9jZEAD4Rr8/9HFqMlfeeMjI7J5KByQ5egKqGk5yCx0O0YdMLhCABZH1I53ZPPQ0xgA1HAoB/krc8YAAAAASUVORK5CYII=);
                 width: calc(var(--h) * var(--m));
                 height: calc(6px * var(--m));
                 background-size: calc(var(--h) * var(--m)) calc(6px * var(--m));
@@ -811,13 +874,24 @@ const Bunnies: React.FC = () => {
                 background-size: var(--width) var(--height); 
             }
 
+            .bunnies-sign {
+                position: fixed;
+                font-family: inherit;
+                color: #57280f;
+                bottom: 10px;
+                right: 10px;
+                font-size: 10px;
+                text-transform: none;
+                z-index: 50;
+            }
+
             .bunnies-indicator {
-                position: absolute;
+                position: fixed;
                 bottom: 12px;
                 left: 32px;
                 transform: translateX(50%);
                 color: #57280f;
-                font-size: 18px;
+                font-size: 20px;
                 opacity: 0.8;
                 z-index: 999;
                 pointer-events: none;
@@ -835,6 +909,7 @@ const Bunnies: React.FC = () => {
                 background-size: 100%;
                 image-rendering: pixelated;
                 left: -42px;
+                transform: scaleX(-1);
             }
 
             .bunnies-indicator.bunnies-happy::before {
@@ -855,10 +930,10 @@ const Bunnies: React.FC = () => {
                         </button>
                     </div>
 
-                    <div className="bunnies-radar" ref={radarRef}>
-                        <div className="bunnies-circle" ref={radarRef}>
+                    <div className="bunnies-radar" ref={radarContainerRef}>
+                        <div className="bunnies-circle" ref={radarCircleRef}>
                             {new Array(5).fill(0).map((_, i) => (
-                                <div key={i} className="bunnies-pos"></div>
+                                <div key={i} className="bunnies-pos bunnies-d-none"></div>
                             ))}
                         </div>
                     </div>

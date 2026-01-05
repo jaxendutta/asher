@@ -9,7 +9,7 @@ import { PiMicroscope } from 'react-icons/pi';
 export default function SpecializationsPage() {
   return (
     <div className="page-enter relative">
-      <div className="absolute inset-0 z-40 p-10 pointer-events-none" style={{ height: '100%' }}>
+      <div className="absolute inset-0 z-40 p-10 pointer-events-none">
         <div className="pointer-events-auto h-full">
           <Dog />
         </div>
