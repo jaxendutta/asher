@@ -3,7 +3,6 @@
 // ============================================================================
 
 import type { NavItem } from '@/types';
-import { BsEnvelopeHeart, BsLinkedin, BsFileEarmarkText } from 'react-icons/bs';
 
 // ---------- Color Palette ----------
 // Inspired by natural garden colors with cat-friendly accents
@@ -87,47 +86,3 @@ export const NAV_ITEMS: NavItem[] = [
     gardenIcon: '🍃', // leaves
   },
 ];
-
-// ---------- Layout Sizes ----------
-
-export const LAYOUT = {
-  maxWidth: '1280px',
-  headerHeight: '80px',
-  footerHeight: '120px',
-  sidebarWidth: '280px',
-  containerPadding: {
-    sm: '1rem',
-    md: '2rem',
-    lg: '3rem',
-  },
-} as const;
-
-// ---------- Social Links ----------
-
-export const SOCIAL_LINKS = {
-  email: {
-    label: 'Email',
-    url: 'mailto:rkim070@uottawa.ca',
-    id: 'rkim070@uottawa.ca',
-    icon: BsEnvelopeHeart,
-  },
-  linkedin: {
-    label: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/kimasher',
-    id: 'kimasher',
-    icon: BsLinkedin,
-  },
-  resume: {
-    label: 'Résumé',
-    url: 'https://docs.google.com/viewer?url=https://docs.google.com/document/d/1Mq_v4v8Nd1nbFrKElQU8YtIwzPFQUonz4XdLpT_5vQ0/export?format=pdf',
-    icon: BsFileEarmarkText,
-  }
- } as const;
-
-// ---------- Research Interests ----------
-
-export const RESEARCH_INTERESTS = [
-  'Plant physiological, metabolic, and genetic responses to abiotic stress',
-  'Beneficial plant-microbe interactions',
-  'Molecular mechanisms of protein subcellular transport in plant cells',
-] as const;

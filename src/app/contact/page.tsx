@@ -1,7 +1,7 @@
 import { jersey_10 } from '@/lib/fonts';
 import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/Button';
-import { SOCIAL_LINKS } from '@/lib/constants';
+import { SOCIAL_LINKS } from '@/data/siteConfig';
 import Link from 'next/dist/client/link';
 import Bunnies from '@/components/pets/Bunnies';
 

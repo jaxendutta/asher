@@ -12,18 +12,19 @@ export const education: Education[] = [
     degree: 'Master of Science',
     degree_abbr: 'MSc',
     field: 'Biology',
-    location: { 
+    location: {
       label: 'Ottawa, ON',
       mapUrl: 'https://maps.app.goo.gl/fTPpvkTadhk7SRiJ6',
     },
     startDate: new Date('2025-09-01'),
     endDate: new Date('2027-04-01'),
     thesis: {
-      title:'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
+      title: 'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
       supervisor: people.marinaCvetkovska,
     },
     awards: [
-      'President\'s Scholarship of Distinction',
+      'Special Merit Scholarship',
+      'Ontario Graduate Scholarship (OGS)',
     ],
   },
   {
@@ -32,7 +33,7 @@ export const education: Education[] = [
     degree: 'Bachelor of Science',
     degree_abbr: 'BSc',
     field: 'Honours Biology',
-    location: { 
+    location: {
       label: 'Waterloo, ON',
       mapUrl: 'https://maps.app.goo.gl/KMeDQQRfvthmS6cH9',
     },
@@ -40,7 +41,7 @@ export const education: Education[] = [
     endDate: new Date('2025-04-01'),
     gpa: '93/100',
     thesis: {
-      title:'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
+      title: 'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
       supervisor: people.simonChuong,
     },
     awards: [
