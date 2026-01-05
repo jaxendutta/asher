@@ -451,8 +451,8 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
             if (endMessageRef.current) endMessageRef.current.classList.add('bunnies-d-none');
             if (indicatorRef.current) indicatorRef.current.classList.remove('bunnies-happy');
 
-            state.player.x = getRandomPos('w');
-            state.player.y = getRandomPos('h');
+            state.player.x = state.settings.map.w / 2;
+            state.player.y = state.settings.map.h / 2;
             state.settings.controlPos = { x: state.player.x, y: state.player.y };
 
             if (playerRef.current) playerRef.current.style.zIndex = `${state.player.y}`;
