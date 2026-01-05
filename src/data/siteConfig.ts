@@ -27,7 +27,7 @@ export const SOCIAL_LINKS = {
     },
     resume: {
         label: 'Résumé',
-        url: 'https://doc-14-4c-apps-viewer.googleusercontent.com/viewer/secure/pdf/6qfs7oqrjlj1rj1ak6ant9vd2po0g25m/60rkgs9b2umb7ch3so44abtmhk0lcg86/1767582225000/lantern/02413682096756226965/ACFrOgC31TUDISJ9uxPYJbKE9usGlxncKeHQU9NYU2BG95KRSX0il8iZ3c9cu7u7MPd8xlt1VV6yf_VrvxA-IHTAMljMzeIrKmFfLx8FgqAVUDfGNYQE88S_hOgR6lJAT9gwJEKNKrLj3yEtGM66?view',
+        url: 'https://docs.google.com/viewer?url=https://docs.google.com/document/d/1unbsI5KAf6wia68Ft3ANt6U0lOJXz9myi2gy8TRkrUw/export?format=pdf',
         icon: BsFileEarmarkText,
     }
 } as const;
