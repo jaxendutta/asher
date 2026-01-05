@@ -16,7 +16,6 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
     const endMessageRef = useRef<HTMLDivElement>(null);
     const radarContainerRef = useRef<HTMLDivElement>(null);
     const radarCircleRef = useRef<HTMLDivElement>(null);
-    const buttonRef = useRef<HTMLButtonElement>(null);
 
     // State for game restart logic
     const [gameBunnyCount, setGameBunnyCount] = useState(bunnyCount);
@@ -564,7 +563,7 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
 
     useEffect(() => {
         if (confettiActive) {
-            const confettiCount = 200; // 4x more confetti!
+            const confettiCount = 250;
             const colors = ['#FFD700', '#FF69B4', '#00CED1', '#FF6347', '#32CD32', '#FF1493', '#FFA500', '#9370DB', '#00FF00', '#FF0080'];
             const confettiElements: HTMLDivElement[] = [];
 
@@ -1151,33 +1150,22 @@ const Bunnies: React.FC<BunniesProps> = ({ bunnyCount = 10 }) => {
             <div className={`bunnies-container ${tiny5.className}`}>
                 <div className="bunnies-wrapper" ref={wrapperRef}>
                     <div className="bunnies-end-message bunnies-d-none" ref={endMessageRef}>
-                        <p className={tiny5.className}>
-                            Yippee! There are no more sad bunnies!
-                        </p>
-
+                        <p className={tiny5.className}>Yippee! There are no more sad bunnies!</p>
                         <div className="bunnies-controls">
                             <div className={`bunnies-input-wrapper ${tiny5.className}`}>
-                                <button className={`bunnies-arrow-btn ${tiny5.className}`} onClick={handleDecrement}>
-                                    &lt;
-                                </button>
+                                <button className={`bunnies-arrow-btn ${tiny5.className}`} onClick={handleDecrement}>&lt;</button>
                                 <input
                                     className={`bunnies-input ${tiny5.className}`}
                                     type="number"
                                     value={inputBunnyCount}
-                                    placeholder={`Default: ${bunnyCount}`}
                                     onChange={handleInputChange}
                                     min={5}
                                     max={50}
                                     onClick={(e) => e.stopPropagation()}
                                 />
-                                <button className={`bunnies-arrow-btn ${tiny5.className}`} onClick={handleIncrement}>
-                                    &gt;
-                                </button>
+                                <button className={`bunnies-arrow-btn ${tiny5.className}`} onClick={handleIncrement}>&gt;</button>
                             </div>
-
-                            <button className={`bunnies-button ${tiny5.className}`} ref={buttonRef} onClick={handleRestart}>
-                                PLAY AGAIN -&gt;
-                            </button>
+                            <button className={`bunnies-button ${tiny5.className}`} onClick={handleRestart}>PLAY AGAIN -&gt;</button>
                         </div>
                     </div>
 
