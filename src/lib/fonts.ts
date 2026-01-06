@@ -1,14 +1,16 @@
-import { 
-    Inter, 
-    Fleur_De_Leah, 
-    Newsreader, 
-    Micro_5, 
-    Tiny5, 
-    Press_Start_2P, 
+import {
+    Inter,
+    Fleur_De_Leah,
+    Newsreader,
+    Micro_5,
+    Tiny5,
+    Press_Start_2P,
     Jersey_25,
     Jersey_20,
     Jersey_15,
-    Jersey_10
+    Jersey_10,
+    Jacquard_12,
+    Jacquard_24
 } from 'next/font/google';
 
 export const inter = Inter({ subsets: ['latin'] });
@@ -63,6 +65,18 @@ export const jersey_15 = Jersey_15({
 });
 
 export const jersey_10 = Jersey_10({
+    weight: '400',
+    subsets: ['latin'],
+    display: 'swap',
+});
+
+export const jacquard_12 = Jacquard_12({
+    weight: '400',
+    subsets: ['latin'],
+    display: 'swap',
+});
+
+export const jacquard_24 = Jacquard_24({
     weight: '400',
     subsets: ['latin'],
     display: 'swap',
