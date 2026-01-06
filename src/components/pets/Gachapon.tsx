@@ -1065,7 +1065,7 @@ export default function Gachapon() {
                 {/* Game Won Modal */}
                 {gameWon && (
                     <div className={`gachapon-end-screen ${tiny5.className}`}>
-                        <p className="text-center text-[#57280f]">Yippee! You collected all the toys!</p>
+                        <p className="text-center text-[#57280f]">Yippee! You freed them all!</p>
                         <div className="gachapon-controls">
                             <div className="gachapon-input-wrapper">
                                 <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
