@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { cn, formatDate, calculateDuration } from '@/lib/utils';
 import type { Experience, Presentation } from '@/types';
 import { presentations } from '@/data/presentations';
+import { jersey_25 } from '@/lib/fonts';
 
 
 interface ResearchCardProps {
@@ -34,7 +35,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
   return (
     <Card hoverable variant="bordered" className={cn('group', className)}>
       <CardHeader>
-        <div className="text-lg md:text-xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors">
+        <div className={`text-2xl text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors leading-5.5 ${jersey_25.className}`}>
           {research.title}
         </div>
 
@@ -133,7 +134,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
                 <Badge className="flex flex-1 justify-between items-center gap-2 text-xs pl-1 pr-2">
                   <div className="flex items-center gap-2">
                     <span className="whitespace-nowrap bg-white/40 rounded-full px-2">{talk.type}</span>
-                    <span className="whitespace-nowrap">{talk.event.shortLabel || talk.event.label}</span>
+                    <span className="whitespace-nowrap" dangerouslySetInnerHTML={{ __html: talk.event.shortLabel || talk.event.label }} />
                   </div>
                   <MdArrowForward className="w-4 h-4 inline flex-shrink-0" />
                 </Badge>

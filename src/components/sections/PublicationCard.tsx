@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import type { Publication } from '@/types';
 import Link from 'next/link';
 import { VscFilePdf } from 'react-icons/vsc';
-import { newsreader } from '@/lib/fonts';
+import { jersey_25, newsreader } from '@/lib/fonts';
 
 interface PublicationCardProps {
   publication: Publication;
@@ -36,9 +36,9 @@ export function PublicationCard({ publication, className }: PublicationCardProps
     <Card hoverable variant="bordered" className={cn('group', className)}>
       <CardContent>
         <div className="flex items-start gap-3">
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex-1 flex flex-col gap-1.5">
             <div className="flex items-start justify-between gap-4">
-              <span className={`text-lg md:text-xl font-semibold text-slate-700 group-hover:text-[#2D5F3F] transition-colors leading-tight italic ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: publication.title }} />
+              <span className={`text-xl md:text-2xl font-semibold text-slate-700 group-hover:text-[#2D5F3F] transition-colors leading-5.5 ${jersey_25.className}`} dangerouslySetInnerHTML={{ __html: publication.title }} />
               {publication.url && (
                 <Link
                   href={publication.url}
@@ -57,7 +57,7 @@ export function PublicationCard({ publication, className }: PublicationCardProps
               {publication.authors.join(', ')}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C6B5C]">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C6B5C] mt-1.5">
               <Badge variant="outline" className={getTypeColor()} size="sm">
                 {publication.type}
               </Badge>

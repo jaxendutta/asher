@@ -10,7 +10,8 @@ import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Badge } from '@/components/ui/Badge';
 import { formatDate } from '@/lib/utils';
 import type { Education } from '@/types';
-import { MdOutlineArrowOutward } from 'react-icons/md';
+import { MdGrade, MdOutlineArrowOutward } from 'react-icons/md';
+import { jersey_25 } from '@/lib/fonts';
 
 interface EducationCardProps {
   education: Education;
@@ -20,31 +21,32 @@ interface EducationCardProps {
 
 export function EducationCard({ education, className }: EducationCardProps) {
   return (
-    <Card hoverable variant="bordered" className="flex-1 p-4 md:p-6">
+    <Card hoverable variant="bordered" className="flex-1 p-4.5 md:p-6">
       {/* Header */}
       <div className="mb-4">
-        <span className="text-xl md:text-2xl font-semibold text-[#1A3A2A] mb-1">
-          {education.degree} - {education.field}
+        <span className={`text-2xl text-[#1A3A2A] leading-5.5 ${jersey_25.className}`}>
+          {education.degree} [{education.degree_abbr}] - {education.field}
         </span>
-        <div className="text-[#2D5F3F] font-semibold mb-2">
+        <div className={`text-lg text-[#2D5F3F] mb-2 ${jersey_25.className}`}>
           {education.institution}
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs text-[#5C6B5C]">
           <Badge className="flex items-center gap-1 text-xs">
-            <HiCalendar className="w-4 h-4" />
+            <HiCalendar />
             <span>
               {formatDate(education.startDate)} - {formatDate(education.endDate)}
             </span>
           </Badge>
           <Link href={education.location.mapUrl} target="_blank" rel="noopener noreferrer">
             <Badge className="flex items-center gap-1 text-xs">
-              <HiLocationMarker className="w-4 h-4" />
+              <HiLocationMarker />
               <span>{education.location.label}</span>
             </Badge>
           </Link>
           {education.gpa && (
             <Badge className="flex items-center gap-1 text-xs">
+              <MdGrade />
               <span className="font-medium">GPA: {education.gpa}</span>
             </Badge>
           )}
@@ -53,7 +55,7 @@ export function EducationCard({ education, className }: EducationCardProps) {
 
       {/* Thesis */}
       {education.thesis && (
-        <div className="mb-4 p-3 bg-[#F4EBD0]/50 rounded-3xl border border-[#B8D4BE]">
+        <div className="mb-4 p-3 bg-[#F4EBD0]/50 rounded-2xl border border-[#B8D4BE]">
           <div className="text-sm font-semibold text-[#2D5F3F] mb-1">
             Honours Thesis
           </div>
@@ -84,7 +86,7 @@ export function EducationCard({ education, className }: EducationCardProps) {
             Awards + Honours
           </div>
           <div className="flex flex-wrap gap-2">
-            {education.awards.map((award, index) => (
+            {education.awards.sort().reverse().map((award, index) => (
               <Badge key={index} variant="success" size="sm">
                 {award}
               </Badge>

@@ -35,8 +35,8 @@ export const presentations: Record<string, Presentation> = {
   path_2025: {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
     event: {
-      label: '1st Pursuits in Applied and Theoretical Science (PATH) Symposium',
-      shortLabel: '1st PATH Symposium',
+      label: '1<sup>st</sup> Pursuits in Applied and Theoretical Science (PATH) Symposium',
+      shortLabel: '1<sup>st</sup> PATH Symposium',
       url: 'https://uwaterloo.ca/science/events/pursuits-applied-and-theoretical-science-path-symposium'
     },
     host: orgs.UW,

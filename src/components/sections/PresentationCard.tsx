@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import type { Presentation } from '@/types';
 import { VscGlobe, VscFilePdf } from 'react-icons/vsc';
 import { RxVideo } from 'react-icons/rx';
-import { newsreader } from '@/lib/fonts';
+import { jersey_10, jersey_25, newsreader } from '@/lib/fonts';
 
 interface PresentationCardProps {
   talk: Presentation;
@@ -40,9 +40,7 @@ export function PresentationCard({ talk, className }: PresentationCardProps) {
       <CardContent className="pb-2">
         <div className="flex flex-col flex-1">
           <div className="flex flex-row">
-            <span className="text-lg md:text-xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors mb-2">
-              {talk.event.label}
-            </span>
+            <span className={`text-xl md:text-2xl font-semibold text-[#1A3A2A] group-hover:text-[#2D5F3F] transition-colors mb-2 pb-1 leading-5.25 ${jersey_25.className}`} dangerouslySetInnerHTML={{ __html: talk.event.label }} />
             <div className="ml-auto flex flex-row flex-shrink-0 justify-center">
               {talk.event.url && <Link href={talk.event.url} className="flex-shrink-0 p-1 text-[#5C6B5C] hover:text-[#2D5F3F] transition-colors" target="_blank" rel="noopener noreferrer" aria-label="View event">
                 <VscGlobe className="w-6 h-6" />
@@ -61,7 +59,7 @@ export function PresentationCard({ talk, className }: PresentationCardProps) {
 
           {/* Talk Title and Description */}
           <div className="flex flex-col gap-2">
-            <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors italic ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
+            <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors italic leading-tight ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
             {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
               {talk.description}
             </p>)}
