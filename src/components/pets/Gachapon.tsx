@@ -46,6 +46,7 @@ export default function Gachapon() {
     const [isSeeThrough, setIsSeeThrough] = useState(false);
     const [isShaking, setIsShaking] = useState(false);
     const [capsulesReady, setCapsulesReady] = useState(false);
+    const [buttonIcon, setButtonIcon] = useState<{ toy: string, color: string } | null>(null);
 
     // --- Refs ---
     const requestRef = useRef<number>(0);
@@ -343,9 +344,19 @@ export default function Gachapon() {
         return e.type[0] === 'm' ? e[`page${type}`] : e.touches[0][`page${type}`];
     }
 
+    // Initialize Physics Once on Mount
+    useEffect(() => {
+        initPhysics();
+        setButtonIcon({
+            toy: TOY_TYPES[randomN(TOY_TYPES.length) - 1],
+            color: BASE_COLORS[randomN(BASE_COLORS.length) - 1]
+        });
+    }, [initPhysics]);
+
+    // Animation Loop Control based on visibility
     useEffect(() => {
         if (!isOpen) {
-            setCapsulesReady(false);
+            cancelAnimationFrame(requestRef.current);
             return;
         }
 
@@ -404,7 +415,6 @@ export default function Gachapon() {
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('touchmove', handleMouseMove);
 
-        initPhysics();
         requestRef.current = requestAnimationFrame(animate);
 
         return () => {
@@ -418,37 +428,63 @@ export default function Gachapon() {
             window.removeEventListener('touchmove', handleMouseMove);
             cancelAnimationFrame(requestRef.current);
         };
-    }, [isOpen, initPhysics, openFlap, closeFlap]);
+    }, [isOpen, openFlap, closeFlap]);
 
     return (
         <>
             <style>{`
                 /* Toggle */
                 .gachapon-toggle {
-                    width: 60px; height: 60px;
+                    width: 60px;
+                    height: 60px;
                     border-radius: 50%;
                     border: 3px solid #fff;
                     cursor: pointer;
-                    display: flex; flex-direction: column;
-                    align-items: center; justify-content: center;
+                    display: flex; 
+                    flex-direction: column;
+                    align-items: center; 
+                    justify-content: center;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
                     transition: transform 0.2s;
-                    background-color: #ff3636;
+                    background-color: #e291ecff;
+                    background-size: 100%;
                     image-rendering: pixelated;
-                    gap: 0;
+                    position: relative;
+                    overflow: hidden;
                 }
                 .gachapon-toggle:hover { transform: scale(1.05); }
-                .gachapon-toggle::before {
-                    content: ''; display: block;
-                    width: 30px; height: 15px;
-                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgABAAAAAICAYAAADwdn+XAAAAAXNSR0IArs4c6QAAADlJREFUKFNjZEAD/////48uhsxnZGRkROHDODCN6ApwWQBTBzYNpJmQRmwGgfQwkqMZ2dWjBvz/DwCs+Tv1GZ2dFQAAAABJRU5ErkJggg==);
-                    background-size: 30px 15px; image-rendering: pixelated;
+                
+                .gachapon-toggle .mini-capsule {
+                    position: relative;
+                    width: 32px;
+                    height: 32px;
+                    transform: rotate(15deg);
+                    animation: float-icon 3s ease-in-out infinite;
                 }
-                .gachapon-toggle::after {
-                    content: ''; display: block;
-                    width: 30px; height: 15px;
-                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgABAAAAAICAYAAADwdn+XAAAAAXNSR0IArs4c6QAAADBJREFUKFNj/G9m9p+BAsA4agADIyj8yA0HxlOnGMEGkGMISDNIH9wAYg2CaYSpBwAEFBgbcBUePAAAAABJRU5ErkJggg==);
-                    background-size: 30px 15px; image-rendering: pixelated;
+                
+                @keyframes float-icon {
+                    0%, 100% { transform: rotate(15deg) translateY(2px); }
+                    50% { transform: rotate(15deg) translateY(-2px); }
+                }
+
+                .gachapon-toggle .mini-capsule .lid,
+                .gachapon-toggle .mini-capsule .base {
+                    position: absolute;
+                    width: 32px; height: 16px;
+                    background-size: 32px 16px !important;
+                    left: 0;
+                }
+                .gachapon-toggle .mini-capsule .lid { top: 0; z-index: 2; }
+                .gachapon-toggle .mini-capsule .base { bottom: 0; z-index: 2; }
+                
+                .gachapon-toggle .mini-capsule .toy {
+                    position: absolute;
+                    width: 24px;
+                    height: 24px;
+                    background-size: 24px 24px !important;
+                    top: 4px;
+                    left: 4px;
+                    z-index: 1;
                 }
 
                 /* Layout */
@@ -457,6 +493,7 @@ export default function Gachapon() {
                     width: 320px;
                     display: flex; flex-direction: column; align-items: center;
                     transform: scale(0.8);
+                    z-index: 60; /* Higher than lock hue */
                 }
                 @media(min-width: 640px) { .machine-wrapper { transform: scale(1); } }
 
@@ -468,7 +505,7 @@ export default function Gachapon() {
                     width: 320px; height: 64px;
                 }
 
-                /* Machine Body - NO border radius for pixel look */
+                /* Machine Body */
                 .capsule-machine {
                     position: relative;
                     width: 320px; height: 500px; 
@@ -505,7 +542,7 @@ export default function Gachapon() {
                     width: 100%; height: 100%;
                     background-color: #fab2cc;
                     opacity: 0.8;
-                    z-index: 50;
+                    z-index: 50; /* Behind machine (60) but above everything else */
                     pointer-events: none;
                     transition: opacity 0.3s;
                 }
@@ -548,7 +585,7 @@ export default function Gachapon() {
 
                 /* Enlarge Animation */
                 .capsule-wrapper.enlarge {
-                    z-index: 60 !important; /* Above pink hue */
+                    z-index: 70 !important; /* Above machine */
                     transition: 0.8s;
                     pointer-events: none;
                 }
@@ -695,103 +732,117 @@ export default function Gachapon() {
                 }
             `}</style>
 
-            <div className="fixed bottom-5 right-5 z-[9998]">
-                {!isOpen && (
+            {/* Toggle Button */}
+            {!isOpen && (
+                <div className="fixed bottom-2 right-2 md:bottom-3 md:right-3 z-[9998]">
                     <button
                         className="gachapon-toggle"
                         onClick={() => setIsOpen(true)}
                         aria-label="Open Gachapon"
-                    />
-                )}
-            </div>
-
-            {isOpen && (
-                <div
-                    className="fixed inset-0 flex justify-center items-center z-[9999] bg-black/60 backdrop-blur-[4px]"
-                    onClick={() => setIsOpen(false)}
-                >
-                    {/* Pink Locked Hue Overlay (Full Screen) */}
-                    {isLocked && <div className="fullscreen-lock" />}
-
-                    <div
-                        className={`machine-wrapper`}
-                        ref={wrapperRef}
-                        onClick={(e) => e.stopPropagation()}
                     >
-                        <button className={`close-btn ${press_start_2p.className}`} onClick={() => setIsOpen(false)}>
-                            <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
-                        </button>
-
-                        <div className="toy-box" ref={toyBoxRef} />
-
-                        <div
-                            className={`capsule-machine pix ${isShaking ? 'shake' : ''} ${isSeeThrough ? 'see-through' : ''}`}
-                            ref={machineRef}
-                        >
-                            {/* Capsules Render */}
-                            {capsulesReady && capsules.current.map((c, i) => (
-                                <div
-                                    key={c.id}
-                                    className="capsule-wrapper"
-                                    ref={el => { capsuleRefs.current[i] = el; }}
-                                    onClick={() => handleCapsuleClick(i)}
-                                >
-                                    <div className="capsule">
-                                        <div className="lid" />
-                                        <div
-                                            className={`toy ${c.toyType}`}
-                                            ref={el => { toyRefs.current[i] = el; }}
-                                        />
-                                        <div className={`base ${c.baseColor}`} />
-                                    </div>
-                                </div>
-                            ))}
-
-                            {/* Internal Lines */}
-                            {lines.current.map((line, i) => (
-                                <React.Fragment key={line.id}>
-                                    <div
-                                        className="line-start"
-                                        ref={el => { lineStartRefs.current[i] = el; }}
-                                    >
-                                        <div
-                                            className="line"
-                                            ref={el => { lineRefs.current[i] = el; }}
-                                        />
-                                    </div>
-                                    <div
-                                        className="line-end"
-                                        ref={el => { lineEndRefs.current[i] = el; }}
-                                    />
-                                </React.Fragment>
-                            ))}
-
-                            {/* Covers (Transparent Interactions) */}
-                            <div className="cover a" />
-                            <div className="cover b" />
-                            <div className="cover c" />
-                            <div className="cover d" />
-                            <div className="cover e" />
-                            {/* Removed cover.white to allow hole visibility */}
-
-                            <div className="circle" ref={circleRef}>
-                                <div className="handle" ref={handleRef} />
+                        {buttonIcon && (
+                            <div className="mini-capsule">
+                                <div className="lid" />
+                                <div className={`toy ${buttonIcon.toy}`} />
+                                <div className={`base ${buttonIcon.color}`} />
                             </div>
-                        </div>
-
-                        {/* Controls moved outside machine */}
-                        <div className="button-wrapper">
-                            <button className={`machine-btn ${press_start_2p.className}`} onClick={shake}>SHAKE</button>
-                            <button
-                                className={`machine-btn ${press_start_2p.className}`}
-                                onClick={() => setIsSeeThrough(!isSeeThrough)}
-                            >
-                                {isSeeThrough ? 'HIDE' : 'PEEK'}
-                            </button>
-                        </div>
-                    </div>
+                        )}
+                    </button>
                 </div>
             )}
+
+            {/* Modal / Game Area - Always rendered but toggled via CSS for persistence */}
+            <div
+                className={`fixed inset-0 flex justify-center items-center z-[9999] transition-all duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                style={{
+                    backgroundColor: isOpen ? 'rgba(0, 0, 0, 0.6)' : 'transparent',
+                    backdropFilter: isOpen ? 'blur(4px)' : 'none'
+                }}
+                onClick={() => setIsOpen(false)}
+            >
+                {/* Pink Locked Hue Overlay (Full Screen) - Z-Index 50 (Behind Machine) */}
+                <div
+                    className="fullscreen-lock"
+                    style={{ opacity: isLocked ? 0.8 : 0 }}
+                />
+
+                <div
+                    className={`machine-wrapper`}
+                    ref={wrapperRef}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <button className={`close-btn ${press_start_2p.className}`} onClick={() => setIsOpen(false)}>
+                        <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
+                    </button>
+
+                    <div className="toy-box" ref={toyBoxRef} />
+
+                    <div
+                        className={`capsule-machine pix ${isShaking ? 'shake' : ''} ${isSeeThrough ? 'see-through' : ''}`}
+                        ref={machineRef}
+                    >
+                        {/* Capsules Render */}
+                        {capsulesReady && capsules.current.map((c, i) => (
+                            <div
+                                key={c.id}
+                                className="capsule-wrapper"
+                                ref={el => { capsuleRefs.current[i] = el; }}
+                                onClick={() => handleCapsuleClick(i)}
+                            >
+                                <div className="capsule">
+                                    <div className="lid" />
+                                    <div
+                                        className={`toy ${c.toyType}`}
+                                        ref={el => { toyRefs.current[i] = el; }}
+                                    />
+                                    <div className={`base ${c.baseColor}`} />
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Internal Lines */}
+                        {lines.current.map((line, i) => (
+                            <React.Fragment key={line.id}>
+                                <div
+                                    className="line-start"
+                                    ref={el => { lineStartRefs.current[i] = el; }}
+                                >
+                                    <div
+                                        className="line"
+                                        ref={el => { lineRefs.current[i] = el; }}
+                                    />
+                                </div>
+                                <div
+                                    className="line-end"
+                                    ref={el => { lineEndRefs.current[i] = el; }}
+                                />
+                            </React.Fragment>
+                        ))}
+
+                        {/* Covers (Transparent Interactions) */}
+                        <div className="cover a" />
+                        <div className="cover b" />
+                        <div className="cover c" />
+                        <div className="cover d" />
+                        <div className="cover e" />
+
+                        <div className="circle" ref={circleRef}>
+                            <div className="handle" ref={handleRef} />
+                        </div>
+                    </div>
+
+                    {/* Controls */}
+                    <div className="button-wrapper">
+                        <button className={`machine-btn ${press_start_2p.className}`} onClick={shake}>SHAKE</button>
+                        <button
+                            className={`machine-btn ${press_start_2p.className}`}
+                            onClick={() => setIsSeeThrough(!isSeeThrough)}
+                        >
+                            {isSeeThrough ? 'HIDE' : 'PEEK'}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }
