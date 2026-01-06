@@ -656,7 +656,7 @@ export default function Gachapon() {
                     flex-direction: column;
                     align-items: center; 
                     justify-content: center;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                     transition: transform 0.2s;
                     background-color: #ffdf85ff;
                     background-size: 100%;
