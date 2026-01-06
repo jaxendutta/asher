@@ -592,12 +592,6 @@ export default function Gachapon() {
                     gap: 15px;
                     z-index: 1000;
                     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-                    animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                }
-                
-                @keyframes pop-in {
-                    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
                 }
 
                 .gachapon-controls {
