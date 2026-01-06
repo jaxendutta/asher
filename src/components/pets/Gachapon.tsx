@@ -363,6 +363,18 @@ export default function Gachapon() {
         });
     }, [initPhysics]);
 
+    // Prevent scrolling when game is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
     // Animation Loop Control based on visibility
     useEffect(() => {
         if (!isOpen) {
