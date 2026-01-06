@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { tiny5 } from '@/lib/fonts';
+import { tiny5, press_start_2p } from '@/lib/fonts';
 
 // --- Types ---
 
@@ -366,9 +366,11 @@ export default function Gachapon() {
         }, 1800);
     };
 
-    const getPage = (e: MouseEvent | TouchEvent, type: 'X' | 'Y') => {
+    // Use Client coordinates (viewport) instead of Page coordinates (document)
+    // This fixes issues when the page is scrolled.
+    const getClient = (e: MouseEvent | TouchEvent, type: 'X' | 'Y') => {
         // @ts-expect-error - unified touch/mouse
-        return e.type[0] === 'm' ? e[`page${type}`] : e.touches[0][`page${type}`];
+        return e.type[0] === 'm' ? e[`client${type}`] : e.touches[0][`client${type}`];
     }
 
     // Initialize Physics Once on Mount
@@ -407,7 +409,8 @@ export default function Gachapon() {
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            const mousePos = { x: getPage(e, 'X'), y: getPage(e, 'Y') };
+            // Use client coordinates
+            const mousePos = { x: getClient(e, 'X'), y: getClient(e, 'Y') };
             settings.current.handleDeg = radToDeg(angleTo(mousePos, { x: centerX, y: centerY }));
             settings.current.handleRotate = 0;
         };
@@ -426,7 +429,8 @@ export default function Gachapon() {
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            const mousePos = { x: getPage(e, 'X'), y: getPage(e, 'Y') };
+            // Use client coordinates
+            const mousePos = { x: getClient(e, 'X'), y: getClient(e, 'Y') };
             settings.current.handleDeg = radToDeg(angleTo(mousePos, { x: centerX, y: centerY }));
 
             const diff = settings.current.handleDeg - settings.current.prevHandleDeg;
