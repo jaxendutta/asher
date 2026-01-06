@@ -444,11 +444,11 @@ const ClawMachine: React.FC = () => {
         if (!isOpen) return;
         const handleDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowRight") handleHoriPress();
-            if (e.key === "ArrowDown") handleVertPress();
+            if (e.key === "ArrowUp") handleVertPress();
         };
         const handleUp = (e: KeyboardEvent) => {
             if (e.key === "ArrowRight") handleHoriRelease();
-            if (e.key === "ArrowDown") handleVertRelease();
+            if (e.key === "ArrowUp") handleVertRelease();
         };
         window.addEventListener('keydown', handleDown);
         window.addEventListener('keyup', handleUp);
@@ -611,7 +611,7 @@ const ClawMachine: React.FC = () => {
                 }
 
                 /* Force Z-Index High for Buttons */
-                claw-button.pix {
+                .claw-button.pix {
                     position: absolute;
                     z-index: 5000000000 !important; 
                     width: 48px; height: 48px; margin: 12px 24px 0 0;
@@ -620,8 +620,8 @@ const ClawMachine: React.FC = () => {
                     background-size: 48px 48px; filter: sepia(1) brightness(0.4);
                     pointer-events: none; cursor: pointer; display: inline-block;
                 }
-                claw-button.hori-btn { transform: rotate(90deg); }
-                claw-button.active { animation: pulse infinite 1s; pointer-events: auto; filter: none; cursor: pointer; }
+                .claw-button.hori-btn { transform: rotate(90deg); }
+                .claw-button.active { animation: pulse infinite 1s; pointer-events: auto; filter: none; cursor: pointer; }
                 @keyframes pulse { 0%, 100% { filter: sepia(0); } 50% { filter: sepia(1); } }
 
                 .toy { position: absolute; pointer-events: none; transition: transform 1s; }
