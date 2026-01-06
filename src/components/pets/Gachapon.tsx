@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { press_start_2p } from '@/lib/fonts';
 
 // --- Types ---
@@ -661,34 +662,36 @@ export default function Gachapon() {
                 /* Action Buttons */
                 .button-wrapper {
                     margin-top: 20px; /* Space below machine */
-                    display: flex; gap: 10px;
+                    display: flex; 
+                    gap: 10px;
+                    justify-content: space-between;
+                    width: 100%;
                     z-index: 30;
                 }
                 .machine-btn {
-                    border: 2px solid black;
                     background-color: white;
                     padding: 10px 20px;
                     font-size: 12px;
                     cursor: pointer;
                     color: black;
-                    box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
                     text-transform: uppercase;
-                    font-family: inherit;
                 }
                 .machine-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
                 
                 .close-btn {
                     position: absolute;
-                    top: -50px; right: -50px;
+                    top: 0px;
+                    right: -50px;
                     background: white;
                     border: none;
-                    width: 40px; height: 40px;
-                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     cursor: pointer;
                     z-index: 100;
-                    font-weight: bold;
-                    font-size: 1.2rem;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+                    font-size: 1.4rem;
                 }
             `}</style>
 
@@ -715,7 +718,9 @@ export default function Gachapon() {
                         ref={wrapperRef}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <button className={`close-btn ${press_start_2p.className}`} onClick={() => setIsOpen(false)}>X</button>
+                        <button className={`close-btn ${press_start_2p.className}`} onClick={() => setIsOpen(false)}>
+                            <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
+                        </button>
 
                         <div className="toy-box" ref={toyBoxRef} />
 
