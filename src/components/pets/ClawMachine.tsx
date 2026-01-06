@@ -461,19 +461,23 @@ const ClawMachine: React.FC = () => {
     return (
         <>
             <style jsx>{`
-                * { box-sizing: border-box; }
-                .pix, .pix::before, .pix::after { image-rendering: pixelated; }
+                .pix, .pix::before, .pix::after {
+                    image-rendering: pixelated; 
+                }
+
                 .pix::before, .pix::after { position: absolute; content: ''; }
 
                 .claw-wrapper {
-                    position: fixed; bottom: 15px; left: 15px; z-index: 99999; pointer-events: auto;
+                    position: fixed; bottom: 15px; left: 15px; z-index: 999; pointer-events: auto;
                 }
+
                 .claw-toggle {
                     width: 60px; height: 60px; border-radius: 50%; border: 3px solid #fff;
                     cursor: pointer; display: flex; align-items: center; justify-content: center;
                     background-color: #84dfe2; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
                     transition: transform 0.2s; pointer-events: auto;
                 }
+
                 .claw-toggle:hover { transform: scale(1.05); }
 
                 .claw-modal {
@@ -481,6 +485,7 @@ const ClawMachine: React.FC = () => {
                     display: flex; justify-content: center; align-items: center; z-index: 100000;
                     animation: fadeIn 0.3s forwards;
                 }
+
                 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
                 .close-btn {
@@ -492,6 +497,7 @@ const ClawMachine: React.FC = () => {
                 .collection-box {
                     width: ${MACHINE_WIDTH}px; height: 64px; margin: -74px 0 24px; display: flex; align-items: end; justify-content: start;
                 }
+                
                 .collection-box .toy-wrapper {
                     position: relative; width: calc(100% / 6); display: flex; align-items: end; justify-content: center;
                 }
