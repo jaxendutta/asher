@@ -423,6 +423,9 @@ export default function Gachapon() {
         const handleMouseMove = (e: any) => {
             if (!settings.current.isTurningHandle || settings.current.isHandleLocked || !circleRef.current || !handleRef.current) return;
 
+            // Prevent default behavior (scrolling) during drag
+            if (e.cancelable) e.preventDefault();
+
             settings.current.prevHandleDeg = settings.current.handleDeg;
 
             const rect = circleRef.current.getBoundingClientRect();
@@ -455,8 +458,10 @@ export default function Gachapon() {
         }
         window.addEventListener('mouseup', handleMouseUp);
         window.addEventListener('touchend', handleMouseUp);
+
+        // Passive false required for preventDefault on touchmove
         window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('touchmove', handleMouseMove);
+        window.addEventListener('touchmove', handleMouseMove, { passive: false });
 
         requestRef.current = requestAnimationFrame(animate);
 
@@ -701,6 +706,7 @@ export default function Gachapon() {
                     display: flex; flex-direction: column; align-items: center;
                     transform: scale(0.8);
                     z-index: 60; /* Higher than lock hue */
+                    touch-action: none; /* Prevents scroll gestures on the machine */
                 }
                 @media(min-width: 640px) { .machine-wrapper { transform: scale(1); } }
 
@@ -751,6 +757,7 @@ export default function Gachapon() {
                     z-index: 50; /* Behind machine (60) but above everything else */
                     pointer-events: none;
                     transition: opacity 0.3s, background-color 0.3s;
+                    touch-action: none; /* Prevents scroll gestures on the background hue */
                 }
 
                 /* Capsules */
@@ -865,8 +872,8 @@ export default function Gachapon() {
                     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAQJJREFUWEft2e0NAiEMBmAZRCfQIXRwHUIn0EG8YFJSsUD5CLSx98vkIPfkhdij53Yd1/H6fHOmPy4HxxlHjameiFH385713NPtFcbVYtlAgHFRKTlgudAicBQsBnOhWaDH9SZW2gMemkszCZyBA3wOSQJn4krIH+AKXA75BVyJSyH1ACWkR6UYEhQNlISLU/wkaMBSOSHuw5+3k5geXmYDNqxumOKX2RK0BHsS6J1re/A/ErRa3LjOoRarSFAaEh9DdbxRwzaR8OoVH+L1nOokpEi1QPS1PlYkWd08molsbr9hpP89uk84pIGJq9SoTisXBs8utoDjUiq2iU7V/BmfITaUSgYmL25tRwAAAABJRU5ErkJggg==);
                     background-size: 160px 160px;
                     image-rendering: pixelated;
-                    /* Removed scale(0.8) to make it bigger */
                     transform-origin: bottom left;
+                    touch-action: none; /* Prevents scroll gestures on the circle */
                 }
                 .circle::after {
                     position: absolute;
@@ -882,6 +889,7 @@ export default function Gachapon() {
                     position: relative;
                     width: 160px; height: 50px;
                     cursor: pointer;
+                    touch-action: none; /* Prevents scroll gestures on the handle */
                 }
                 .handle::after {
                     position: absolute;
@@ -925,7 +933,9 @@ export default function Gachapon() {
                     position: absolute;
                     top: 0px;
                     right: -50px;
-                    background: white;
+                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAQJJREFUWEft2e0NAiEMBmAZRCfQIXRwHUIn0EG8YFJSsUD5CLSx98vkIPfkhdij53Yd1/H6fHOmPy4HxxlHjameiFH385713NPtFcbVYtlAgHFRKTlgudAicBQsBnOhWaDH9SZW2gMemkszCZyBA3wOSQJn4krIH+AKXA75BVyJSyH1ACWkR6UYEhQNlISLU/wkaMBSOSHuw5+3k5geXmYDNqxumOKX2RK0BHsS6J1re/A/ErRa3LjOoRarSFAaEh9DdbxRwzaR8OoVH+L1nOokpEi1QPS1PlYkWd08molsbr9hpP89uk84pIGJq9SoTisXBs8utoDjUiq2iU7V/BmfITaUSgYmL25tRwAAAABJRU5ErkJggg==);
+                    background-size: 40px 40px;
+                    image-rendering: pixelated;
                     border: none;
                     width: 40px;
                     height: 40px;
