@@ -43,6 +43,7 @@ const BASE_COLORS = ['red', 'pink', 'white', 'blue'];
 export default function Gachapon() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
+    const [lockColor, setLockColor] = useState('#fab2cc'); // Default pink
     const [isSeeThrough, setIsSeeThrough] = useState(false);
     const [isShaking, setIsShaking] = useState(false);
     const [capsulesReady, setCapsulesReady] = useState(false);
@@ -308,6 +309,15 @@ export default function Gachapon() {
 
         if (!el || !wrapperRef.current || !machineRef.current || !toyBoxRef.current || !toy) return;
 
+        // Set the background hue based on capsule color
+        const colors: Record<string, string> = {
+            red: '#ff5e5e',
+            pink: '#fab2cc',
+            white: '#f0f0f0',
+            blue: '#63b3ed'
+        };
+        setLockColor(colors[c.baseColor] || '#fab2cc');
+
         setIsLocked(true);
         c.selected = true;
 
@@ -446,7 +456,7 @@ export default function Gachapon() {
                     justify-content: center;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
                     transition: transform 0.2s;
-                    background-color: #e291ecff;
+                    background-color: #ffdf85ff;
                     background-size: 100%;
                     image-rendering: pixelated;
                     position: relative;
@@ -540,11 +550,10 @@ export default function Gachapon() {
                     position: fixed;
                     top: 0; left: 0;
                     width: 100%; height: 100%;
-                    background-color: #fab2cc;
                     opacity: 0.8;
                     z-index: 50; /* Behind machine (60) but above everything else */
                     pointer-events: none;
-                    transition: opacity 0.3s;
+                    transition: opacity 0.3s, background-color 0.3s;
                 }
 
                 /* Capsules */
@@ -763,7 +772,10 @@ export default function Gachapon() {
                 {/* Pink Locked Hue Overlay (Full Screen) - Z-Index 50 (Behind Machine) */}
                 <div
                     className="fullscreen-lock"
-                    style={{ opacity: isLocked ? 0.8 : 0 }}
+                    style={{
+                        opacity: isLocked ? 0.8 : 0,
+                        backgroundColor: lockColor
+                    }}
                 />
 
                 <div
