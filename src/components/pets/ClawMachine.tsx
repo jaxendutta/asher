@@ -495,7 +495,7 @@ const ClawMachine: React.FC = () => {
 
                 /* Inventory */
                 .collection-box {
-                    width: ${MACHINE_WIDTH}px; height: 64px; margin: -74px 0 24px; display: flex; align-items: end; justify-content: start;
+                    width: ${MACHINE_WIDTH}px; height: 64px; margin: -108px 0 32px; display: flex; align-items: end; justify-content: start;
                 }
                 
                 .collection-box .toy-wrapper {
