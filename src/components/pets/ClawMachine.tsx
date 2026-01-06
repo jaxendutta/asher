@@ -515,7 +515,7 @@ const ClawMachine: React.FC = () => {
                 }
                 /* Brown Bar */
                 .box::before {
-                    background-color: #57280f; top: ${MACHINE_TOP_HEIGHT}px; width: 100%; height: 16px; z-index: 21;
+                    background-color: #57280f; top: ${MACHINE_TOP_HEIGHT}px; width: 100%; height: 16px; z-index: 25;
                 }
                 /* Right Bar */
                 .box::after {
