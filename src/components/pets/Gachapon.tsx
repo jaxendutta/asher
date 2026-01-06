@@ -77,7 +77,7 @@ export default function Gachapon() {
     ]);
 
     const settings = useRef({
-        capsuleNo: 2,
+        capsuleNo: 20,
         isTurningHandle: false,
         isHandleLocked: false,
         handleDeg: 0,
@@ -472,8 +472,8 @@ export default function Gachapon() {
 
     // Confetti Effect
     useEffect(() => {
-        if (confettiActive && wrapperRef.current) {
-            const confettiCount = 250;
+        if (confettiActive) {
+            const confettiCount = 500;
             const colors = ['#FFD700', '#FF69B4', '#00CED1', '#FF6347', '#32CD32', '#FF1493', '#FFA500', '#9370DB', '#00FF00', '#FF0080'];
             const confettiElements: HTMLDivElement[] = [];
 
@@ -482,7 +482,7 @@ export default function Gachapon() {
                 confetti.className = 'gachapon-confetti';
 
                 // Random position and color
-                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.left = `${Math.random() * 100}vw`;
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
                 // Random Size
@@ -491,19 +491,19 @@ export default function Gachapon() {
                 confetti.style.height = `${Math.random() > 0.5 ? size : size * 1.5}px`;
 
                 // Animation props
-                confetti.style.animationDelay = `${Math.random() * 1}s`;
-                confetti.style.animationDuration = `${2.5 + Math.random() * 2}s`;
-                confetti.style.setProperty('--drift', `${(Math.random() - 0.5) * 400}px`);
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                confetti.style.animationDuration = `${3 + Math.random() * 3}s`;
+                confetti.style.setProperty('--drift', `${(Math.random() - 0.5) * 500}px`);
                 confetti.style.setProperty('--rotation', `${Math.random() * 720 - 360}deg`);
 
-                wrapperRef.current.appendChild(confetti);
+                document.body.appendChild(confetti);
                 confettiElements.push(confetti);
             }
 
             const timeout = setTimeout(() => {
                 confettiElements.forEach(el => el.remove());
                 setConfettiActive(false);
-            }, 6000);
+            }, 7000);
 
             return () => {
                 clearTimeout(timeout);
@@ -554,9 +554,9 @@ export default function Gachapon() {
             <style>{`
                 /* Confetti */
                 .gachapon-confetti {
-                    position: absolute;
-                    top: -20px;
-                    z-index: 9999;
+                    position: fixed;
+                    top: -50px;
+                    z-index: 100000;
                     pointer-events: none;
                     animation: gachapon-fall ease-in forwards;
                     image-rendering: pixelated;
@@ -569,7 +569,7 @@ export default function Gachapon() {
                         opacity: 1;
                     }
                     100% {
-                        transform: translateY(600px) translateX(var(--drift)) rotate(var(--rotation)) scale(0.8);
+                        transform: translateY(110vh) translateX(var(--drift)) rotate(var(--rotation)) scale(0.8);
                         opacity: 0;
                     }
                 }
@@ -1055,28 +1055,27 @@ export default function Gachapon() {
                 </div>
 
                 {/* Game Won Modal */}
-                    {gameWon && (
-                        <div className={`gachapon-end-screen ${tiny5.className}`}>
-                            <p className="text-center text-[#57280f]">Yippee! You collected all the toys!</p>
-
-                            <div className="gachapon-controls">
-                                <div className="gachapon-input-wrapper">
-                                    <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
-                                    <input
-                                        className="gachapon-input"
-                                        type="number"
-                                        value={inputCapsuleCount}
-                                        onChange={handleInputChange}
-                                        min={1}
-                                        max={20}
-                                        onClick={(e) => e.stopPropagation()}
-                                    />
-                                    <button className="gachapon-arrow-btn" onClick={handleIncrement}>&gt;</button>
-                                </div>
-                                <button className="gachapon-play-btn" onClick={handleRestart}>PLAY AGAIN</button>
+                {gameWon && (
+                    <div className={`gachapon-end-screen ${tiny5.className}`}>
+                        <p className="text-center text-[#57280f]">Yippee! You collected all the toys!</p>
+                        <div className="gachapon-controls">
+                            <div className="gachapon-input-wrapper">
+                                <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
+                                <input
+                                    className="gachapon-input"
+                                    type="number"
+                                    value={inputCapsuleCount}
+                                    onChange={handleInputChange}
+                                    min={1}
+                                    max={20}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                <button className="gachapon-arrow-btn" onClick={handleIncrement}>&gt;</button>
                             </div>
+                            <button className="gachapon-play-btn" onClick={handleRestart}>PLAY AGAIN</button>
                         </div>
-                    )}
+                    </div>
+                )}
             </div>
         </>
     );
