@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { press_start_2p } from '@/lib/fonts';
+import { tiny5 } from '@/lib/fonts';
 
 // --- Types ---
 
@@ -43,11 +43,16 @@ const BASE_COLORS = ['red', 'pink', 'white', 'blue'];
 export default function Gachapon() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
-    const [lockColor, setLockColor] = useState('#fab2cc'); // Default pink
+    const [lockColor, setLockColor] = useState('#fab2cc');
     const [isSeeThrough, setIsSeeThrough] = useState(false);
     const [isShaking, setIsShaking] = useState(false);
     const [capsulesReady, setCapsulesReady] = useState(false);
     const [buttonIcon, setButtonIcon] = useState<{ toy: string, color: string } | null>(null);
+
+    // Game End State
+    const [gameWon, setGameWon] = useState(false);
+    const [confettiActive, setConfettiActive] = useState(false);
+    const [inputCapsuleCount, setInputCapsuleCount] = useState(20);
 
     // --- Refs ---
     const requestRef = useRef<number>(0);
@@ -72,7 +77,7 @@ export default function Gachapon() {
     ]);
 
     const settings = useRef({
-        capsuleNo: 20,
+        capsuleNo: 2,
         isTurningHandle: false,
         isHandleLocked: false,
         handleDeg: 0,
@@ -105,6 +110,10 @@ export default function Gachapon() {
     const initPhysics = useCallback(() => {
         const width = 320;
         const height = 500;
+
+        // Reset refs
+        capsuleRefs.current = [];
+        toyRefs.current = [];
 
         capsules.current = Array.from({ length: settings.current.capsuleNo }).map((_, i) => ({
             id: i,
@@ -346,6 +355,14 @@ export default function Gachapon() {
 
             el.style.transform = `translate(${px(destX)}, ${px(destY)})`;
             settings.current.collectedNo++;
+
+            // Win Condition
+            if (settings.current.collectedNo >= settings.current.capsuleNo) {
+                setTimeout(() => {
+                    setGameWon(true);
+                    setConfettiActive(true);
+                }, 500);
+            }
         }, 1800);
     };
 
@@ -452,9 +469,179 @@ export default function Gachapon() {
         };
     }, [isOpen, openFlap, closeFlap]);
 
+
+    // Confetti Effect
+    useEffect(() => {
+        if (confettiActive && wrapperRef.current) {
+            const confettiCount = 250;
+            const colors = ['#FFD700', '#FF69B4', '#00CED1', '#FF6347', '#32CD32', '#FF1493', '#FFA500', '#9370DB', '#00FF00', '#FF0080'];
+            const confettiElements: HTMLDivElement[] = [];
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'gachapon-confetti';
+
+                // Random position and color
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                // Random Size
+                const size = 8 + Math.random() * 8;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${Math.random() > 0.5 ? size : size * 1.5}px`;
+
+                // Animation props
+                confetti.style.animationDelay = `${Math.random() * 1}s`;
+                confetti.style.animationDuration = `${2.5 + Math.random() * 2}s`;
+                confetti.style.setProperty('--drift', `${(Math.random() - 0.5) * 400}px`);
+                confetti.style.setProperty('--rotation', `${Math.random() * 720 - 360}deg`);
+
+                wrapperRef.current.appendChild(confetti);
+                confettiElements.push(confetti);
+            }
+
+            const timeout = setTimeout(() => {
+                confettiElements.forEach(el => el.remove());
+                setConfettiActive(false);
+            }, 6000);
+
+            return () => {
+                clearTimeout(timeout);
+                confettiElements.forEach(el => el.remove());
+            };
+        }
+    }, [confettiActive]);
+
+
+    // Restart Handlers
+    const handleIncrement = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setInputCapsuleCount(prev => Math.min(50, prev + 1));
+    };
+
+    const handleDecrement = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setInputCapsuleCount(prev => Math.max(1, prev - 1));
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = parseInt(e.target.value);
+        if (!isNaN(val)) {
+            setInputCapsuleCount(Math.max(1, Math.min(50, val)));
+        }
+    };
+
+    const handleRestart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        // Reset Logic
+        settings.current.capsuleNo = inputCapsuleCount;
+        settings.current.collectedNo = 0;
+        setGameWon(false);
+        setConfettiActive(false);
+
+        // Unmount capsules to force clear "collected/open" classes
+        setCapsulesReady(false);
+
+        // Re-init physics on next tick
+        setTimeout(() => {
+            initPhysics();
+        }, 50);
+    };
+
     return (
         <>
             <style>{`
+                /* Confetti */
+                .gachapon-confetti {
+                    position: absolute;
+                    top: -20px;
+                    z-index: 9999;
+                    pointer-events: none;
+                    animation: gachapon-fall ease-in forwards;
+                    image-rendering: pixelated;
+                    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+                }
+
+                @keyframes gachapon-fall {
+                    0% {
+                        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(600px) translateX(var(--drift)) rotate(var(--rotation)) scale(0.8);
+                        opacity: 0;
+                    }
+                }
+
+                /* End Screen Modal */
+                .gachapon-end-screen {
+                    position: absolute;
+                    bottom: 20px;
+                    background-color: #fff;
+                    border: 3px solid #57280f;
+                    border-radius: 12px;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 15px;
+                    z-index: 1000;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                    animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                
+                @keyframes pop-in {
+                    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                }
+
+                .gachapon-controls {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                
+                .gachapon-input-wrapper {
+                    display: flex;
+                    align-items: center;
+                    border: 2px solid #57280f;
+                    border-radius: 4px;
+                    overflow: hidden;
+                    background-color: #fff;
+                }
+                
+                .gachapon-arrow-btn {
+                    background-color: #e6dcc8;
+                    border: none;
+                    color: #57280f;
+                    padding: 3px 12px;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    display: flex; align-items: center; justify-content: center;
+                }
+                .gachapon-arrow-btn:hover { background-color: #c3ac83; color: #fff; }
+                
+                .gachapon-input {
+                    border: none;
+                    width: 50px;
+                    text-align: center;
+                    color: #57280f;
+                    font-size: 1.2rem;
+                    outline: none;
+                }
+                
+                .gachapon-play-btn {
+                    border: 0;
+                    padding: 7px 16px;
+                    color: #fff;
+                    background-color: #57280f;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    text-transform: uppercase;
+                }
+                .gachapon-play-btn:hover { background-color: #7a3e1a; }
+
                 /* Toggle */
                 .gachapon-toggle {
                     width: 60px;
@@ -728,8 +915,8 @@ export default function Gachapon() {
                 }
                 .machine-btn {
                     background-color: white;
-                    padding: 10px 20px;
-                    font-size: 12px;
+                    padding: 6px 12px;
+                    font-size: 1.2rem;
                     cursor: pointer;
                     color: black;
                     text-transform: uppercase;
@@ -795,7 +982,7 @@ export default function Gachapon() {
                     ref={wrapperRef}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <button className={`close-btn ${press_start_2p.className}`} onClick={() => setIsOpen(false)}>
+                    <button className="close-btn" onClick={() => setIsOpen(false)}>
                         <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
                     </button>
 
@@ -857,15 +1044,39 @@ export default function Gachapon() {
 
                     {/* Controls */}
                     <div className="button-wrapper">
-                        <button className={`machine-btn ${press_start_2p.className}`} onClick={shake}>SHAKE</button>
+                        <button className={`machine-btn ${tiny5.className}`} onClick={shake}>SHAKE</button>
                         <button
-                            className={`machine-btn ${press_start_2p.className}`}
+                            className={`machine-btn ${tiny5.className}`}
                             onClick={() => setIsSeeThrough(!isSeeThrough)}
                         >
                             {isSeeThrough ? 'HIDE' : 'PEEK'}
                         </button>
                     </div>
                 </div>
+
+                {/* Game Won Modal */}
+                    {gameWon && (
+                        <div className={`gachapon-end-screen ${tiny5.className}`}>
+                            <p className="text-center text-[#57280f]">Yippee! You collected all the toys!</p>
+
+                            <div className="gachapon-controls">
+                                <div className="gachapon-input-wrapper">
+                                    <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
+                                    <input
+                                        className="gachapon-input"
+                                        type="number"
+                                        value={inputCapsuleCount}
+                                        onChange={handleInputChange}
+                                        min={1}
+                                        max={20}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                    <button className="gachapon-arrow-btn" onClick={handleIncrement}>&gt;</button>
+                                </div>
+                                <button className="gachapon-play-btn" onClick={handleRestart}>PLAY AGAIN</button>
+                            </div>
+                        </div>
+                    )}
             </div>
         </>
     );
