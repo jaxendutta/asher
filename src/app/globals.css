@@ -23,34 +23,41 @@
 }
 
 html {
-  min-height: 100vh;
+  min-height: 100dvh;
   scroll-behavior: smooth;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  background-image: url('/tilesets/grass_tile.jpg');
-  background-repeat: repeat;
-  background-size: 300px 180px;
-  /* No background-attachment: fixed needed; the element itself is fixed */
-  
-  /* Ensure it covers safe areas */
-  pointer-events: none;
+  background: transparent;
+  overflow-x: hidden; 
 }
 
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   background-color: transparent;
   color: var(--color-charcoal);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  /* Stretch the background well beyond the screen edges */
+  top: -50dvh;
+  left: -50dvw;
+  width: 200dvw;
+  height: 200dvh;
+  z-index: -1;
+  
+  background-image: url('/tilesets/grass_tile.jpg');
+  background-repeat: repeat;
+  background-size: 300px 180px;
+  
+  /* Prevent interaction */
+  pointer-events: none;
+  
+  /* Ensure it doesn't cause scrollbars */
+  transform: translateZ(0); /* Hardware acceleration helpful for fixed bg */
 }
 
 /* Custom scrollbar */
