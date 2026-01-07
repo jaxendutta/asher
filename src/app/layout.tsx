@@ -9,6 +9,7 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://asher.anirban.ca'),
   title: 'Asher Kim',
   description: 'Portfolio of Asher Kim, specializing in plant biology and molecular research.',
   icons: {
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Asher Kim',
     description: 'Portfolio of Asher Kim, specializing in plant biology and molecular research.',
-    url: 'https://asherk.vercel.app',
+    url: 'https://asher.anirban.ca',
     siteName: 'Asher Kim',
     images: [
       {
