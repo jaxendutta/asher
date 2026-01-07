@@ -39,7 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col relative z-10">
         {/* Header */}
         <Header />
 
