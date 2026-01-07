@@ -25,7 +25,7 @@
 html {
   min-height: 100dvh;
   scroll-behavior: smooth;
-  background: transparent;
+  background-color: #7ac755;
 }
 
 body {
@@ -41,23 +41,16 @@ body {
 body::before {
   content: "";
   position: fixed;
-  /* Center the oversized background */
-  top: -50vh;
-  left: -50vw;
-  width: 200vw;
-  height: 200vh;
-  
-  /* Remove z-index: -1. 
-     As a ::before element, it is the first child of body, 
-     so it naturally sits behind the content (which comes after). */
-  
+  top: -50dvh;
+  left: -50dvw;
+  width: 200dvw;
+  height: 200dvh;
+  z-index: -1;
   background-image: url('/tilesets/grass_tile.jpg');
   background-repeat: repeat;
   background-size: 300px 180px;
-  
   pointer-events: none;
   transform: translateZ(0);
-  will-change: transform; /* Helps with mobile performance */
 }
 
 /* Custom scrollbar */
