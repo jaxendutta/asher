@@ -439,19 +439,30 @@ export default function Bear() {
                 /* Sparkle Effect - Real Element for iOS Safety */
                 .bear-sparkle {
                     position: absolute;
-                    width: 40px; height: 40px;
-                    --bg: ${SPARKLE_BG};
-                    border-image: var(--bg) 5 fill / 20px / 0 stretch;
+                    width: 32px; height: 32px;
+                    /* Using background-image instead of border-image for better iOS support */
+                    background-image: ${SPARKLE_BG};
+                    background-size: 100% 100%;
                     image-rendering: pixelated;
+                    transform: translate3d(0,0,0);                    
                     animation: bear-sparkle 0.5s forwards;
                     pointer-events: none;
-                    top: -10px; left: -10px;
-                    z-index: 60;
+                    top: -8px; left: -8px;
+                    z-index: 100;
+                    will-change: transform, opacity;
                 }
-                @keyframes bear-sparkle {
-                    0% { width: 40px; height: 40px; transform: translate(16px, 4px); }
-                    95% { width: 80px; height: 80px; transform: translate(-2px, -10px); opacity: 1; }
-                    100% { opacity: 0; }
+               @keyframes bear-sparkle {
+                    0% { 
+                        transform: translate3d(16px, 4px, 0) scale(1); 
+                    }
+                    50% { 
+                        transform: translate3d(-2px, -10px, 0) scale(1.5); 
+                        opacity: 1; 
+                    }
+                    100% { 
+                        transform: translate3d(-2px, -10px, 0) scale(1);
+                        opacity: 0; 
+                    }
                 }
 
                 /* Crumbs */
