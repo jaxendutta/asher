@@ -30,6 +30,9 @@ export const metadata: Metadata = {
       },
     ],
   },
+  other: {
+    "theme-color": "#7ac755",
+  },
 };
 
 export default function RootLayout({
@@ -39,7 +42,31 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="min-h-screen flex flex-col relative z-10">
+      <body className="min-h-screen flex flex-col relative">
+
+        {/* =========================================================
+            THE FIXED BACKGROUND LAYER
+            - Fixed position: Stays put when scrolling
+            - Inset -50vh: Oversized by 50% to cover ALL white bars
+            - z-[-1]: Stays behind everything
+            - pointer-events-none: You can click through it
+           ========================================================= */}
+        <div
+          style={{
+            position: 'fixed',
+            top: '-50vh',
+            left: '-50vw',
+            width: '200vw',
+            height: '200vh',
+            zIndex: -1,
+            backgroundImage: "url('/tilesets/grass_tile.jpg')",
+            backgroundRepeat: 'repeat',
+            backgroundSize: '300px 180px',
+            pointerEvents: 'none',
+            transform: 'translateZ(0)', // iOS Hardware Acceleration
+          }}
+        />
+
         {/* Header */}
         <Header />
 
