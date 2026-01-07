@@ -548,7 +548,7 @@ export default function CatChat() {
                                 onClick={handleClose}
                                 aria-label="Close chat"
                             >
-                                <Image src={"/images/icons/cross.svg"} alt="Close" width={40} height={40} style={{ filter: 'brightness(0) invert(1)' }} />
+                                <Image src={"/icons/cross.svg"} alt="Close" width={40} height={40} style={{ filter: 'brightness(0) invert(1)' }} />
                             </button>
                         </div>
 

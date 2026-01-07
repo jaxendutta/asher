@@ -992,7 +992,7 @@ export default function Gachapon() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button className="close-btn" onClick={() => setIsOpen(false)}>
-                            <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
+                            <Image src="/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
                         </button>
 
                         <div className="toy-box" ref={toyBoxRef} />

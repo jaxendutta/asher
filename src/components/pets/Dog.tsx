@@ -656,7 +656,7 @@ const Dog: React.FC = () => {
                     </div>
                 </div>
                 <Image
-                    src="/images/objects/dog_bone.svg"
+                    src="/objects/dog_bone.svg"
                     alt="Dog Bone"
                     width={50}
                     height={50}

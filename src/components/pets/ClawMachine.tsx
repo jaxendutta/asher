@@ -684,7 +684,7 @@ const ClawMachine: React.FC = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }} onClick={e => e.stopPropagation()}>
 
                         <button className="close-btn" onClick={() => setIsOpen(false)}>
-                            <Image src="/images/icons/cross.svg" alt="Close" width={48} height={48} />
+                            <Image src="/icons/cross.svg" alt="Close" width={48} height={48} />
                         </button>
 
                         <div className="collection-box pix">

@@ -234,7 +234,7 @@ const Cat: React.FC = () => {
         <>
             {/* Cat tree in bottom right corner */}
             <Image
-                src="/images/objects/cat_tree.png"
+                src="/objects/cat_tree.png"
                 alt="Cat Tree"
                 className="fixed bottom-2 right-0 z-40 pointer-events-none brightness-105"
                 width={105}

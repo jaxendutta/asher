@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   title: 'Asher Kim',
   description: 'Portfolio of Asher Kim, specializing in plant biology and molecular research.',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/images/favicon.png',
-    apple: '/images/favicon.png',
+    icon: '/brand/favicon.ico',
+    shortcut: '/brand/favicon.png',
+    apple: '/brand/favicon.png',
   },
   openGraph: {
     title: 'Asher Kim',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: 'Asher Kim',
     images: [
       {
-        url: '/images/og.png',
+        url: '/brand/og.png',
         alt: 'Asher Kim',
       },
     ],
