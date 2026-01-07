@@ -2,6 +2,7 @@ import { Section } from '@/components/ui/Section';
 import { PresentationCard } from '@/components/sections/PresentationCard';
 import { presentations } from '@/data/presentations';
 import Gachapon from '@/components/pets/Gachapon';
+import Bear from '@/components/pets/Bear';
 // import ClawMachine from '@/components/pets/ClawMachine';
 
 export default function PresentationsPage() {
@@ -22,6 +23,8 @@ export default function PresentationsPage() {
             ))}
           </div>
         </Section>
+
+        <Bear />
       </div>
     </>
   );
