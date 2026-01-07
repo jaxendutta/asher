@@ -7,12 +7,11 @@
 import Link from 'next/link';
 import { SITECONFIG } from '@/data/siteConfig';
 import { jacquard_24, jersey_10, jersey_25 } from '@/lib/fonts';
-import { HiArrowRight } from 'react-icons/hi';
 import { Button } from '@/components/ui/Button';
 
 export function Hero() {
   return (
-    <div className={`${jersey_10.className} z-10 max-w-5xl mx-auto px-4 sm:px-16 lg:px-24 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE] flex flex-col gap-4`}>
+    <div className={`${jersey_10.className} z-10 max-w-5xl mx-auto px-4 sm:px-16 lg:px-24 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE] flex flex-col gap-4 self-center`}>
       {/* Main heading with animation */}
       <div className={`animate-fadeIn text-[#1A3A2A] flex flex-col animate-fadeIn ${jersey_10.className}`} style={{ animationDelay: '0.2s' }}>
         <span className="text-lg sm:text-xl md:text-2xl">WELCOME TO</span>
