@@ -36,7 +36,6 @@ const DONUT_STAGES = [
 export default function Bear() {
     const [isEating, setIsEating] = useState(false);
     const [isGrowing, setIsGrowing] = useState(false);
-    const [isCheekShrink, setIsCheekShrink] = useState(false);
     const [foodEatenLevel, setFoodEatenLevel] = useState(0);
     const [showMessage, setShowMessage] = useState(true);
     const [bearSize, setBearSize] = useState<Size>({ w: 70, h: 90 });
@@ -74,7 +73,6 @@ export default function Bear() {
             };
             dragRef.current.foodPos = { ...dragRef.current.startPos };
 
-            // Initial position update
             if (foodRef.current) {
                 foodRef.current.style.transform = `translate(${px(dragRef.current.foodPos.x)}, ${px(dragRef.current.foodPos.y)})`;
             }
@@ -202,22 +200,20 @@ export default function Bear() {
             eatTimerRef.current = null;
         }
 
-        setIsGrowing(true);
         setIsEating(false);
+        setIsGrowing(true); // Hides donut, triggers cheek shrink
 
-        // Reset Food Logic after animation
-        setTimeout(() => {
-            setIsCheekShrink(true);
-            setTimeout(() => {
-                setIsCheekShrink(false);
-                resetFood();
-            }, 1000);
-        }, 1000);
+        // Trigger bear expansion simultaneously with cheek shrink
+        setBearSize(prev => ({ w: prev.w + 20, h: prev.h + 10 }));
 
+        // Reset food IMMEDIATELY while it is hidden
+        // This prevents the "ghost piece" from appearing at the old location
+        resetFood();
+
+        // Wait for animations (approx 0.5s transition + buffer)
         setTimeout(() => {
-            setBearSize(prev => ({ w: prev.w + 20, h: prev.h + 10 }));
-            setIsGrowing(false);
-        }, 1500);
+            setIsGrowing(false); // Show fresh donut (triggers sparkle)
+        }, 600);
     };
 
     const resetFood = () => {
@@ -230,8 +226,7 @@ export default function Bear() {
             const xPos = width / 2 - 36;
 
             dragRef.current.foodPos = { x: xPos, y: yPos };
-            // Note: We don't update style here directly because element might be unmounted.
-            // The style prop on the re-mounted div will handle it.
+            // Style update will happen on re-mount or we can force it here just in case it's visible (it shouldn't be)
         }
     };
 
@@ -367,12 +362,9 @@ export default function Bear() {
                     50% { width: 40px; height: 40px; }
                 }
                 
+                /* Synced Shrink Animation */
                 .bear-character.grow .bear-cheek {
-                     width: 40px; height: 40px;
-                     animation: none;
-                }
-                .bear-character.cheek-shrink .bear-cheek {
-                    animation: bear-cheek-shrink 0.4s forwards;
+                     animation: bear-cheek-shrink 0.5s forwards;
                 }
                 @keyframes bear-cheek-shrink {
                     0% { width: 40px; height: 40px; }
@@ -482,7 +474,7 @@ export default function Bear() {
             {/* The Bear */}
             <div
                 ref={bearRef}
-                className={`bear-character bear-object ${isEating ? 'eating' : ''} ${isGrowing ? 'grow' : ''} ${isCheekShrink ? 'cheek-shrink' : ''} flex-none`}
+                className={`bear-character bear-object ${isEating ? 'eating' : ''} ${isGrowing ? 'grow' : ''} flex-none`}
                 style={{
                     '--w': px(bearSize.w),
                     '--h': px(bearSize.h),
