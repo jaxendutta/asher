@@ -74,6 +74,7 @@ export default function Bear() {
             };
             dragRef.current.foodPos = { ...dragRef.current.startPos };
 
+            // Initial position update
             if (foodRef.current) {
                 foodRef.current.style.transform = `translate(${px(dragRef.current.foodPos.x)}, ${px(dragRef.current.foodPos.y)})`;
             }
@@ -229,9 +230,8 @@ export default function Bear() {
             const xPos = width / 2 - 36;
 
             dragRef.current.foodPos = { x: xPos, y: yPos };
-            if (foodRef.current) {
-                foodRef.current.style.transform = `translate(${px(xPos)}, ${px(yPos)})`;
-            }
+            // Note: We don't update style here directly because element might be unmounted.
+            // The style prop on the re-mounted div will handle it.
         }
     };
 
@@ -443,8 +443,8 @@ export default function Bear() {
                 .bear-donut-4 { background-image: ${DONUT_STAGES[4]}; }
                 .bear-donut-5 { background-image: ${DONUT_STAGES[5]}; }
 
-                /* Sparkle Effect */
-                .bear-character.grow::after {
+                /* Sparkle Effect - Applied to the donut (which respawns) */
+                .bear-donut::after {
                     position: absolute;
                     content: '';
                     width: 40px; height: 40px;
@@ -453,6 +453,7 @@ export default function Bear() {
                     image-rendering: pixelated;
                     animation: bear-sparkle 0.5s forwards;
                     pointer-events: none;
+                    top: -10px; left: -10px;
                 }
                 @keyframes bear-sparkle {
                     0% { width: 40px; height: 40px; transform: translate(16px, 4px); }
@@ -530,6 +531,9 @@ export default function Bear() {
                 <div
                     ref={foodRef}
                     className={`bear-food ${foodEatenLevel === 0 ? 'bear-donut' : `bear-donut-${foodEatenLevel}`}`}
+                    style={{
+                        transform: `translate(${px(dragRef.current.foodPos.x)}, ${px(dragRef.current.foodPos.y)})`
+                    }}
                     onPointerDown={handlePointerDown}
                 />
             )}
