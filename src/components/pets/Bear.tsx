@@ -27,7 +27,7 @@ const SPARKLE_BG = "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCA
 const DONUT_STAGES = [
     "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAAXNSR0IArs4c6QAAAVJJREFUOE9jZCAAwjX4/+NTsvLGR0Z88lglkQ0tjQ1nMLazxWlGRGoOXA6bZSgWwAwGGUosQLYcZhmyRXALQIaTYjA2B8AsA1kEswRsATUMR7YQZBHMErAFZ1rT8EbkrdtXsIaYmqoOzpAEWcJoG8vIiM/1uAxGNxWbRTBf4LSge/FKBn8LbbhZOk5WKOZe2XcMzt944ioDtvgDmYHTApgLQKZUV6ViDYrWttlg8RWzpzCcPXQYQw1eC0CqkVMFNhtABoMANsNB4nALQEFBKMKwWYDLYJBaUPyBgg4cRMhhjc8iYjIfcsIAWwDS9PfFrv8rKxrg+sm1BNnw8I4GBmYJN0Z4Rlt2YDUDsiUw2whZhi0pgwyPcggF52aUogJkCQhgs4iY4AEZDAIww0FsrIUdzCJiLIMZCjMYrAepCCdYXCNbhs0XINfCAMHiGpsBlFY4AGg4nGHeibMpAAAAAElFTkSuQmCC)",
     "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAAXNSR0IArs4c6QAAAWBJREFUOE+dlbFKA0EQhm/xAWx9ASVgOhsJJEgKW6twIqRMZxsQ06SJCLZ2KQXJYWVrIaIgNnYRRF/ANg8QIv/CP8yds3trtko2O983O7s7cVniyBubK2tp8blwMUT0RwYCPptem5zjwanMW7JkwbCfm4K9TlvmKdOiWgGyD8GrRsogoiQq+A9cyyCixAt4gHprGv71PTfLs7PdDJ4vJK7dd06Drm4KH8CShMBVqiXiLkoCHQjZ0f6uTDW7rRJ3/vgq3+/fPiSpKiMoYAYIGJ0PzFJMLqZ+Hlf4/fnlzxokGRRgtb4VloFvw4JjvQhQiroDswQhMNbi/FA6vwNd65gopavoi+EFCFr+PKyKs7HEryvR8PxynG1sHTp5B7dPd5mW0FYns64y4CcHPf+a5SWjVJBgWKKU8gCMQTg+l1oFXzRFKTJCCfYxqoWbvUj3fi2zdoFsOdZq16E/mhhUJ/ILNpijYV616soAAAAASUVORK5CYII=)",
-    "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABtJREFUOE9jZKAxYKSG+eEa/P9B5qy88RHDPIotABm+YvYUsDsjUnPANLJFZFkAczHIsNLYcHggGNvZwi2CWUKSBTCDkQ3FFsQgi0C+AVlCtAUgw/0ttFHMU1PVwRmFIEsYbWOJswCb4cgmY7MI5guifLAsweq/jpMVimuv7DsG5288cRUlLmAS3YtXMoAtwJbMkCOyuioVa1C0ts0Gi4NS0dlDhzHUgC0AGQSLNJAADIDEkFMFNhtgyROb4SD1cAtAkUcowrBZgMtgkNpbt68wgIIO7APk1IHPImJyPchgGABbAOL8fbHr/8qKBrgEuZYgGx7e0cDALOEGSaYgXyw7sJoB2RKYbYQsQzYUpgdkeJRDKGpGg1kCLkuQfENMsCAbDGLDDAexUfIBLGmCfAMDhCwDuRYGQAaDHYhUqmLNaMh5ANkybL6BGYpuMEwtwZyMbBk2C7DVAcjqADiOkGEeg4/IAAAAAElFTkSuQmCC)", // Repaired/Placeholder for stage 2
+    "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAAXNSR0IArs4c6QAAAVtJREFUOE9jZKAxYKSG+eEa/P9B5qy88RHDPIotABm+YvYUsDsjUnPANLJFZFkAczHIsNLYcHggGNvZwi2CWUKSBTCDkQ3FFsQgi0C+AVlCtAUgw/0ttFHMU1PVwRmFIEsYbWOJswCb4cgmY7MI5guifLAsweq/jpMVimuv7DsG5288cRUlLmAS3YtXMoAtwJbMkCOyuioVa1C0ts0Gi4NS0dlDhzHUgC0AGQSLNJAADIDEkFMFNhtgyROb4SD1cAtAkUcowrBZgMtgkNpbt68wgIIO7APk1IHPImJyPchgGABbAOL8fbHr/8qKBrgEuZYgGx7e0cDALOEGSaYgXyw7sJoB2RKYbYQsQzYUpgdkeJRDKGpGg1kCLkuQfENMsCAbDGLDDAexUfIBLGmCfAMDhCwDuRYGQAaDHYhUqmLNaMh5ANkybL6BGYpuMEwtwZyMbBk2C7DVAcjqADiOkGEeg4/IAAAAAElFTkSuQmCC)",
     "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAAXNSR0IArs4c6QAAARFJREFUOE9jZKAxYKSG+eEa/P9B5qy88RHDPIotABm+YvYUsDsjUnPANLJFZFsAc3VpbDg8EIztbOEWwSwhywKQ4cgGowczyCKQb0CWkGXBsgQrcJirqergjEKQJYy2saRbADMc2WRsFsF8QbIPLi0qAbv+yr5jcDs2nrjKgC3IuhevZCDbApDprW2zwZaAUtHZQ4cxgossC2CpB2YwiMZmOEicZAuQ0zw+g0Fyt25fYQAFHdFBRChpwsIHZDAMUN0CZMPDOxoYmCXciE+muHyAbCjM5SDDoxxCic9oIMP9LbQJlosgg0EAZjiITVQc4LMAZijMYJILO5Dhyw6sxul6kGthgOziGjnto9uEzVBkNQCDSHph6/HU2wAAAABJRU5ErkJggg==)",
     "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAAXNSR0IArs4c6QAAAO1JREFUOE9jZKAxYKSx+QxUsyBcg/8/zLErb3yEm0uxBTCDS2PDGYztbMF2RKTmMMAsocgCkOEgg9EByCKYJRRZcKY1DR4s2CxhtI1lJNuCZQlWcMPVVHVw+oIqFmw8cZUBW1B1L15Jfiq6tKjkf2vbbLDLV8yewnD20GEMX1BkASiCQQaDADbDQeJkWwAzHJfBIMNv3b7CAAo6suIAV/KEGQwLK6pbAHI1DIR3NDAwS7iRn0xhvkA2FNnwKIdQcG4mK4jgBmnw//e30EZxNYgDMxzEptiCZQdWwy0AGQwCNCns0A2G2UqRD4ipSwCm6mlhhOrUsgAAAABJRU5ErkJggg==)",
     "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAAXNSR0IArs4c6QAAAIpJREFUOE9jZKAxYKSx+QyjFhAMYaoH0ZnWtP/di1eCLV554yMjVS0AGQ7zkrGdLUNEag71IhnZcJglIJ9QxQf/Dy/+f/bQYYz4oJoF4Rr8/0tjw+lrwa3bVxg2nrhKnSACOR0WByCDYYCqFoCCyd9CG8VwqidTkCUwG0CGg9hUSUX4svOoBQQLOwA+szZhNsKHIwAAAABJRU5ErkJggg==)"
@@ -47,6 +47,9 @@ export default function Bear() {
     const bearRef = useRef<HTMLDivElement>(null);
     const mouthRef = useRef<HTMLDivElement>(null);
     const foodRef = useRef<HTMLDivElement>(null);
+
+    // Counter for unique keys
+    const crumbIdCounter = useRef(0);
 
     // Mutable state for the loop
     const dragRef = useRef({
@@ -121,13 +124,6 @@ export default function Bear() {
         if (foodRef.current) {
             foodRef.current.style.cursor = 'grab';
         }
-
-        // Stop eating if we let go and aren't fully consumed? 
-        // Logic says we stop eating if distance > 50, which is handled in checkCollision loop mostly.
-        if (!isEating) {
-            // Optional: Snap back if not eating?
-            // For now, let it stay where dropped like original
-        }
     };
 
     const checkCollision = useCallback(() => {
@@ -136,7 +132,6 @@ export default function Bear() {
         const mouthRect = mouthRef.current.getBoundingClientRect();
         const foodRect = foodRef.current.getBoundingClientRect();
 
-        // Calculate center distances
         const mouthCenter = {
             x: mouthRect.left + mouthRect.width / 2,
             y: mouthRect.top + mouthRect.height / 2
@@ -168,17 +163,19 @@ export default function Bear() {
             setFoodEatenLevel(prev => {
                 const next = prev + 1;
 
-                // Spawn Crumb
-                const crumbId = Date.now();
+                // Spawn Crumb with Unique ID
+                crumbIdCounter.current += 1;
+                const newId = crumbIdCounter.current;
+
                 setCrumbs(c => [...c, {
-                    id: crumbId,
+                    id: newId,
                     x: dragRef.current.foodPos.x + Math.random() * 40,
                     y: dragRef.current.foodPos.y + Math.random() * 40
                 }]);
 
                 // Remove crumb after animation
                 setTimeout(() => {
-                    setCrumbs(c => c.filter(x => x.id !== crumbId));
+                    setCrumbs(c => c.filter(x => x.id !== newId));
                 }, 1000);
 
                 if (next >= 5) {
@@ -228,7 +225,6 @@ export default function Bear() {
         // Reset Position
         if (containerRef.current) {
             const { width, height } = containerRef.current.getBoundingClientRect();
-            // Original logic: height - (height > 400 ? 200 : 100)
             const yPos = height - (height > 400 ? 200 : 100);
             const xPos = width / 2 - 36;
 
@@ -256,7 +252,7 @@ export default function Bear() {
                     content: 'drag the donut and feed the bear';
                     top: 20px;
                     font-style: italic;
-                    color: #57280f; /* Changed to brown for visibility on white bg */
+                    color: #57280f;
                     font-size: 1.2em;
                     z-index: 10;
                     opacity: 0.8;
@@ -276,10 +272,17 @@ export default function Bear() {
                 /* Bear Styles */
                 .bear-character {
                     position: relative;
-                    /* Using dynamic w/h from styles prop */
+                    /* Map CSS vars to component state for stable animation */
+                    width: var(--w);
+                    height: var(--h);
+                    
                     --bg: ${BEAR_BG};
                     border-image: var(--bg) 5 fill / 12px / 0 stretch;
                     transition: width 0.5s, height 0.5s;
+                    
+                    /* Prevent flex child from stretching weirdly */
+                    flex-shrink: 0;
+                    flex-grow: 0;
                 }
 
                 .bear-ears {
@@ -309,10 +312,9 @@ export default function Bear() {
                 }
 
                 @keyframes bear-face-eat {
-                    0%, 100% { top: 22px; } /* adjusted for face pos */
+                    0%, 100% { top: 22px; }
                     50% { top: 24px; }
                 }
-                /* Ears sync */
                 @keyframes bear-ears-eat {
                     0%, 100% { top: -14px; }
                     50% { top: -16px; }
@@ -320,7 +322,6 @@ export default function Bear() {
                 .bear-character.eating .bear-ears {
                     animation: bear-ears-eat infinite 0.4s;
                 }
-
 
                 .bear-inner-face {
                     width: 100%;
@@ -355,11 +356,10 @@ export default function Bear() {
                     height: 0;
                 }
                 .bear-cheek {
-                    width: 0; height: 0; /* Hidden by default */
+                    width: 0; height: 0;
                 }
-                /* Animate cheeks when eating */
                 .bear-character.eating .bear-cheek {
-                    animation: bear-cheek-eat infinite 0.4s; /* sync with eat */
+                    animation: bear-cheek-eat infinite 0.4s;
                     animation-play-state: running;
                 }
                 @keyframes bear-cheek-eat {
@@ -367,7 +367,6 @@ export default function Bear() {
                     50% { width: 40px; height: 40px; }
                 }
                 
-                /* Growing State Cheek Animation */
                 .bear-character.grow .bear-cheek {
                      width: 40px; height: 40px;
                      animation: none;
@@ -482,11 +481,11 @@ export default function Bear() {
             {/* The Bear */}
             <div
                 ref={bearRef}
-                className={`bear-character bear-object ${isEating ? 'eating' : ''} ${isGrowing ? 'grow' : ''} ${isCheekShrink ? 'cheek-shrink' : ''}`}
+                className={`bear-character bear-object ${isEating ? 'eating' : ''} ${isGrowing ? 'grow' : ''} ${isCheekShrink ? 'cheek-shrink' : ''} flex-none`}
                 style={{
-                    width: px(bearSize.w),
-                    height: px(bearSize.h),
-                }}
+                    '--w': px(bearSize.w),
+                    '--h': px(bearSize.h),
+                } as React.CSSProperties}
             >
                 <div className="bear-ears">
                     <div className="bear-inner-ears">
