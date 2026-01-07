@@ -26,6 +26,7 @@ html {
   min-height: 100svh;
   scroll-behavior: smooth;
   background-color: #7ac755;
+  overscroll-behavior-y: none;
 }
 
 body {
