@@ -967,124 +967,126 @@ export default function Gachapon() {
                 </div>
             )}
 
-            {/* Modal / Game Area - Always rendered but toggled via CSS for persistence */}
-            <div
-                className={`fixed inset-0 flex justify-center items-center z-[9999] transition-all duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-                style={{
-                    backgroundColor: isOpen ? 'rgba(0, 0, 0, 0.6)' : 'transparent',
-                    backdropFilter: isOpen ? 'blur(4px)' : 'none'
-                }}
-                onClick={() => setIsOpen(false)}
-            >
-                {/* Pink Locked Hue Overlay (Full Screen) - Z-Index 50 (Behind Machine) */}
+            {/* Modal / Game Area - Only rendered when open */}
+            {isOpen && (
                 <div
-                    className="fullscreen-lock"
+                    className="fixed inset-0 flex justify-center items-center z-[9999] transition-all duration-300 opacity-100 pointer-events-auto"
                     style={{
-                        opacity: isLocked ? 0.8 : 0,
-                        backgroundColor: lockColor
+                        backgroundColor: isOpen ? 'rgba(0, 0, 0, 0.6)' : 'transparent',
+                        backdropFilter: isOpen ? 'blur(4px)' : 'none'
                     }}
-                />
-
-                <div
-                    className={`machine-wrapper`}
-                    ref={wrapperRef}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={() => setIsOpen(false)}
                 >
-                    <button className="close-btn" onClick={() => setIsOpen(false)}>
-                        <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
-                    </button>
-
-                    <div className="toy-box" ref={toyBoxRef} />
+                    {/* Pink Locked Hue Overlay (Full Screen) - Z-Index 50 (Behind Machine) */}
+                    <div
+                        className="fullscreen-lock"
+                        style={{
+                            opacity: isLocked ? 0.8 : 0,
+                            backgroundColor: lockColor
+                        }}
+                    />
 
                     <div
-                        className={`capsule-machine pix ${isShaking ? 'shake' : ''} ${isSeeThrough ? 'see-through' : ''}`}
-                        ref={machineRef}
+                        className={`machine-wrapper`}
+                        ref={wrapperRef}
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Capsules Render */}
-                        {capsulesReady && capsules.current.map((c, i) => (
-                            <div
-                                key={c.id}
-                                className="capsule-wrapper"
-                                ref={el => { capsuleRefs.current[i] = el; }}
-                                onClick={() => handleCapsuleClick(i)}
-                            >
-                                <div className="capsule">
-                                    <div className="lid" />
-                                    <div
-                                        className={`toy ${c.toyType}`}
-                                        ref={el => { toyRefs.current[i] = el; }}
-                                    />
-                                    <div className={`base ${c.baseColor}`} />
-                                </div>
-                            </div>
-                        ))}
-
-                        {/* Internal Lines */}
-                        {lines.current.map((line, i) => (
-                            <React.Fragment key={line.id}>
-                                <div
-                                    className="line-start"
-                                    ref={el => { lineStartRefs.current[i] = el; }}
-                                >
-                                    <div
-                                        className="line"
-                                        ref={el => { lineRefs.current[i] = el; }}
-                                    />
-                                </div>
-                                <div
-                                    className="line-end"
-                                    ref={el => { lineEndRefs.current[i] = el; }}
-                                />
-                            </React.Fragment>
-                        ))}
-
-                        {/* Covers (Transparent Interactions) */}
-                        <div className="cover a" />
-                        <div className="cover b" />
-                        <div className="cover c" />
-                        <div className="cover d" />
-                        <div className="cover e" />
-
-                        <div className="circle" ref={circleRef}>
-                            <div className="handle" ref={handleRef} />
-                        </div>
-                    </div>
-
-                    {/* Controls */}
-                    <div className="button-wrapper">
-                        <button className={`machine-btn ${tiny5.className}`} onClick={shake}>SHAKE</button>
-                        <button
-                            className={`machine-btn ${tiny5.className}`}
-                            onClick={() => setIsSeeThrough(!isSeeThrough)}
-                        >
-                            {isSeeThrough ? 'HIDE' : 'PEEK'}
+                        <button className="close-btn" onClick={() => setIsOpen(false)}>
+                            <Image src="/images/icons/cross.svg" alt="Close" width={36} height={36} className="stroke-black" />
                         </button>
-                    </div>
-                </div>
 
-                {/* Game Won Modal */}
-                {gameWon && (
-                    <div className={`gachapon-end-screen ${tiny5.className}`}>
-                        <p className="text-center text-[#57280f]">Yippee! You freed them all!</p>
-                        <div className="gachapon-controls">
-                            <div className="gachapon-input-wrapper">
-                                <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
-                                <input
-                                    className="gachapon-input"
-                                    type="number"
-                                    value={inputCapsuleCount}
-                                    onChange={handleInputChange}
-                                    min={1}
-                                    max={20}
-                                    onClick={(e) => e.stopPropagation()}
-                                />
-                                <button className="gachapon-arrow-btn" onClick={handleIncrement}>&gt;</button>
+                        <div className="toy-box" ref={toyBoxRef} />
+
+                        <div
+                            className={`capsule-machine pix ${isShaking ? 'shake' : ''} ${isSeeThrough ? 'see-through' : ''}`}
+                            ref={machineRef}
+                        >
+                            {/* Capsules Render */}
+                            {capsulesReady && capsules.current.map((c, i) => (
+                                <div
+                                    key={c.id}
+                                    className="capsule-wrapper"
+                                    ref={el => { capsuleRefs.current[i] = el; }}
+                                    onClick={() => handleCapsuleClick(i)}
+                                >
+                                    <div className="capsule">
+                                        <div className="lid" />
+                                        <div
+                                            className={`toy ${c.toyType}`}
+                                            ref={el => { toyRefs.current[i] = el; }}
+                                        />
+                                        <div className={`base ${c.baseColor}`} />
+                                    </div>
+                                </div>
+                            ))}
+
+                            {/* Internal Lines */}
+                            {lines.current.map((line, i) => (
+                                <React.Fragment key={line.id}>
+                                    <div
+                                        className="line-start"
+                                        ref={el => { lineStartRefs.current[i] = el; }}
+                                    >
+                                        <div
+                                            className="line"
+                                            ref={el => { lineRefs.current[i] = el; }}
+                                        />
+                                    </div>
+                                    <div
+                                        className="line-end"
+                                        ref={el => { lineEndRefs.current[i] = el; }}
+                                    />
+                                </React.Fragment>
+                            ))}
+
+                            {/* Covers (Transparent Interactions) */}
+                            <div className="cover a" />
+                            <div className="cover b" />
+                            <div className="cover c" />
+                            <div className="cover d" />
+                            <div className="cover e" />
+
+                            <div className="circle" ref={circleRef}>
+                                <div className="handle" ref={handleRef} />
                             </div>
-                            <button className="gachapon-play-btn" onClick={handleRestart}>PLAY AGAIN</button>
+                        </div>
+
+                        {/* Controls */}
+                        <div className="button-wrapper">
+                            <button className={`machine-btn ${tiny5.className}`} onClick={shake}>SHAKE</button>
+                            <button
+                                className={`machine-btn ${tiny5.className}`}
+                                onClick={() => setIsSeeThrough(!isSeeThrough)}
+                            >
+                                {isSeeThrough ? 'HIDE' : 'PEEK'}
+                            </button>
                         </div>
                     </div>
-                )}
-            </div>
+
+                    {/* Game Won Modal */}
+                    {gameWon && (
+                        <div className={`gachapon-end-screen ${tiny5.className}`}>
+                            <p className="text-center text-[#57280f]">Yippee! You freed them all!</p>
+                            <div className="gachapon-controls">
+                                <div className="gachapon-input-wrapper">
+                                    <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
+                                    <input
+                                        className="gachapon-input"
+                                        type="number"
+                                        value={inputCapsuleCount}
+                                        onChange={handleInputChange}
+                                        min={1}
+                                        max={20}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                    <button className="gachapon-arrow-btn" onClick={handleIncrement}>&gt;</button>
+                                </div>
+                                <button className="gachapon-play-btn" onClick={handleRestart}>PLAY AGAIN</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
         </>
     );
 }
