@@ -2,13 +2,13 @@ import { Section } from '@/components/ui/Section';
 import { PresentationCard } from '@/components/sections/PresentationCard';
 import { presentations } from '@/data/presentations';
 import Gachapon from '@/components/pets/Gachapon';
-import ClawMachine from '@/components/pets/ClawMachine';
+// import ClawMachine from '@/components/pets/ClawMachine';
 
 export default function TalksPage() {
   return (
     <>
       <Gachapon />
-      <ClawMachine />
+      {/* <ClawMachine /> <--- Needs tonnes of debugging so temporarily disabled */}
 
       <div className="page-enter">
         <Section
