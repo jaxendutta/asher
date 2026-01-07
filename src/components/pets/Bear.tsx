@@ -31,6 +31,8 @@ const DONUT_STAGES = [
 export default function Bear() {
     const [isEating, setIsEating] = useState(false);
     const [isGrowing, setIsGrowing] = useState(false);
+    const [isCheekShrink, setIsCheekShrink] = useState(false);
+    const [isSparkling, setIsSparkling] = useState(false);
     const [foodEatenLevel, setFoodEatenLevel] = useState(0);
     const [showMessage, setShowMessage] = useState(true);
     const [bearSize, setBearSize] = useState<Size>({ w: 70, h: 90 });
@@ -202,12 +204,17 @@ export default function Bear() {
         setBearSize(prev => ({ w: prev.w + 20, h: prev.h + 10 }));
 
         // Reset food IMMEDIATELY while it is hidden
-        // This prevents the "ghost piece" from appearing at the old location
         resetFood();
 
         // Wait for animations (approx 0.5s transition + buffer)
         setTimeout(() => {
-            setIsGrowing(false); // Show fresh donut (triggers sparkle)
+            setIsGrowing(false); // Show fresh donut
+            setIsSparkling(true); // Trigger sparkle animation
+
+            // Stop sparkling after animation plays
+            setTimeout(() => {
+                setIsSparkling(false);
+            }, 600);
         }, 600);
     };
 
@@ -221,14 +228,13 @@ export default function Bear() {
             const xPos = width / 2 - 36;
 
             dragRef.current.foodPos = { x: xPos, y: yPos };
-            // Style update will happen on re-mount or we can force it here just in case it's visible (it shouldn't be)
         }
     };
 
     return (
         <div
             ref={containerRef}
-            className={`bear-wrapper relative w-full h-full min-h-[400px] flex items-center justify-center overflow-hidden touch-none select-none ${tiny5.className}`}
+            className={`bear-wrapper relative w-full h-full min-h-[400px] flex items-center justify-center overflow-hidden select-none ${tiny5.className}`}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
@@ -430,10 +436,9 @@ export default function Bear() {
                 .bear-donut-4 { background-image: ${DONUT_STAGES[4]}; }
                 .bear-donut-5 { background-image: ${DONUT_STAGES[5]}; }
 
-                /* Sparkle Effect - Applied to the donut (which respawns) */
-                .bear-donut::after {
+                /* Sparkle Effect - Real Element for iOS Safety */
+                .bear-sparkle {
                     position: absolute;
-                    content: '';
                     width: 40px; height: 40px;
                     --bg: ${SPARKLE_BG};
                     border-image: var(--bg) 5 fill / 20px / 0 stretch;
@@ -441,6 +446,7 @@ export default function Bear() {
                     animation: bear-sparkle 0.5s forwards;
                     pointer-events: none;
                     top: -10px; left: -10px;
+                    z-index: 60;
                 }
                 @keyframes bear-sparkle {
                     0% { width: 40px; height: 40px; transform: translate(16px, 4px); }
@@ -517,12 +523,16 @@ export default function Bear() {
             {!isGrowing && (
                 <div
                     ref={foodRef}
-                    className={`bear-food ${foodEatenLevel === 0 ? 'bear-donut' : `bear-donut-${foodEatenLevel}`}`}
+                    // 'touch-none' ONLY here to prevent scrolling while dragging donut
+                    className={`bear-food ${foodEatenLevel === 0 ? 'bear-donut' : `bear-donut-${foodEatenLevel}`} touch-none`}
                     style={{
                         transform: `translate(${px(dragRef.current.foodPos.x)}, ${px(dragRef.current.foodPos.y)})`
                     }}
                     onPointerDown={handlePointerDown}
-                />
+                >
+                    {/* Explicit Sparkle Element for iOS compatibility */}
+                    {isSparkling && <div className="bear-sparkle" />}
+                </div>
             )}
 
             {/* Crumbs Particles */}
