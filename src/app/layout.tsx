@@ -1,11 +1,12 @@
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { inter } from '@/lib/fonts';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 
-export const viewport = {
+export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
 }
 
 export const metadata: Metadata = {

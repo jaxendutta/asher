@@ -25,19 +25,30 @@
 html {
   min-height: 100vh;
   scroll-behavior: smooth;
-  background-color: transparent;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
   background-image: url('/tilesets/grass_tile.jpg');
   background-repeat: repeat;
   background-size: 300px 180px;
-  background-color: #7ac755;
-  background-attachment: fixed;
+  /* No background-attachment: fixed needed; the element itself is fixed */
+  
+  /* Ensure it covers safe areas */
+  pointer-events: none;
 }
 
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: relative;
   background-color: transparent;
   color: var(--color-charcoal);
 }
