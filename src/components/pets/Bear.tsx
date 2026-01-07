@@ -4,11 +4,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { tiny5 } from '@/lib/fonts';
 
 // --- Types ---
-interface Vector {
-    x: number;
-    y: number;
-}
-
 interface Size {
     w: number;
     h: number;
