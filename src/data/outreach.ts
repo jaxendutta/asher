@@ -11,10 +11,10 @@ export const outreachExperience: Record<string, Experience> = {
     org: orgs.uO,
     subOrg: subOrgs.uO_Bio,
     startDate: new Date('2025-09-01'),
-    description: 'Assisted in teaching undergraduate biology laboratory courses, facilitating experiments, and grading assignments of over 100 students',
+    description: 'Assisted in teaching undergraduate biology laboratory courses, facilitating experiments, and grading assignments of 200+ students',
     highlights: [
-      'BIO 2137 (F25): Introduction to Plant Science',
-      'BIO 1140 (W26): Introduction to Cell and Molecular Biology',
+      'BIO 2137 (F25): Introduction to Plant Science (120+ students)',
+      'BIO 1140 (W26): Introduction to Cell and Molecular Biology (70+ students)',
     ],
     skills: ['Teaching', 'Science Communication', 'Laboratory Management', 'Mentorship'],
   },

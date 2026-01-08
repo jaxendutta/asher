@@ -59,7 +59,7 @@ export function PresentationCard({ talk, className }: PresentationCardProps) {
 
           {/* Talk Title and Description */}
           <div className="flex flex-col gap-2">
-            <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors italic leading-tight ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
+            <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors leading-tight ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
             {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
               {talk.description}
             </p>)}

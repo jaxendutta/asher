@@ -11,7 +11,7 @@ export default function ResearchPage() {
       <Birds birdCount={6}>
         <Section
           title="Research Experience"
-          subtitle="Exploring plant biology through hands-on research and fieldwork"
+          subtitle="Exploring research interests through hands-on research and fieldwork"
           centered
         >
           <div className="space-y-6">

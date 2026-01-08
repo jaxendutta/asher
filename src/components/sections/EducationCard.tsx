@@ -57,7 +57,7 @@ export function EducationCard({ education, className }: EducationCardProps) {
       {education.thesis && (
         <div className="mb-4 p-3 bg-[#F4EBD0]/50 rounded-2xl border border-[#B8D4BE]">
           <div className="text-sm font-semibold text-[#2D5F3F] mb-1">
-            Honours Thesis
+            Thesis
           </div>
           <p className="text-sm text-[#2C3E2C] mb-2 italic">{education.thesis.title}</p>
           {education.thesis.supervisor && (

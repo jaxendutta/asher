@@ -91,7 +91,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
       </CardHeader>
 
       <CardContent>
-        <p className="text-[#2C3E2C] mb-3 text-sm md:text-base">{research.description}</p>
+        <p className="text-[#2C3E2C] mb-3 text-sm md:text-base" dangerouslySetInnerHTML={{ __html: research.description }} />
 
         {research.highlights && research.highlights.length > 0 && (
           <ul className="space-y-1">

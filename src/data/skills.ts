@@ -20,6 +20,7 @@ export const skills: Skill[] = [
       'DNA Purification',
       'Plasmid Ligation and Transformation',
       'Biolistic Cell Bombardment',
+      'Spectroscopy',
     ],
   },
   {

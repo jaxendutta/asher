@@ -19,7 +19,7 @@ export const education: Education[] = [
     startDate: new Date('2025-09-01'),
     endDate: new Date('2027-04-01'),
     thesis: {
-      title: 'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
+      title: 'Alleviating waterlogging stress in barley by applying plant growth-promoting microbes (PGPMs)',
       supervisor: people.marinaCvetkovska,
     },
     awards: [
@@ -48,7 +48,7 @@ export const education: Education[] = [
       'President\'s Scholarship of Distinction',
       'Purdy Crawford Undergraduate Scholarship',
       'Science Memorial Scholarship',
-      'Excellent Standing Term Distinctions (8 terms)',
+      'Dean\'s Honour List',
       'IDEAL Scholar Recipient',
     ],
   },
