@@ -82,7 +82,7 @@ export default function Gachapon() {
     ]);
 
     const settings = useRef({
-        capsuleNo: 20,
+        capsuleNo: 2,
         isTurningHandle: false,
         isHandleLocked: false,
         handleDeg: 0,
@@ -1108,7 +1108,7 @@ export default function Gachapon() {
                     {/* Game Won Modal */}
                     {gameWon && (
                         <div className={`gachapon-end-screen ${tiny5.className}`}>
-                            <p className="text-center text-[#57280f]">Yippee! You freed them all!</p>
+                            <p className="text-center text-[#57280f] text-2xl">Yippee! You freed them all!</p>
                             <div className="gachapon-controls">
                                 <div className="gachapon-input-wrapper">
                                     <button className="gachapon-arrow-btn" onClick={handleDecrement}>&lt;</button>
