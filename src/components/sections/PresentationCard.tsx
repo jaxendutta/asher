@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import type { Presentation } from '@/types';
 import { VscGlobe, VscFilePdf } from 'react-icons/vsc';
 import { RxVideo } from 'react-icons/rx';
-import { jersey_10, jersey_25, newsreader } from '@/lib/fonts';
+import { jersey_25 } from '@/lib/fonts';
 
 interface PresentationCardProps {
   talk: Presentation;
@@ -59,7 +59,7 @@ export function PresentationCard({ talk, className }: PresentationCardProps) {
 
           {/* Talk Title and Description */}
           <div className="flex flex-col gap-2">
-            <div className={`font-semibold text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors leading-tight ${newsreader.className}`} dangerouslySetInnerHTML={{ __html: talk.title }} />
+            <div className={`text-[#1A3A2A]/80 group-hover:text-[#2D5F3F] transition-colors leading-tight`} dangerouslySetInnerHTML={{ __html: talk.title }} />
             {talk.description && (<p className="text-sm text-[#2C3E2C] leading-relaxed">
               {talk.description}
             </p>)}
