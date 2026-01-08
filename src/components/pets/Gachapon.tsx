@@ -35,6 +35,8 @@ interface CapsuleData {
     selected: boolean;
     prevX: number;
     prevY: number;
+    collectedIndex?: number;
+    animating?: boolean;
 }
 
 const TOY_TYPES = ['bunny', 'duck-yellow', 'duck-pink', 'star', 'water-melon', 'panda', 'dino', 'roboto-san', 'roboto-sama', 'penguin', 'turtle'];
@@ -53,6 +55,9 @@ export default function Gachapon() {
     const [gameWon, setGameWon] = useState(false);
     const [confettiActive, setConfettiActive] = useState(false);
     const [inputCapsuleCount, setInputCapsuleCount] = useState(20);
+
+    // Force re-render for state restoration
+    const [, forceUpdate] = useState(0);
 
     // --- Refs ---
     const requestRef = useRef<number>(0);
@@ -106,6 +111,16 @@ export default function Gachapon() {
         };
     };
 
+    const getShelfPosition = (index: number) => {
+        const colX = index % 10 * 32;
+        const colY = Math.floor(index / 10) * 32;
+        // Toybox top is at -84px roughly, aligning to grid
+        return {
+            x: 16 + colX,
+            y: -80 + 16 + colY
+        };
+    };
+
     // --- Physics Engine ---
     const initPhysics = useCallback(() => {
         const width = 320;
@@ -132,7 +147,9 @@ export default function Gachapon() {
             baseColor: BASE_COLORS[randomN(BASE_COLORS.length) - 1],
             selected: false,
             prevX: 0,
-            prevY: 0
+            prevY: 0,
+            collectedIndex: undefined,
+            animating: false
         }));
 
         updateLines();
@@ -329,6 +346,12 @@ export default function Gachapon() {
 
         setIsLocked(true);
         c.selected = true;
+        c.animating = true;
+
+        // Reserve the spot immediately to maintain order
+        const shelfIndex = settings.current.collectedNo;
+        c.collectedIndex = shelfIndex;
+        settings.current.collectedNo++;
 
         el.classList.add('enlarge');
 
@@ -345,16 +368,10 @@ export default function Gachapon() {
         setTimeout(() => {
             setIsLocked(false);
             toy.classList.add('collected');
+            c.animating = false;
 
-            const colX = settings.current.collectedNo % 10 * 32;
-            const colY = Math.floor(settings.current.collectedNo / 10) * 32;
-
-            // Toybox is at -84px
-            const destX = 16 + colX;
-            const destY = -80 + 16 + colY;
-
-            el.style.transform = `translate(${px(destX)}, ${px(destY)})`;
-            settings.current.collectedNo++;
+            const pos = getShelfPosition(shelfIndex);
+            el.style.transform = `translate(${px(pos.x)}, ${px(pos.y)})`;
 
             // Win Condition
             if (settings.current.collectedNo >= settings.current.capsuleNo) {
@@ -386,6 +403,18 @@ export default function Gachapon() {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+
+            // Restore states of collected items when reopening the modal
+            // We fast-forward any mid-animation capsules to 'collected' state
+            let needsUpdate = false;
+            capsules.current.forEach(c => {
+                if (c.selected && c.animating) {
+                    c.animating = false;
+                    needsUpdate = true;
+                }
+            });
+            // Force a re-render so that the style props for restored items are applied
+            forceUpdate(prev => prev + 1);
         } else {
             document.body.style.overflow = '';
         }
@@ -1002,23 +1031,36 @@ export default function Gachapon() {
                             ref={machineRef}
                         >
                             {/* Capsules Render */}
-                            {capsulesReady && capsules.current.map((c, i) => (
-                                <div
-                                    key={c.id}
-                                    className="capsule-wrapper"
-                                    ref={el => { capsuleRefs.current[i] = el; }}
-                                    onClick={() => handleCapsuleClick(i)}
-                                >
-                                    <div className="capsule">
-                                        <div className="lid" />
-                                        <div
-                                            className={`toy ${c.toyType}`}
-                                            ref={el => { toyRefs.current[i] = el; }}
-                                        />
-                                        <div className={`base ${c.baseColor}`} />
+                            {capsulesReady && capsules.current.map((c, i) => {
+                                // Calculate style for already collected items (not currently animating)
+                                const isStaticCollected = c.selected && !c.animating && c.collectedIndex !== undefined;
+                                const wrapperStyle = isStaticCollected
+                                    ? { transform: `translate(${px(getShelfPosition(c.collectedIndex!).x)}, ${px(getShelfPosition(c.collectedIndex!).y)})` }
+                                    : undefined;
+
+                                return (
+                                    <div
+                                        key={c.id}
+                                        // Apply 'open' class only when NOT animating, to avoid overriding the timeout sequence
+                                        // Apply 'enlarge' immediately so it persists if React re-renders during animation
+                                        className={`capsule-wrapper ${c.selected ? 'enlarge' : ''} ${(c.selected && !c.animating) ? 'open' : ''}`}
+                                        ref={el => { capsuleRefs.current[i] = el; }}
+                                        onClick={() => handleCapsuleClick(i)}
+                                        style={wrapperStyle}
+                                    >
+                                        <div className="capsule">
+                                            <div className="lid" />
+                                            <div
+                                                // Delay 'collected' class until animation is done
+                                                className={`toy ${c.toyType} ${(c.selected && !c.animating) ? 'collected' : ''}`}
+                                                ref={el => { toyRefs.current[i] = el; }}
+                                                style={isStaticCollected ? { transform: 'rotate(0deg)' } : undefined}
+                                            />
+                                            <div className={`base ${c.baseColor}`} />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
 
                             {/* Internal Lines */}
                             {lines.current.map((line, i) => (
