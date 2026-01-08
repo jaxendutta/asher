@@ -82,7 +82,7 @@ export default function Gachapon() {
     ]);
 
     const settings = useRef({
-        capsuleNo: 2,
+        capsuleNo: 20,
         isTurningHandle: false,
         isHandleLocked: false,
         handleDeg: 0,
