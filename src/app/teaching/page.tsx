@@ -1,11 +1,11 @@
 import Monkey, { MonkeyBar } from '@/components/pets/Monkey';
 import { Section } from '@/components/ui/Section';
 import { ResearchCard } from '@/components/sections/ResearchCard';
-import { outreachExperience } from '@/data/outreach';
+import { teaching } from '@/data/teaching';
 import { jersey_25 } from '@/lib/fonts';
 
 export default function TeachingPage() {
-  const outreachEntries = Object.entries(outreachExperience);
+  const teachingEntries = Object.entries(teaching);
 
   return (
     <div className="page-enter">
@@ -43,7 +43,7 @@ export default function TeachingPage() {
               <MonkeyBar id="bar-3" className="mt-12" />
             </div>
 
-            {outreachEntries.map(([id, experience], index) => (
+            {teachingEntries.map(([id, experience], index) => (
               <div key={id}>
                 <ResearchCard research={experience} />
 

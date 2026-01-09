@@ -5,7 +5,7 @@
 import type { Experience } from '@/types';
 import { orgs, subOrgs } from './orgs';
 
-export const outreachExperience: Record<string, Experience> = {
+export const teaching: Record<string, Experience> = {
   uO_ta: {
     title: 'Teaching Assistant',
     org: orgs.uO,
@@ -13,8 +13,8 @@ export const outreachExperience: Record<string, Experience> = {
     startDate: new Date('2025-09-01'),
     description: 'Assisted in teaching undergraduate biology laboratory courses, facilitating experiments, and grading assignments of 200+ students',
     highlights: [
-      'BIO 2137 (F25): Introduction to Plant Science (120+ students)',
-      'BIO 1140 (W26): Introduction to Cell and Molecular Biology (70+ students)',
+      'BIO 2137: Introduction to Plant Science [F25] (80+ students)',
+      'BIO 1140: Introduction to Cell and Molecular Biology [W26] (120+ students)',
     ],
     skills: ['Teaching', 'Science Communication', 'Laboratory Management', 'Mentorship'],
   },
