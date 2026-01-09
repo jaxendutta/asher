@@ -14,7 +14,10 @@ export const publications: Record<string, Publication> = {
     date: new Date('2025-04-15'),
     type: 'Thesis',
     abstract: 'Research conducted under the supervision of Dr. Simon Chuong investigating protein subcellular localization mechanisms.',
-    url: '/docs/asher-kim-thesis-honours-2025.pdf',
+    url: {
+      local: '/docs/asher-kim-thesis-honours-2025.pdf',
+      doi: 'https://www.biorxiv.org/'
+    },
     tags: ['Protein Localization', 'GFP', 'Plant Biology', 'Molecular Biology'],
   },
 };

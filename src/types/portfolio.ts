@@ -54,7 +54,10 @@ export interface Publication {
   medium?: string;
   date: Date;
   type: 'Article' | 'Essay' | 'Thesis';
-  url?: string;
+  url: {
+    local?: string;
+    doi?: string;
+  };
   abstract?: string;
   tags?: string[];
 }

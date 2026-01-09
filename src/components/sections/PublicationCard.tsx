@@ -11,8 +11,10 @@ import { cn } from '@/lib/utils';
 import type { Publication } from '@/types';
 import Link from 'next/link';
 import { VscFilePdf } from 'react-icons/vsc';
+import { IoPersonCircleSharp } from 'react-icons/io5';
 import { jersey_25 } from '@/lib/fonts';
 import { formatDateLong } from '@/lib/utils';
+import { SiDoi } from 'react-icons/si';
 
 interface PublicationCardProps {
   publication: Publication;
@@ -40,22 +42,44 @@ export function PublicationCard({ publication, className }: PublicationCardProps
           <div className="flex-1 flex flex-col gap-1.5">
             <div className="flex items-start justify-between gap-4">
               <span className={`text-xl md:text-2xl font-semibold text-slate-700 group-hover:text-[#2D5F3F] transition-colors leading-5.5 ${jersey_25.className}`} dangerouslySetInnerHTML={{ __html: publication.title }} />
-              {publication.url && (
-                <Link
-                  href={publication.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-shrink-0 p-1 text-[#5C6B5C] hover:text-[#2D5F3F] transition-colors"
-                  aria-label="View publication"
-                >
-                  {publication.url.startsWith('http') ? (<HiExternalLink className="w-6 h-6" />) : (<VscFilePdf className="w-6 h-6" />)}
-                </Link>
-              )
-              }
+              <div className="flex items-center">
+                {publication.url.local && (
+                  <Link
+                    href={publication.url.local}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 p-1 text-[#5C6B5C] hover:text-[#2D5F3F] transition-colors"
+                    aria-label="View publication"
+                  >
+                    {publication.url.local.startsWith('http') ? (<HiExternalLink className="w-6 h-6" />) : (<VscFilePdf className="w-6 h-6" />)}
+                  </Link>
+                )}
+
+                {publication.url.doi && (
+                  <Link
+                    href={publication.url.doi}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 p-1 text-[#5C6B5C] hover:text-[#2D5F3F] transition-colors"
+                    aria-label="View DOI link"
+                  >
+                    <SiDoi className="w-6 h-6" />
+                  </Link>
+                )}
+              </div>
             </div>
 
-            <div className="text-sm text-[#5C6B5C]">
-              {publication.authors.join(', ')}
+            <div className="">
+              {publication.authors.map((author, index) => (
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="flex items-center gap-1 rounded-full mt-2 w-max"
+                >
+                  <IoPersonCircleSharp />
+                  {author}
+                </Badge>
+              ))}
             </div>
 
             <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C6B5C] mt-1.5">
