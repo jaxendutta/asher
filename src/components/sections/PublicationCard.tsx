@@ -11,7 +11,8 @@ import { cn } from '@/lib/utils';
 import type { Publication } from '@/types';
 import Link from 'next/link';
 import { VscFilePdf } from 'react-icons/vsc';
-import { jersey_25, newsreader } from '@/lib/fonts';
+import { jersey_25 } from '@/lib/fonts';
+import { formatDateLong } from '@/lib/utils';
 
 interface PublicationCardProps {
   publication: Publication;
@@ -65,7 +66,7 @@ export function PublicationCard({ publication, className }: PublicationCardProps
                 {publication.medium || 'N/A'}
               </Badge>)}
               <Badge variant="outline" size="sm">
-                {publication.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                {formatDateLong(publication.date)}
               </Badge>
             </div>
           </div>

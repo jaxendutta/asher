@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Badge } from '@/components/ui/Badge';
-import { formatDate } from '@/lib/utils';
+import { formatDateLong, formatMonthYear } from '@/lib/utils';
 import type { Education } from '@/types';
 import { MdGrade, MdOutlineArrowOutward } from 'react-icons/md';
 import { jersey_25 } from '@/lib/fonts';
@@ -35,7 +35,7 @@ export function EducationCard({ education, className }: EducationCardProps) {
           <Badge className="flex items-center gap-1 text-xs">
             <HiCalendar />
             <span>
-              {formatDate(education.startDate)} - {formatDate(education.endDate)}
+              {formatMonthYear(education.startDate)} &ndash; {formatMonthYear(education.endDate)}
             </span>
           </Badge>
           <Link href={education.location.mapUrl} target="_blank" rel="noopener noreferrer">

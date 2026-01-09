@@ -15,20 +15,54 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Format date string for display
  */
-export function formatDate(dateString: string | Date): string {
-  if (typeof dateString === 'string' && dateString.toLowerCase() === 'present') {
-    return 'Present';
-  }
-  
-  // Handle formats like "Sep 2021" or "2021"
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    return typeof dateString === 'string' ? dateString : dateString.toString(); // Return as-is if not parseable
-  }
-  
+export function formatDateLong(input: string | Date): string {
+  const toDate = (value: string | Date) => {
+    if (value instanceof Date) return value;
+
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (match) {
+      const [, y, m, d] = match;
+      return new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+    }
+
+    // Fallback: let Date parse whatever else was passed
+    return new Date(value);
+  };
+
+  const date = toDate(input);
+  if (isNaN(date.getTime())) return 'Invalid Date';
+
   return date.toLocaleDateString('en-US', {
-    month: 'short',
     year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+export function formatMonthYear(input: string | Date): string {
+  if (input === 'present') return 'Present';
+
+  const toDate = (value: string | Date) => {
+    if (value instanceof Date) return value;
+
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (match) {
+      const [, y, m, d] = match;
+      return new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+    }
+
+    // Fallback: let Date parse whatever else was passed
+    return new Date(value);
+  };
+
+  const date = toDate(input);
+  if (isNaN(date.getTime())) return 'Invalid Date';
+
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
   });
 }
 
@@ -39,21 +73,21 @@ export function calculateDuration(startDate: Date, endDate: Date): string {
   if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
     return '';
   }
-  
-  const months: number = (endDate.getFullYear() - startDate.getFullYear()) * 12 
+
+  const months: number = (endDate.getFullYear() - startDate.getFullYear()) * 12
     + (endDate.getMonth() - startDate.getMonth());
-  
+
   const years: number = Math.floor(months / 12);
   const remainingMonths: number = months % 12;
-  
+
   if (years === 0) {
     return `${months} ${months === 1 ? 'month' : 'months'}`;
   }
-  
+
   if (remainingMonths === 0) {
     return `${years} ${years === 1 ? 'year' : 'years'}`;
   }
-  
+
   return `${years} ${years === 1 ? 'year' : 'years'}, ${remainingMonths} ${remainingMonths === 1 ? 'month' : 'months'}`;
 }
 
@@ -112,13 +146,13 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     const later = () => {
       timeout = null;
       func(...args);
     };
-    
+
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
@@ -132,7 +166,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     if (!inThrottle) {
       func(...args);

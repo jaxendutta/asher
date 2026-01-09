@@ -9,7 +9,7 @@ import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { MdArrowForward, MdOutlineArrowOutward } from 'react-icons/md';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { cn, formatDate, calculateDuration } from '@/lib/utils';
+import { cn, formatDateLong, calculateDuration, formatMonthYear } from '@/lib/utils';
 import type { Experience, Presentation } from '@/types';
 import { presentations } from '@/data/presentations';
 import { jersey_25 } from '@/lib/fonts';
@@ -80,7 +80,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
           <Badge className="flex items-center gap-2 text-xs flex-1">
             <HiCalendar />
             <span className="whitespace-nowrap">
-              {formatDate(research.startDate)} - {formatDate(research.endDate || 'present')}
+              {formatMonthYear(research.startDate)} &ndash; {formatMonthYear(research.endDate || 'present')}
             </span>
           </Badge>
           <Badge className="flex items-center gap-1 text-xs flex-shrink-0">
