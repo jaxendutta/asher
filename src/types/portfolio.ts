@@ -73,6 +73,7 @@ export interface Presentation {
   video?: textLink[];
   poster?: textLink;
   docs?: textLink[];
+  mainUrl: string;
 }
 
 export interface Skill {

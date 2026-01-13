@@ -69,7 +69,7 @@ export function PublicationCard({ publication, className }: PublicationCardProps
               </div>
             </div>
 
-            <div className="">
+            <div>
               {publication.authors.map((author, index) => (
                 <Badge
                   key={index}

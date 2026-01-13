@@ -15,7 +15,7 @@ export default function TeachingPage() {
           subtitle="Sharing the joy of science with students and communities"
           centered
         >
-          <div className="flex flex-row justify-between max-w-6xl mx-auto mb-16 px-8">
+          <div className="flex flex-row justify-between w-full mx-auto mb-16 px-8">
             <MonkeyBar id="bar-start-1" />
             <MonkeyBar id="bar-start-2" className="mt-6" />
             <MonkeyBar id="bar-start-3" className="mt-12" />

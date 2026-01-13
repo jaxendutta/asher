@@ -9,7 +9,7 @@ import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { MdArrowForward, MdOutlineArrowOutward } from 'react-icons/md';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { cn, formatDateLong, calculateDuration, formatMonthYear } from '@/lib/utils';
+import { cn, formatMonthYear } from '@/lib/utils';
 import type { Experience, Presentation } from '@/types';
 import { presentations } from '@/data/presentations';
 import { jersey_25 } from '@/lib/fonts';
@@ -126,7 +126,7 @@ export function ResearchCard({ research, className }: ResearchCardProps) {
           <div className="flex flex-wrap w-full gap-2">
             {sortedTalks.map(([id, talk]) => (
               <Link
-                href={`/talks#${id}`}
+                href={talk.mainUrl}
                 key={id}
                 rel="noopener noreferrer"
                 className="flex flex-1 items-center gap-1 hover:text-[#2D5F3F] transition-colors"

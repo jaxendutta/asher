@@ -26,9 +26,9 @@ export function Section({
       className={cn('pt-30 pb-10', className)}
       {...props}
     >
-      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-4 md:gap-6 max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
         {(title || subtitle) && (
-          <div className={cn(centered && 'mb-8 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]')}>
+          <div className={cn(centered && 'mb-4 text-center bg-gradient-to-r from-[#F4EBD0]/70 to-[#B8D4BE]/60 rounded-3xl p-8 border-2 border-[#B8D4BE]')}>
             {title && (
               <span className={`${jersey_10.className} text-5xl md:text-6xl text-[#1A3A2A] tracking-wide leading-[0.75]`}>
                 {title}

@@ -41,7 +41,7 @@ export const education: Education[] = [
     endDate: new Date('2025-04-01'),
     gpa: '93/100',
     thesis: {
-      title: 'Investigating regions involved in subcellular localization of an undisclosed protein using a GFP fusion construct',
+      title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
       supervisor: people.simonChuong,
     },
     awards: [

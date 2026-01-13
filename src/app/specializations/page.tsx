@@ -18,27 +18,28 @@ export default function SpecializationsPage() {
         title="Specializations"
         subtitle="Dive into my research frontiers and technical arsenal"
         centered
-        className="max-w-5xl"
+        className="max-w-5xl flex flex-col gap-6 md:gap-8 mb-16"
       >
+        {/* Research Interests */}
+        <Card hoverable variant="bordered" className="p-1 md:p-2">
+          <CardHeader>
+            <span className={`text-2xl md:text-3xl font-bold text-[#2D5F3F] flex items-center gap-2 ${jersey_10.className}`}>
+              <PiMicroscope className="text-xl" /> Research Interests
+            </span>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {researchInterests.map((interest, index) => (
+                <Badge key={index} variant="default" className="text-xs">
+                  {interest}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Research Interests and Skills */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {/* Research Interests */}
-          <Card hoverable variant="bordered" className="p-1 md:p-2">
-            <CardHeader>
-              <span className={`text-2xl md:text-3xl font-bold text-[#2D5F3F] flex items-center gap-2 ${jersey_10.className}`}>
-                <PiMicroscope className="text-xl" /> Research Interests
-              </span>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {researchInterests.map((interest) => (
-                  <Badge key={interest.id} variant="default" className="text-xs">
-                    {interest.title}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
           {/* Skills */}
           {skills.map((skillCategory, index) => (
             <Card hoverable variant="bordered" key={index} className="p-1 md:p-2">

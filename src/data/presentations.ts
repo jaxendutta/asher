@@ -31,6 +31,7 @@ export const presentations: Record<string, Presentation> = {
       label: 'YouTube Video',
       url: 'https://youtu.be/Wrqo4ujlwKw',
     }],
+    mainUrl: 'https://youtu.be/Wrqo4ujlwKw'
   },
   path_2025: {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
@@ -46,6 +47,7 @@ export const presentations: Record<string, Presentation> = {
       label: 'Poster[PDF]',
       url: '/docs/asher-kim-poster-2025.pdf',
     },
+    mainUrl: '/docs/asher-kim-poster-2025.pdf',
   },
   uw_showcase_2025: {
     title: 'Investigating Subcellular Localization of <i>Arabidopsis thaliana</i> Hydroperoxide Lyase I (At4g15440)',
@@ -60,5 +62,6 @@ export const presentations: Record<string, Presentation> = {
       label: 'Poster[PDF]',
       url: '/docs/asher-kim-poster-2025.pdf',
     },
+    mainUrl: '/docs/asher-kim-poster-2025.pdf',
   },
 };

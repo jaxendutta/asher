@@ -24,18 +24,12 @@ export const skills: Skill[] = [
     ],
   },
   {
-    category: 'Technical Skills',
-    icon: LiaLaptopCodeSolid,
+    category: 'Computation + Bioinformatics',
+    icon: TbDatabaseSmile,
     items: [
       'R',
       'IBM SPSS',
       'Python',
-    ],
-  },
-  {
-    category: 'Databases + Bioinformatics',
-    icon: TbDatabaseSmile,
-    items: [
       'PDB',
       'AlphaFold',
       'NCBI BLAST',
@@ -51,22 +45,9 @@ export const skills: Skill[] = [
 ];
 
 export const researchInterests = [
-  {
-    id: 'abiotic-stress',
-    title: 'Abiotic Stress Responses',
-    description: 'Plant physiological, metabolic, and genetic responses to abiotic stress',
-    icon: 'plant',
-  },
-  {
-    id: 'plant-microbe',
-    title: 'Plant-Microbe Interactions',
-    description: 'Beneficial plant-microbe interactions',
-    icon: 'bacteria',
-  },
-  {
-    id: 'protein-transport',
-    title: 'Protein Subcellular Transport',
-    description: 'Molecular mechanisms of protein subcellular transport in plant cells',
-    icon: 'cell',
-  },
+  "Abiotic Stress Responses",
+  "Plant-Microbe Interactions",
+  "Molecular Biology",
+  "Plant Physiology",
+  "Microbiology",
 ];

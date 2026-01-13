@@ -59,7 +59,7 @@ export function EducationCard({ education, className }: EducationCardProps) {
           <div className="text-sm font-semibold text-[#2D5F3F] mb-1">
             Thesis
           </div>
-          <p className="text-sm text-[#2C3E2C] mb-2 italic">{education.thesis.title}</p>
+          <p className="text-sm text-[#2C3E2C] mb-2" dangerouslySetInnerHTML={{ __html: education.thesis.title }}></p>
           {education.thesis.supervisor && (
             <div className="text-xs text-[#5C6B5C]">
               <Link href={education.thesis.supervisor.url} target="_blank" className="text-[#2D5F3F]">
